@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:18
+    container_name: vigvam-db
+    restart: always
+    environment:
+      POSTGRES_DB: vigvam_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      TZ: Europe/UTC
+
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+volumes:
+  postgres_data:
+
+
