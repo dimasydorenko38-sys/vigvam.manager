@@ -1,6 +1,6 @@
 package com.sydorenko.vigvam.manager.enums.users;
 
-public enum StatusUser {
+public enum Status {
     ENABLED,
     DISABLED
-    }
+}

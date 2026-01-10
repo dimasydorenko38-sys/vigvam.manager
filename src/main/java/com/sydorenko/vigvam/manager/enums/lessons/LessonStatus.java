@@ -1,6 +1,6 @@
 package com.sydorenko.vigvam.manager.enums.lessons;
 
-public enum StatusLessons {
+public enum LessonStatus {
 
     WAIT,
     DONE,

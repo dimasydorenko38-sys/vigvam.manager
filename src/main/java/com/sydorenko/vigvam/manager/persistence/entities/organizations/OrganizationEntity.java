@@ -1,65 +1,62 @@
-package com.sydorenko.vigvam.manager.entities.organizations;
+package com.sydorenko.vigvam.manager.persistence.entities.organizations;
 
-import com.sydorenko.vigvam.manager.entities.users.Client;
-import com.sydorenko.vigvam.manager.entities.users.Specialist;
-import com.sydorenko.vigvam.manager.enums.ServicesForPrice;
-import com.sydorenko.vigvam.manager.enums.users.StatusUser;
-import com.sydorenko.vigvam.manager.enums.lessons.TypeLessons;
+import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
+import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
+import com.sydorenko.vigvam.manager.enums.ServiceType;
+import com.sydorenko.vigvam.manager.enums.users.Status;
+import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.envers.Audited;
 
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Set;
 
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
-
 @Entity
 @Table(name = "organizations")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
-public class Organization {
+public class OrganizationEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @CreationTimestamp
-    @Column(name = "created_dates", updatable = false, columnDefinition = "DATE")
+    @Column(name = "created_date", updatable = false, columnDefinition = "DATE")
     private LocalDate createdDate;
 
-    @Column(name = "organization_names", nullable = false, unique = true)
+    @Column(name = "organization_name", nullable = false, unique = true)
     private String organizationName;
 
     @Column(name = "organization_city")
     private String organizationCity;
 
-    @ManyToMany(mappedBy = "organization")
-    private Set<Client> clientSet;
+    @ManyToMany(mappedBy = "organizations")
+    private Set<ClientEntity> clients;
 
-    @ManyToMany(mappedBy = "organization")
-    private Set<Specialist> specialistSet;
+    @ManyToMany(mappedBy = "organizations")
+    private Set<EmployeeEntity> employees;
 
     @ElementCollection
     @CollectionTable(name = "organization_prices",
             joinColumns = @JoinColumn(name = "organization_id"))
     @MapKeyEnumerated(EnumType.STRING)
     @Column(name = "prices", nullable = false)
-    private Map<ServicesForPrice, Long> Price;
+    private Map<ServiceType, Long> prices;
 
     @ElementCollection
     @CollectionTable(name = "organization_lessons_settings",
             joinColumns = @JoinColumn(name = "organization_id"))
     @MapKeyEnumerated(EnumType.STRING)
     @Column(name = "settingLessons", nullable = false)
-    private Map<TypeLessons, SettingLessonsTime> settingLessons;
+    private Map<LessonType, SettingLessonsTime> settingLessons;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "statuses", nullable = false)
-    private StatusUser statusUser;
+    @Column(name = "status", nullable = false)
+    private Status status;
 }

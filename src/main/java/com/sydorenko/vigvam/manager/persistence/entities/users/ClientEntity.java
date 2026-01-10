@@ -1,20 +1,22 @@
-package com.sydorenko.vigvam.manager.entities.users;
+package com.sydorenko.vigvam.manager.persistence.entities.users;
 
 import com.sydorenko.vigvam.manager.enums.users.SourceClient;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Set;
 
 
 @Entity
 @Table(name = "clients")
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class Client extends User {
+public class ClientEntity extends UserEntity {
 
 
     @Column(name = "feed_backs")
@@ -28,6 +30,5 @@ public class Client extends User {
     private SourceClient source;
 
     @OneToMany (mappedBy = "client", cascade = CascadeType.ALL)
-    private Set<Child> childs;
-
+    private Set<ChildEntity> childs;
 }

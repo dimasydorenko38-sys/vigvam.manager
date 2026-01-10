@@ -1,28 +1,25 @@
-package com.sydorenko.vigvam.manager.entities.users;
+package com.sydorenko.vigvam.manager.persistence.entities.users;
 
-import com.sydorenko.vigvam.manager.enums.users.StatusUser;
+import com.sydorenko.vigvam.manager.enums.users.Status;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.envers.Audited;
 
 import java.time.LocalDate;
 
-import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
-
 @Entity
-@Table(name = "childs")
-@Getter @Setter
-public class Child {
+@Table(name = "children")
+@Getter
+@Setter
+public class ChildEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @CreationTimestamp
-    @Column(name = "created_dates", updatable = false, columnDefinition = "DATE")
+    @Column(name = "created_date", updatable = false, columnDefinition = "DATE")
     private LocalDate createdDate;
 
     @Column(name = "names", nullable = false)
@@ -48,9 +45,9 @@ public class Child {
 
     @ManyToOne
     @JoinColumn(name = "clients")
-    private Client client;
+    private ClientEntity client;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_user", nullable = false)
-    private StatusUser statusUser;
+    private Status status;
 }
