@@ -1,5 +1,7 @@
 package com.sydorenko.vigvam.manager;
 
+import ch.qos.logback.core.net.server.Client;
+import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,7 +17,6 @@ public class VigVamManagerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(VigVamManagerApplication.class, args);
 	}
-
 
     @Configuration
     public class DbCheckConfig {

@@ -3,13 +3,13 @@ package com.sydorenko.vigvam.manager.persistence.entities.lessons;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
-import com.sydorenko.vigvam.manager.enums.ServiceType;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonCategory;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.Audited;
 
 import java.time.LocalDate;
@@ -35,9 +35,10 @@ public class LessonEntity {
     @Column(name = "status",nullable = false)
     private LessonStatus status;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "service")
-    private ServiceType service;
+    @ManyToOne
+    @Audited(targetAuditMode = NOT_AUDITED)
+    @JoinColumn(name = "service_type_id", nullable = false)
+    private ServiceTypeEntity serviceType;
 
     @NonNull
     @Enumerated(EnumType.STRING)
@@ -72,5 +73,9 @@ public class LessonEntity {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, columnDefinition = "DATE")
     private LocalDate createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", columnDefinition = "DATE")
+    private LocalDateTime updatedAt;
 
 }

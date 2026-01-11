@@ -1,7 +1,7 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
-import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
-import com.sydorenko.vigvam.manager.enums.users.Status;
+import com.sydorenko.vigvam.manager.arhiv.RoleEntity;
+import com.sydorenko.vigvam.manager.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,27 +25,17 @@ public abstract class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "login", length = 20, nullable = false, unique = true)
+    private String login;
+
+    @Column(name = "password", length = 15, nullable = false)
+    private String password;
+
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "phone", length = 20)
     private String phone;
-
-    @ManyToMany
-    @JoinTable(
-            name = "users_organizations",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "organization_id")
-    )
-    private Set<OrganizationEntity> organizations;
-
-    @ManyToMany
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<RoleEntity> roles;
 
     @CreationTimestamp
     @Column(name = "created_date", updatable = false, columnDefinition = "DATE")

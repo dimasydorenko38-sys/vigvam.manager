@@ -1,6 +1,6 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
-import com.sydorenko.vigvam.manager.enums.users.Status;
+import com.sydorenko.vigvam.manager.enums.Status;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,16 +22,16 @@ public class ChildEntity {
     @Column(name = "created_date", updatable = false, columnDefinition = "DATE")
     private LocalDate createdDate;
 
-    @Column(name = "names", nullable = false)
+    @Column(name = "name", nullable = false)
     private String Name;
 
-    @Column(name = "last_names", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
 
     @Column(name = "second_name")
     private String secondName;
 
-    @Column(name = "birthday_dates", nullable = false)
+    @Column(name = "birthday_date", nullable = false)
     private LocalDate birthdayDate;
 
     @Column(name = "interests")
@@ -44,8 +44,11 @@ public class ChildEntity {
     private String diagnosis;
 
     @ManyToOne
-    @JoinColumn(name = "clients")
+    @JoinColumn(name = "client_id")
     private ClientEntity client;
+
+    @Column(name = "disabled_date")
+    private LocalDate disabledDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_user", nullable = false)

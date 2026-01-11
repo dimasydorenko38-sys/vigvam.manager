@@ -1,9 +1,8 @@
 package com.sydorenko.vigvam.manager.persistence.entities.organizations;
 
-import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
-import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
-import com.sydorenko.vigvam.manager.enums.ServiceType;
-import com.sydorenko.vigvam.manager.enums.users.Status;
+import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
+import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
+import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -36,18 +35,11 @@ public class OrganizationEntity {
     @Column(name = "organization_city")
     private String organizationCity;
 
-    @ManyToMany(mappedBy = "organizations")
-    private Set<ClientEntity> clients;
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    private Set<ContractEmployeeEntity> employeeContracts;
 
-    @ManyToMany(mappedBy = "organizations")
-    private Set<EmployeeEntity> employees;
-
-    @ElementCollection
-    @CollectionTable(name = "organization_prices",
-            joinColumns = @JoinColumn(name = "organization_id"))
-    @MapKeyEnumerated(EnumType.STRING)
-    @Column(name = "prices", nullable = false)
-    private Map<ServiceType, Long> prices;
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
+    private Set<PriceOrganizationEntity> price;
 
     @ElementCollection
     @CollectionTable(name = "organization_lessons_settings",

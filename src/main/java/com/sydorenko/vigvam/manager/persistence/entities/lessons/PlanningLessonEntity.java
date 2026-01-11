@@ -3,7 +3,6 @@ package com.sydorenko.vigvam.manager.persistence.entities.lessons;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
-import com.sydorenko.vigvam.manager.enums.ServiceType;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonCategory;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import jakarta.persistence.Column;
@@ -38,9 +37,9 @@ public class PlanningLessonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "service", nullable = false)
-    private ServiceType service;
+    @ManyToOne
+    @JoinColumn (name = "service", nullable = false)
+    private ServiceTypeEntity serviceType;
 
     @NonNull
     @Enumerated(EnumType.STRING)

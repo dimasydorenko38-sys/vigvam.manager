@@ -1,4 +1,4 @@
-package com.sydorenko.vigvam.manager.enums.users;
+package com.sydorenko.vigvam.manager.enums;
 
 public enum Status {
     ENABLED,

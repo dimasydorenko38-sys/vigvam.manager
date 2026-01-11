@@ -1,11 +1,10 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
-import com.sydorenko.vigvam.manager.enums.ServiceType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Map;
+import java.util.Set;
 
 @Entity
 @Table(name = "employees")
@@ -17,9 +16,10 @@ import java.util.Map;
 @SuperBuilder
 public class EmployeeEntity extends UserEntity {
 
-    @ElementCollection
-    @CollectionTable(name = "employee_salary", joinColumns = @JoinColumn(name = "employee_id"))
-    @MapKeyEnumerated(EnumType.STRING)
-    private Map<ServiceType, Long> salary;
+    @Column(name = "last_name", nullable = false)
+    private String LastName;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<ContractEmployeeEntity> contractsEmployee;
 
 }
