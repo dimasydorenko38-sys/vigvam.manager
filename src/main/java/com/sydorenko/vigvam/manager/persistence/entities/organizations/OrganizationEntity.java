@@ -32,7 +32,7 @@ public class OrganizationEntity {
     @Column(name = "organization_name", nullable = false, unique = true)
     private String organizationName;
 
-    @Column(name = "organization_city")
+    @Column(name = "organization_city", nullable = false)
     private String organizationCity;
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
@@ -41,11 +41,9 @@ public class OrganizationEntity {
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
     private Set<PriceOrganizationEntity> price;
 
-    @ElementCollection
-    @CollectionTable(name = "organization_lessons_settings",
-            joinColumns = @JoinColumn(name = "organization_id"))
+    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyEnumerated(EnumType.STRING)
-    @Column(name = "settingLessons", nullable = false)
+    @MapKey(name = "lessonType")
     private Map<LessonType, SettingLessonsTime> settingLessons;
 
     @Enumerated(EnumType.STRING)

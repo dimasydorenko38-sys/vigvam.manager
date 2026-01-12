@@ -1,13 +1,26 @@
 package com.sydorenko.vigvam.manager.persistence.entities.organizations;
 
+import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.function.LongToIntFunction;
 
-@Embeddable
+@Entity
+@Table(name = "setting_lessons_time")
+@Getter
+@Setter
+@NoArgsConstructor
 public class SettingLessonsTime {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @CreationTimestamp
     @Column(name = "created_date", updatable = false, columnDefinition = "DATE")
@@ -24,4 +37,12 @@ public class SettingLessonsTime {
 
     @Column(name = "break_duration", nullable = false)
     private Long breakDuration;
+
+    @Column(name = "lesson_type")
+    @Enumerated(EnumType.STRING)
+    private LessonType lessonType;
+
+    @ManyToOne
+    @JoinColumn (name = "organization_id")
+    private OrganizationEntity organization;
 }

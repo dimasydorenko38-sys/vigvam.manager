@@ -1,6 +1,5 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
-import com.sydorenko.vigvam.manager.arhiv.RoleEntity;
 import com.sydorenko.vigvam.manager.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @MappedSuperclass
 @Getter

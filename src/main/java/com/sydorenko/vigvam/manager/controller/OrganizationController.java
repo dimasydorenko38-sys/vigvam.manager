@@ -1,0 +1,22 @@
+package com.sydorenko.vigvam.manager.controller;
+
+import com.sydorenko.vigvam.manager.dto.request.CreateOrganizationRequestDto;
+import com.sydorenko.vigvam.manager.service.OrganizationService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/organizations")
+@RequiredArgsConstructor
+public class OrganizationController {
+
+    private final OrganizationService service;
+
+    @PostMapping("/add")
+    public void createOrganizationThisSettings(@RequestBody CreateOrganizationRequestDto dto){
+        service.createOrganizationThisSettings(dto);
+    }
+}
