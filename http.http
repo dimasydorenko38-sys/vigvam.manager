@@ -1,4 +1,4 @@
-@host = http://localhost:8080
+@host = http://localhost:8082
 
 ### Створення нової організації з налаштуваннями
 POST {{host}}/api/organizations/add
@@ -25,11 +25,11 @@ Content-Type: application/json
             ],
             "priceList": [
             {
-            "lessonType": "INDIVIDUAL",
+            "serviceType": "Logoped",
             "value": 350
             },
             {
-            "lessonType": "GROUP",
+            "serviceType": "SI",
             "value": 200
             }
             ]

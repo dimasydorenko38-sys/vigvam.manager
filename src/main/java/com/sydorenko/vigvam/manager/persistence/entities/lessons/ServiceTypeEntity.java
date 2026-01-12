@@ -11,6 +11,10 @@ import lombok.Setter;
 @Setter
 public class ServiceTypeEntity {
 
+    // LOGOPED
+    // SI
+    // GROUP
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

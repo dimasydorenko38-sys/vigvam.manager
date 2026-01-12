@@ -7,12 +7,15 @@ services:
       POSTGRES_DB: vigvam_db
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
-      TZ: Europe/UTC
+      TZ: UTC
+      PGTZ: UTC
+
 
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
+    command: postgres -c timezone=UTC
 
 volumes:
   postgres_data:

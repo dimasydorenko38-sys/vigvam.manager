@@ -1,5 +1,7 @@
 package com.sydorenko.vigvam.manager.persistence.entities.organizations;
 
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
