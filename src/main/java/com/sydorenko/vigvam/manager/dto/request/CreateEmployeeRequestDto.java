@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.dto.request;
 
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
+import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,8 +14,9 @@ import java.util.Set;
 @NoArgsConstructor
 public class CreateEmployeeRequestDto {
 
+    private String login;
+    private String password;
     private String name;
+    private String lastName;
     private String phone;
-    private Set<RoleUser> roles;
-    private Set<Long> organizationIds;
 }

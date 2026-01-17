@@ -17,7 +17,7 @@ import java.util.Set;
 public class EmployeeEntity extends UserEntity {
 
     @Column(name = "last_name", nullable = false)
-    private String LastName;
+    private String lastName;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ContractEmployeeEntity> contractsEmployee;

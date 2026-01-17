@@ -15,6 +15,7 @@ public class ServiceTypeEntity {
     // SI
     // GROUP
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

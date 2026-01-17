@@ -7,13 +7,10 @@ import com.sydorenko.vigvam.manager.persistence.entities.organizations.Organizat
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.SettingLessonsTime;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.ServiceTypeRepository;
-import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.function.Function.*;
 import static java.util.stream.Collectors.*;
@@ -45,7 +42,7 @@ public class OrganizationService {
                     price.setOrganization(newOrganization);
                     ServiceTypeEntity checkServiceType = serviceTypeRepository.getById(price.getServiceType().getId());
                     if(checkServiceType.getStatus() != Status.ENABLED){
-                        throw new IllegalArgumentException("Полуга " + checkServiceType.getServiceType() +" ("+checkServiceType.getDisplayName()+")" + " не існує або ця послуга вимкнена в системі");
+                        throw new EntityNotFoundException("Полуга " + checkServiceType.getServiceType() +" ("+checkServiceType.getDisplayName()+")" + " не існує або ця послуга вимкнена в системі");
                     }
                     price.setServiceType(checkServiceType);
                 })
