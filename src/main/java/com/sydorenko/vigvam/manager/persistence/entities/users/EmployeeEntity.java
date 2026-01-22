@@ -3,8 +3,14 @@ package com.sydorenko.vigvam.manager.persistence.entities.users;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "employees")
@@ -13,7 +19,6 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
 public class EmployeeEntity extends UserEntity {
 
     @Column(name = "last_name", nullable = false)
@@ -22,4 +27,10 @@ public class EmployeeEntity extends UserEntity {
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ContractEmployeeEntity> contractsEmployee;
 
+    @Override
+    public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
+        return contractsEmployee.stream()
+                .map(contract -> new SimpleGrantedAuthority("ROLE_" + contract.getRole()))
+                .collect(Collectors.toList());
+    }
 }

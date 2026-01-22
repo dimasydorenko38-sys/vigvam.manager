@@ -2,12 +2,10 @@ package com.sydorenko.vigvam.manager.service;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateOrganizationRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
-import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.SettingLessonsTime;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.ServiceTypeRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +19,7 @@ public class OrganizationService {
 
     private final OrganizationRepository repository;
     private final ServiceTypeRepository serviceTypeRepository;
+    private final ServiceTypeService serviceTypeService;
 
     @Transactional
     public void createOrganizationThisSettings (CreateOrganizationRequestDto dto){
@@ -40,11 +39,12 @@ public class OrganizationService {
                 .stream()
                 .peek(price -> {
                     price.setOrganization(newOrganization);
-                    ServiceTypeEntity checkServiceType = serviceTypeRepository.getById(price.getServiceType().getId());
-                    if(checkServiceType.getStatus() != Status.ENABLED){
-                        throw new EntityNotFoundException("Полуга " + checkServiceType.getServiceType() +" ("+checkServiceType.getDisplayName()+")" + " не існує або ця послуга вимкнена в системі");
-                    }
-                    price.setServiceType(checkServiceType);
+//                    ServiceTypeEntity checkServiceType = serviceTypeRepository.getById(price.getServiceType().getId());
+//                    if(checkServiceType.getStatus() != Status.ENABLED){
+//                        throw new EntityNotFoundException("Полуга " + checkServiceType.getServiceType() +" ("+checkServiceType.getDisplayName()+")" + " не існує або ця послуга вимкнена в системі");
+//                    }
+//                    price.setServiceType(checkServiceType);
+                    price.setServiceType(serviceTypeService.getServiceTypeById(price.getServiceType().getId()));
                 })
                 .collect(toSet()));
 

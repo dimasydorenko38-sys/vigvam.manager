@@ -30,8 +30,11 @@ public class SalaryEmployeeEntity {
     @Column(name = "value", nullable = false)
     private Long value;
 
+    @Column(name = "premium_value")
+    private Long premiumValue;
+
     @ManyToOne
-    @JoinColumn(name = "contract_id")
+    @JoinColumn(name = "contract_id", nullable = false)
     private ContractEmployeeEntity contractEmployee;
 
 

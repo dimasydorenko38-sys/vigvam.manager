@@ -23,7 +23,7 @@ public class ChildEntity {
     private LocalDate createdDate;
 
     @Column(name = "name", nullable = false)
-    private String Name;
+    private String name;
 
     @Column(name = "last_name", nullable = false)
     private String lastName;

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 
 
-//{
+//      {
 //        "serviceType": "art-terapia",
 //        "displayName": "арт терапія"
 //        }

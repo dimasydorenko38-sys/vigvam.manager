@@ -29,4 +29,5 @@ public class ServiceTypeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
+
 }

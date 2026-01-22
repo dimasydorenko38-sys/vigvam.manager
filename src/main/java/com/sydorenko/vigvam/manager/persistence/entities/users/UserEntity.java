@@ -2,22 +2,22 @@ package com.sydorenko.vigvam.manager.persistence.entities.users;
 
 import com.sydorenko.vigvam.manager.enums.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UuidGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.UUID;
 
 @MappedSuperclass
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
-public abstract class UserEntity {
+public abstract class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,4 +45,32 @@ public abstract class UserEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
+
+    @UuidGenerator
+    @Column(name = "refresh_token", unique = true)
+    private UUID refreshToken;
+
+
+    @NonNull
+    @Override
+    public abstract Collection<? extends GrantedAuthority> getAuthorities();
+
+
+    @NonNull
+    @Override
+    public String getUsername() {
+        return this.login;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.status == Status.ENABLED;
+    }
+
+
 }

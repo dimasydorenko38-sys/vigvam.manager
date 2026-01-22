@@ -7,14 +7,20 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
 @Table(name = "contract_employee")
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class ContractEmployeeEntity {
 
     @Id
@@ -46,6 +52,16 @@ public class ContractEmployeeEntity {
 
     @Column(name = "disabled_date")
     private LocalDate disabledDate;
+
+    @CreatedBy
+    @Column(name = "created_by_id", updatable = false)
+    private Long createdBy;
+
+    @LastModifiedBy
+    private Long lastModifiedBy;
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

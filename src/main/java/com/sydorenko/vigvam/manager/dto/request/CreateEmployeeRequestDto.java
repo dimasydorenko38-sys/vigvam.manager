@@ -9,6 +9,16 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
+
+//  {
+//      "login": "admin",
+//      "password": "admin",
+//      "name": "UserName",
+//      "lastName": "UserLastName",
+//      "phone": "Phone"
+//        }
+
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

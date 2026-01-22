@@ -11,6 +11,10 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +26,7 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @Setter
 @NoArgsConstructor
 @Audited
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "lessons", indexes = {
         @Index(name = "lesson_organization_id_idx", columnList = "organization_id")
 })
@@ -72,6 +77,14 @@ public class LessonEntity {
 
     @Column(name = "comments")
     private String comments;
+
+    @CreatedBy
+    @Column(name = "created_by_id", updatable = false)
+    private Long createdById;
+
+    @LastModifiedBy
+    @Column(name = "last_modified_by_id")
+    private Long lastModifiedBy;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, columnDefinition = "DATE")

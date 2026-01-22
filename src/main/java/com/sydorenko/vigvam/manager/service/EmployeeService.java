@@ -20,7 +20,8 @@ public class EmployeeService {
         employee.setName(dto.getName());
         employee.setLastName(dto.getLastName());
         employee.setPhone(dto.getPhone());
-//        TODO: add only one ContractEmployeeEntity + {SalaryEmployeeEntity}
         employee.setStatus(Status.ENABLED);
+
+        employeeRepository.save(employee);
     }
 }

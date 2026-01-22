@@ -7,6 +7,7 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -44,10 +45,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }
 
+    @ExceptionHandler
     public ResponseEntity<ErrorResponseDto> handleDataUniqueRequest (DataIntegrityViolationException exception){
         log.error("ERROR: The data violates the database conditions: ", exception);
         String fullMessage = exception.getMostSpecificCause().getMessage();
         String userMessage = "Помилка при збереженні даних.";
+
 
         if (fullMessage.contains("duplicate key") || fullMessage.contains("AlreadyExists")) {
             userMessage = "Запис із такими даними вже існує в системі.";
@@ -87,6 +90,16 @@ public class GlobalExceptionHandler {
                 exception.toString()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    public ResponseEntity<ErrorResponseDto> handleAuthRole(AuthorizationDeniedException exception){
+        log.error("ERROR: Access Denied: ", exception);
+        ErrorResponseDto error = new ErrorResponseDto(
+                LocalDateTime.now(),
+                "Ви не маєте доступу до цих даних, зверніться до адміністратора для отримання додаткових прав!",
+                exception.toString()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
 }

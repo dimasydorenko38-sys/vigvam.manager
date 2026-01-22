@@ -1,11 +1,22 @@
 @host = http://localhost:8082
 
+
+### Створення видів послуги
+POST {{host}}/api/service-type/add
+Content-Type: application/json
+
+      {
+        "serviceType": "art-terapia",
+        "displayName": "арт терапія"
+        }
+
 ### Створення нової організації з налаштуваннями
-POST {{host}}/api/organizations/add
+POST {{host}}/api/organizations/crud/add
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IkNMSUVOVCIsImlkIjoxNSwic3ViIjoiMTUiLCJpYXQiOjE3NjkxMTAwOTIsImV4cCI6MTc2OTE5NjQ5Mn0.Xy-19WorZwjJIPdentQ4ReV6dBKS4oXoasrVv08h5S0
 Content-Type: application/json
 
         {
-            "organizationName": "2Організація",
+            "organizationName": "Організація10",
             "organizationCity": "Київ",
             "settingLessonsTimesList": [
             {
@@ -25,12 +36,66 @@ Content-Type: application/json
             ],
             "priceList": [
             {
-            "serviceType": "Logoped",
+            "serviceType":  { "id": 1 },
             "value": 350
-            },
-            {
-            "serviceType": "SI",
-            "value": 200
             }
             ]
+        }
+
+
+
+### Створення персоналу
+POST {{host}}/api/employee/add
+Content-Type: application/json
+
+  {
+      "login": "admin",
+      "password": "admin",
+      "name": "UserName",
+      "lastName": "UserLastName",
+      "phone": "Phone"
+        }
+
+### Створення контракту
+POST {{host}}/api/employee/contracts/add
+Content-Type: application/json
+
+{
+"employee": {"id": 1},
+"organization": {"id": 1},
+"masterEmployee": null,
+"salary": [
+        {
+            "serviceType": {"id": 1},
+            "value": 0,
+            "premiumValue": null
+        }
+        ],
+"role": "admin"
+        }
+
+### Створення клієнта
+POST {{host}}/api/clients/add
+Content-Type: application/json
+
+{
+"login": "login8",
+"password": "pass",
+"phone": "095111111",
+"name": "Dima",
+    "organization": {"id":  1},
+    "photoPermission": true,
+    "sourceClient": "OLX",
+    "children": [
+    {
+    "name": "Mira",
+    "lastName":"Dmytrovna",
+    "secondName": "Sydorenko",
+    "birthdayDate":"2021-08-11",
+    "interests": "molot huiny",
+    "requestForLessons":"RRRRR",
+    "diagnosis": null
+    }
+    ]
+
         }
