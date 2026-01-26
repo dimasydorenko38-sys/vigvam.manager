@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ServiceTypeService {
 
     private final ServiceTypeRepository serviceTypeRepository;
 
-    @Transactional
     public void createServiceType(CreateServiceTypeRequestDto dto) {
         ServiceTypeEntity serviceTypeEntity = new ServiceTypeEntity();
         serviceTypeEntity.setServiceType(dto.getServiceType().toUpperCase());

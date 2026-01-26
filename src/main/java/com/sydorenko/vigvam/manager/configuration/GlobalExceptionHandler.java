@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 
@@ -92,6 +93,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler
     public ResponseEntity<ErrorResponseDto> handleAuthRole(AuthorizationDeniedException exception){
         log.error("ERROR: Access Denied: ", exception);
         ErrorResponseDto error = new ErrorResponseDto(
@@ -100,6 +102,28 @@ public class GlobalExceptionHandler {
                 exception.toString()
         );
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponseDto> handleResponseStatus(ResponseStatusException exception){
+        log.error("ERROR: Access Denied: ", exception);
+        ErrorResponseDto error = new ErrorResponseDto(
+                LocalDateTime.now(),
+                "Профіль цього користувача вимкнено, доступ обмежено",
+                exception.toString()
+        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponseDto> handleNullPointer (NullPointerException exception){
+        log.error("ERROR: Atribut is null: ", exception);
+        ErrorResponseDto error = new ErrorResponseDto(
+                LocalDateTime.now(),
+                "Необхідно заповнити поля",
+                exception.toString()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
 }

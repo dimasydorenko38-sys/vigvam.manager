@@ -8,16 +8,17 @@ import com.sydorenko.vigvam.manager.persistence.repository.ContractEmployeeRepos
 import com.sydorenko.vigvam.manager.persistence.repository.EmployeeRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ContractEmployeeService {
 
     private final ContractEmployeeRepository contractEmployeeRepository;
@@ -25,7 +26,7 @@ public class ContractEmployeeService {
     private final OrganizationRepository organizationRepository;
     private final ServiceTypeService serviceTypeService;
 
-    public void createContract(CreateContractEmployeeRequestDto dto) {
+    public void createContract(@NonNull CreateContractEmployeeRequestDto dto) {
         ContractEmployeeEntity contractEmployee = new ContractEmployeeEntity();
 
         contractEmployee.setEmployee(employeeRepository.findById(dto.getEmployee().getId())
@@ -45,7 +46,6 @@ public class ContractEmployeeService {
                 ).collect(Collectors.toSet()));
         contractEmployee.setRole(RoleUser.fromString(dto.getRole()));
         contractEmployee.setStatus(Status.ENABLED);
-
         contractEmployeeRepository.save(contractEmployee);
     }
 }

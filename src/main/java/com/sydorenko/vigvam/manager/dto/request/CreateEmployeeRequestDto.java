@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 
@@ -29,4 +30,5 @@ public class CreateEmployeeRequestDto {
     private String name;
     private String lastName;
     private String phone;
+    private LocalDate birthday;
 }

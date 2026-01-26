@@ -7,6 +7,7 @@ import com.sydorenko.vigvam.manager.persistence.entities.users.SalaryEmployeeEnt
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.List;
 
@@ -30,10 +31,15 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateContractEmployeeRequestDto {
 
+    @NonNull
     private EmployeeEntity employee;
+    @NonNull
     private OrganizationEntity organization;
+
     private EmployeeEntity masterEmployee;
+    @NonNull
     private List<SalaryEmployeeEntity> salary;
+    @NonNull
     private String role;
 
 }

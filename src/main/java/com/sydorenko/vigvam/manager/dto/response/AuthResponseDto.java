@@ -1,4 +1,24 @@
 package com.sydorenko.vigvam.manager.dto.response;
 
-public record AuthResponseDto(String token) {
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+import java.util.UUID;
+
+
+@Getter
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AuthResponseDto {
+    String token;
+    UUID refreshToken;
+
+    public AuthResponseDto(String token) {
+        this.token = token;
+    }
+
+    public AuthResponseDto(String token, UUID refreshToken) {
+        this.token = token;
+        this.refreshToken = refreshToken;
+    }
 }

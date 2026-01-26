@@ -19,7 +19,6 @@ public class ClientController {
 
     @PostMapping("/add")
     public ResponseEntity<AuthResponseDto> createClient(@RequestBody CreateClientRequestDto dto){
-        String token = clientService.createClient(dto);
-        return ResponseEntity.ok(new AuthResponseDto(token));
+        return ResponseEntity.ok(clientService.createClient(dto));
     }
 }

@@ -17,7 +17,7 @@ public class OrganizationController {
     private final OrganizationService service;
 
     @PostMapping("/add")
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     public void createOrganizationThisSettings(@RequestBody CreateOrganizationRequestDto dto){
         service.createOrganizationThisSettings(dto);
     }

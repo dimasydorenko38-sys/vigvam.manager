@@ -1,5 +1,21 @@
 @host = http://localhost:8082
 
+### логін
+POST {{host}}/api/login
+Content-Type: application/json
+
+{
+"login": "super_admin",
+"password": "super_admin"
+}
+
+### логін refresh
+POST {{host}}/api/login/refresh
+Content-Type: application/json
+
+{
+"refreshToken": "c4b45610-d8e2-475c-a213-333a22d125dd"
+}
 
 ### Створення видів послуги
 POST {{host}}/api/service-type/add
@@ -12,7 +28,7 @@ Content-Type: application/json
 
 ### Створення нової організації з налаштуваннями
 POST {{host}}/api/organizations/crud/add
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IkNMSUVOVCIsImlkIjoxNSwic3ViIjoiMTUiLCJpYXQiOjE3NjkxMTAwOTIsImV4cCI6MTc2OTE5NjQ5Mn0.Xy-19WorZwjJIPdentQ4ReV6dBKS4oXoasrVv08h5S0
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NjkzODI0MTgsImV4cCI6MTc2OTQ2ODgxOH0.PG7DTH0gysc8_mySm6JcqLkaPxjbFAdDeiGtce1oc98
 Content-Type: application/json
 
         {
@@ -37,7 +53,7 @@ Content-Type: application/json
             "priceList": [
             {
             "serviceType":  { "id": 1 },
-            "value": 350
+            "valueOnePay": 350
             }
             ]
         }
@@ -79,11 +95,11 @@ POST {{host}}/api/clients/add
 Content-Type: application/json
 
 {
-"login": "login8",
+"login": "login21",
 "password": "pass",
 "phone": "095111111",
 "name": "Dima",
-    "organization": {"id":  1},
+    "organization": {"id":  3},
     "photoPermission": true,
     "sourceClient": "OLX",
     "children": [
@@ -98,4 +114,4 @@ Content-Type: application/json
     }
     ]
 
-        }
+}

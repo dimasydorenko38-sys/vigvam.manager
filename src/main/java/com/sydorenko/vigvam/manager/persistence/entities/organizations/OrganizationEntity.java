@@ -1,21 +1,20 @@
 package com.sydorenko.vigvam.manager.persistence.entities.organizations;
 
-import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
+import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
@@ -38,6 +37,12 @@ public class OrganizationEntity {
     @Column(name = "organization_city", nullable = false)
     private String organizationCity;
 
+    @Column(name = "address")
+    private String address;
+
+    @OneToMany(mappedBy = "organization")
+    private Set<ClientsOrganizationsEntity> clientLinks;
+
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
     private Set<ContractEmployeeEntity> employeeContracts;
 
@@ -55,7 +60,7 @@ public class OrganizationEntity {
 
     @CreatedDate
     @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime createdDate;
 
     @LastModifiedBy
     @Column(name = "last_modified_by_id")

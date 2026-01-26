@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,9 @@ public class EmployeeEntity extends UserEntity {
 
     @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Column(name = "birthday")
+    private LocalDate birthday;
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<ContractEmployeeEntity> contractsEmployee;

@@ -1,12 +1,12 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
 import com.sydorenko.vigvam.manager.enums.Status;
-import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -15,40 +15,41 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
-@Table(name = "contract_employee")
+@Table(name = "client_organization"
+//        ,
+//        uniqueConstraints = {
+//                @UniqueConstraint(
+//                        name = "uc_client_organization",
+//                        columnNames = {"client_id", "organization_id"}
+//                )
+//        }
+        )
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class ContractEmployeeEntity {
+public class ClientsOrganizationsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private EmployeeEntity employee;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", nullable = false)
+    private ClientEntity client;
 
-    @ManyToOne
-    @JoinColumn(name = "organization_id",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id", nullable = false)
     private OrganizationEntity organization;
 
-    @ManyToOne
-    @JoinColumn(name = "master_employee_id")
-    private EmployeeEntity masterEmployee;
-
-    @OneToMany(mappedBy = "contractEmployee", cascade = CascadeType.ALL)
-    private Set<SalaryEmployeeEntity> salary;
-
-    @Column(name = "role", nullable = false)
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private RoleUser role;
+    private Status status;
 
-    @Column(name = "disabled_date")
-    private LocalDate disabledDate;
+//    TODO: create PaymentEntity (id, org, date, sum, lessonTypePriceMap, lessonTypeCountMap, paymentType)
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
@@ -64,8 +65,10 @@ public class ContractEmployeeEntity {
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private Status status;
 
+    public ClientsOrganizationsEntity(ClientEntity client, OrganizationEntity organization, Status status) {
+        this.client = client;
+        this.organization = organization;
+        this.status = status;
+    }
 }

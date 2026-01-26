@@ -32,7 +32,7 @@ public abstract class UserEntity implements UserDetails {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "phone", length = 20)
+    @Column(name = "phone", length = 20, nullable = false)
     private String phone;
 
     @CreationTimestamp
@@ -48,8 +48,7 @@ public abstract class UserEntity implements UserDetails {
 
     @UuidGenerator
     @Column(name = "refresh_token", unique = true)
-    private UUID refreshToken;
-
+    UUID refreshToken;
 
     @NonNull
     @Override

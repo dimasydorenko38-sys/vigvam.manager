@@ -15,10 +15,10 @@ import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class OrganizationService {
 
     private final OrganizationRepository repository;
-    private final ServiceTypeRepository serviceTypeRepository;
     private final ServiceTypeService serviceTypeService;
 
     @Transactional
@@ -33,17 +33,16 @@ public class OrganizationService {
 
         newOrganization.setSettingLessons( dto.getSettingLessonsTimesList()
                 .stream()
+                //TODO: ->
+//                .map(s -> if (firstHourOfWork.isAfter(lastHourOfWork)) {
+//            throw new IllegalArgumentException("Час початку не може бути пізніше часу завершення");
+//        })
                 .peek(s -> s.setOrganization(newOrganization))
                 .collect(toMap(SettingLessonsTime::getLessonType, identity())));
         newOrganization.setPrice(dto.getPriceList()
                 .stream()
                 .peek(price -> {
                     price.setOrganization(newOrganization);
-//                    ServiceTypeEntity checkServiceType = serviceTypeRepository.getById(price.getServiceType().getId());
-//                    if(checkServiceType.getStatus() != Status.ENABLED){
-//                        throw new EntityNotFoundException("Полуга " + checkServiceType.getServiceType() +" ("+checkServiceType.getDisplayName()+")" + " не існує або ця послуга вимкнена в системі");
-//                    }
-//                    price.setServiceType(checkServiceType);
                     price.setServiceType(serviceTypeService.getServiceTypeById(price.getServiceType().getId()));
                 })
                 .collect(toSet()));
