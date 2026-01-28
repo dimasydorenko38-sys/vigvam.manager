@@ -1,11 +1,11 @@
 package com.sydorenko.vigvam.manager.service;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateOrganizationRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.SettingLessonsTime;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
-import com.sydorenko.vigvam.manager.persistence.repository.ServiceTypeRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,16 @@ import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
-public class OrganizationService {
+@org.springframework.transaction.annotation.Transactional
+public class OrganizationService extends GenericService<OrganizationEntity> {
 
     private final OrganizationRepository repository;
     private final ServiceTypeService serviceTypeService;
 
+
     @Transactional
-    public void createOrganizationThisSettings (CreateOrganizationRequestDto dto){
-        if(dto == null || dto.getSettingLessonsTimesList().isEmpty() || dto.getPriceList().isEmpty()){
+    public void createOrganizationThisSettings(CreateOrganizationRequestDto dto) {
+        if (dto == null || dto.getSettingLessonsTimesList().isEmpty() || dto.getPriceList().isEmpty()) {
             throw new IllegalArgumentException("Дані організації заповнено некоректно!");
         }
         OrganizationEntity newOrganization = new OrganizationEntity();
@@ -31,13 +32,14 @@ public class OrganizationService {
         newOrganization.setOrganizationCity(dto.getOrganizationCity());
         newOrganization.setStatus(Status.ENABLED);
 
-        newOrganization.setSettingLessons( dto.getSettingLessonsTimesList()
+        newOrganization.setSettingLessons(dto.getSettingLessonsTimesList()
                 .stream()
-                //TODO: ->
-//                .map(s -> if (firstHourOfWork.isAfter(lastHourOfWork)) {
-//            throw new IllegalArgumentException("Час початку не може бути пізніше часу завершення");
-//        })
-                .peek(s -> s.setOrganization(newOrganization))
+                .peek(s -> {
+                    if (s.getFirstHourOfWork().isAfter(s.getLastHourOfWork())) {
+                        throw new IllegalArgumentException("Час початку не може бути пізніше часу завершення");
+                    }
+                    s.setOrganization(newOrganization);
+                })
                 .collect(toMap(SettingLessonsTime::getLessonType, identity())));
         newOrganization.setPrice(dto.getPriceList()
                 .stream()
@@ -48,5 +50,14 @@ public class OrganizationService {
                 .collect(toSet()));
 
         repository.save(newOrganization);
+    }
+
+
+    public void setDisableStatus(DisabledObjectRequestDto dto) {
+        super.setDisableStatus(dto, repository);
+    }
+
+    public void setEnableStatus(DisabledObjectRequestDto dto) {
+        super.setEnableStatus(dto, repository);
     }
 }

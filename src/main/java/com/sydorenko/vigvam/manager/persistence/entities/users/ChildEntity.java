@@ -1,26 +1,32 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
 import com.sydorenko.vigvam.manager.enums.Status;
+import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "children")
 @Getter
 @Setter
-public class ChildEntity {
+@EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class ChildEntity implements Statusable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @CreationTimestamp
-    @Column(name = "created_date", updatable = false, columnDefinition = "DATE")
-    private LocalDate createdDate;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -47,10 +53,26 @@ public class ChildEntity {
     @JoinColumn(name = "client_id")
     private ClientEntity client;
 
-    @Column(name = "disabled_date")
-    private LocalDate disabledDate;
+    @Column(name = "disable_date")
+    private LocalDateTime disableDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status_user", nullable = false)
     private Status status;
+
+    @CreatedBy
+    @Column(name = "created_by_id", updatable = false)
+    private Long createdById;
+
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedBy
+    @Column(name = "last_modified_by_id")
+    private Long lastModifiedBy;
+
+    @LastModifiedDate
+    @Column(name = "last_modified_date")
+    private LocalDateTime lastModifiedDate;
 }

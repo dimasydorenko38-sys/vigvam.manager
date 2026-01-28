@@ -45,6 +45,9 @@ public class ClientsOrganizationsEntity {
     @JoinColumn(name = "organization_id", nullable = false)
     private OrganizationEntity organization;
 
+    @Column(name = "disable_date")
+    private LocalDateTime disableDate;
+
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;

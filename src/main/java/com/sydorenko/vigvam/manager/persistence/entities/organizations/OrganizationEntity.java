@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.persistence.entities.organizations;
 
+import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
 import com.sydorenko.vigvam.manager.enums.Status;
@@ -25,7 +26,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class OrganizationEntity {
+public class OrganizationEntity implements Statusable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,6 +74,9 @@ public class OrganizationEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
+
+    @Column(name = "disable_date")
+    private LocalDateTime disableDate;
 
     
 }

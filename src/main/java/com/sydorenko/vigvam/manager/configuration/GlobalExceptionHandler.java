@@ -2,6 +2,7 @@ package com.sydorenko.vigvam.manager.configuration;
 
 import com.sydorenko.vigvam.manager.dto.response.ErrorResponseDto;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.naming.AuthenticationException;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -22,9 +24,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleAllExceptions (Exception exception){
         log.error("|?| Unexpected ERROR |?|: ", exception);
-
-        // TODO: add ErrorEntity this user from Auth Security;
-
         ErrorResponseDto responseDto = new ErrorResponseDto(
                 LocalDateTime.now(),
                 "Виникла невідома помилка, спробуйте пізніше, або зверніться до адміністратора",
@@ -93,14 +92,30 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleAuthRole(AuthorizationDeniedException exception){
-        log.error("ERROR: Access Denied: ", exception);
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponseDto> handleAuthentication( AuthenticationException exception){
+        log.error("ERROR: User has not login: ", exception);
         ErrorResponseDto error = new ErrorResponseDto(
                 LocalDateTime.now(),
-                "Ви не маєте доступу до цих даних, зверніться до адміністратора для отримання додаткових прав!",
+                exception.getMessage(),
                 exception.toString()
         );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponseDto> handleAuthRole(
+            AuthorizationDeniedException exception,
+            HttpServletRequest request) {
+
+        log.error("Access Denied for user at path: {}", request.getRequestURI());
+
+        ErrorResponseDto error = new ErrorResponseDto(
+                LocalDateTime.now(),
+                "Ви не маєте доступу до цих даних, зверніться до адміністратора!",
+                "Path: " + request.getRequestURI()
+        );
+
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
@@ -109,7 +124,7 @@ public class GlobalExceptionHandler {
         log.error("ERROR: Access Denied: ", exception);
         ErrorResponseDto error = new ErrorResponseDto(
                 LocalDateTime.now(),
-                "Профіль цього користувача вимкнено, доступ обмежено",
+                exception.getMessage(),
                 exception.toString()
         );
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
@@ -117,7 +132,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponseDto> handleNullPointer (NullPointerException exception){
-        log.error("ERROR: Atribut is null: ", exception);
+        log.error("ERROR: Attribute is null: ", exception);
         ErrorResponseDto error = new ErrorResponseDto(
                 LocalDateTime.now(),
                 "Необхідно заповнити поля",

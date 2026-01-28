@@ -1,18 +1,19 @@
 package com.sydorenko.vigvam.manager.service;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateServiceTypeRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.ServiceTypeRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ServiceTypeService {
+public class ServiceTypeService extends GenericService<ServiceTypeEntity> {
 
     private final ServiceTypeRepository serviceTypeRepository;
 
@@ -31,5 +32,13 @@ public class ServiceTypeService {
             throw new EntityNotFoundException("Полуга " + checkServiceType.getServiceType() +" ("+checkServiceType.getDisplayName()+")" + " вже не активна в системі");
         };
         return checkServiceType;
+    }
+
+    public void setDisableStatus(DisabledObjectRequestDto dto) {
+        super.setDisableStatus(dto, serviceTypeRepository);
+    }
+
+    public void setEnableStatus(DisabledObjectRequestDto dto) {
+        super.setEnableStatus(dto, serviceTypeRepository);
     }
 }

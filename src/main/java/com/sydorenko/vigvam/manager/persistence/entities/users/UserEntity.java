@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
 import com.sydorenko.vigvam.manager.enums.Status;
+import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -17,7 +19,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class UserEntity implements UserDetails {
+public abstract class UserEntity implements UserDetails, Statusable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,8 +41,8 @@ public abstract class UserEntity implements UserDetails {
     @Column(name = "created_date", updatable = false, columnDefinition = "DATE")
     private LocalDate createdDate;
 
-    @Column(name = "disabled_date")
-    private LocalDate disabledDate;
+    @Column(name = "disable_date")
+    private LocalDateTime disableDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)

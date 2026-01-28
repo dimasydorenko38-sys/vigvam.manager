@@ -13,3 +13,5 @@ public interface UserRepository<T extends UserEntity> extends JpaRepository<T, L
 
     Optional<T> findByLogin(String login);
 }
+
+//TODO: findEntity default only status.ENABLED

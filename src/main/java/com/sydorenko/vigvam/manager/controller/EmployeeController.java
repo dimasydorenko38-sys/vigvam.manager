@@ -2,6 +2,7 @@ package com.sydorenko.vigvam.manager.controller;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateContractEmployeeRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.CreateEmployeeRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.service.ContractEmployeeService;
 import com.sydorenko.vigvam.manager.service.EmployeeService;
@@ -19,6 +20,8 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
     private final ContractEmployeeService contractEmployeeService;
+    private final AuthResponseDto responseDto;
+
 
 
     @PostMapping("/add")
@@ -29,5 +32,21 @@ public class EmployeeController {
     @PostMapping("/contracts/add")
     private void createContractEmployee(@RequestBody CreateContractEmployeeRequestDto dto){
         contractEmployeeService.createContract(dto);
+    }
+
+    @PostMapping("/disable")
+    public ResponseEntity<AuthResponseDto> disableClient(@RequestBody DisabledObjectRequestDto dto){
+        employeeService.setDisableStatus(dto);
+        responseDto.setMessage("Successful");
+
+        return ResponseEntity.ok(responseDto);
+    }
+
+
+    @PostMapping("/enable")
+    public ResponseEntity<AuthResponseDto> enableClient(@RequestBody DisabledObjectRequestDto dto){
+        employeeService.setEnableStatus(dto);
+        responseDto.setMessage("Successful");
+        return ResponseEntity.ok(responseDto);
     }
 }

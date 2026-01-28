@@ -10,12 +10,12 @@ import com.sydorenko.vigvam.manager.persistence.entities.users.UserEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
@@ -79,7 +79,7 @@ public class JwtService {
 
     public String generateTokenByRefreshToken(RefreshTokenDto dto) {
         if(dto.getRefreshToken() == null){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "RefreshToken can not be null");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ваш профіль було деактивовано, зверніться до Адміністратора");
         }
         UserEntity user = repositories.stream()
                 .map(repo -> repo.findByRefreshToken(dto.getRefreshToken()))

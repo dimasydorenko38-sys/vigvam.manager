@@ -2,8 +2,10 @@ package com.sydorenko.vigvam.manager.persistence.entities.users;
 
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
+import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,7 +24,7 @@ import java.util.Set;
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
-public class ContractEmployeeEntity {
+public class ContractEmployeeEntity implements Statusable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,6 +42,7 @@ public class ContractEmployeeEntity {
     @JoinColumn(name = "master_employee_id")
     private EmployeeEntity masterEmployee;
 
+    @NotEmpty
     @OneToMany(mappedBy = "contractEmployee", cascade = CascadeType.ALL)
     private Set<SalaryEmployeeEntity> salary;
 
@@ -47,8 +50,8 @@ public class ContractEmployeeEntity {
     @Enumerated(EnumType.STRING)
     private RoleUser role;
 
-    @Column(name = "disabled_date")
-    private LocalDate disabledDate;
+    @Column(name = "disable_date")
+    private LocalDateTime disableDate;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)

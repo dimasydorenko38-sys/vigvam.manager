@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.persistence.entities.lessons;
 
 import com.sydorenko.vigvam.manager.enums.Status;
+import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServiceTypeEntity {
+public class ServiceTypeEntity implements Statusable {
 
     // LOGOPED
     // SI
@@ -38,6 +39,9 @@ public class ServiceTypeEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
+
+    @Column(name = "disable_date")
+    private LocalDateTime disableDate;
 
     @CreatedBy
     @Column(name = "created_by_id", updatable = false)

@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.service;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateClientRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
@@ -11,7 +12,7 @@ import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizati
 import com.sydorenko.vigvam.manager.persistence.repository.ClientRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ClientService {
+public class ClientService extends GenericService<ClientEntity>{
 
     private final ClientRepository clientRepository;
     private final OrganizationRepository organizationRepository;
@@ -41,7 +42,7 @@ public class ClientService {
         client.setSource(SourceClient.valueOf(dto.getSourceClient().toUpperCase()));
         OrganizationEntity currentOrganization = organizationRepository
                 .findById(dto.getOrganization().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Такої організації не інснує"));
+                .orElseThrow(() -> new EntityNotFoundException("Такої організації не існує"));
         client.setOrganizationLinks(Set.of(new ClientsOrganizationsEntity(client, currentOrganization, Status.ENABLED)));
         client.setChildren(dto.getChildren()
                 .stream()
@@ -58,5 +59,13 @@ public class ClientService {
         String token = jwtService.generateToken(saveClient);
         return new AuthResponseDto(token,refreshToken);
 
+    }
+
+    public void setDisableStatus(DisabledObjectRequestDto dto) {
+        super.setDisableStatus(dto, clientRepository);
+    }
+
+    public void setEnableStatus(DisabledObjectRequestDto dto) {
+        super.setEnableStatus(dto, clientRepository);
     }
 }

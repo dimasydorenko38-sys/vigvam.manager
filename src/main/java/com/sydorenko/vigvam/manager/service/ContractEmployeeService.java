@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.service;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateContractEmployeeRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
@@ -8,10 +9,10 @@ import com.sydorenko.vigvam.manager.persistence.repository.ContractEmployeeRepos
 import com.sydorenko.vigvam.manager.persistence.repository.EmployeeRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ContractEmployeeService {
+public class ContractEmployeeService extends GenericService<ContractEmployeeEntity> {
 
     private final ContractEmployeeRepository contractEmployeeRepository;
     private final EmployeeRepository employeeRepository;
@@ -47,6 +48,14 @@ public class ContractEmployeeService {
         contractEmployee.setRole(RoleUser.fromString(dto.getRole()));
         contractEmployee.setStatus(Status.ENABLED);
         contractEmployeeRepository.save(contractEmployee);
+    }
+
+    public void setDisableStatus(DisabledObjectRequestDto dto) {
+        super.setDisableStatus(dto, contractEmployeeRepository);
+    }
+
+    public void setEnableStatus(DisabledObjectRequestDto dto) {
+        super.setEnableStatus(dto, contractEmployeeRepository);
     }
 }
 

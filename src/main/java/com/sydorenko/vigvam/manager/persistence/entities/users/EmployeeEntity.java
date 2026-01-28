@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.access.prepost.PreAuthorize;

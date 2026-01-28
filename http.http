@@ -22,8 +22,8 @@ POST {{host}}/api/service-type/add
 Content-Type: application/json
 
       {
-        "serviceType": "art-terapia",
-        "displayName": "арт терапія"
+        "serviceType": "logo",
+        "displayName": "logo"
         }
 
 ### Створення нової організації з налаштуваннями
@@ -32,7 +32,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiO
 Content-Type: application/json
 
         {
-            "organizationName": "Організація10",
+            "organizationName": "Організація12",
             "organizationCity": "Київ",
             "settingLessonsTimesList": [
             {
@@ -72,6 +72,7 @@ Content-Type: application/json
       "phone": "Phone"
         }
 
+
 ### Створення контракту
 POST {{host}}/api/employee/contracts/add
 Content-Type: application/json
@@ -95,11 +96,11 @@ POST {{host}}/api/clients/add
 Content-Type: application/json
 
 {
-"login": "login21",
+"login": "login24",
 "password": "pass",
 "phone": "095111111",
 "name": "Dima",
-    "organization": {"id":  3},
+    "organization": {"id":  2},
     "photoPermission": true,
     "sourceClient": "OLX",
     "children": [
@@ -114,4 +115,43 @@ Content-Type: application/json
     }
     ]
 
+}
+
+### Вимкнути клієнта
+POST {{host}}/api/clients/disable
+Content-Type: application/json
+
+{
+"id": 4
+}
+
+### Створити динину клієнтом
+POST {{host}}/api/child/add/client
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IkNMSUVOVCIsImlkIjozLCJzdWIiOiIzIiwiaWF0IjoxNzY5NDYwNzM5LCJleHAiOjE3Njk1NDcxMzl9.5zXYNzEZ7WrcnX3hXOa6X-q9zPRilj-bhSXKS0F7w2o
+Content-Type: application/json
+
+{
+    "name":  "child2",
+    "lastName": "sgddgh",
+    "secondName":  "sdfgh",
+    "birthdayDate": "1884-11-11",
+    "interests":  "sgdfh",
+    "requestForLessons": null,
+    "diagnosis": ""
+}
+
+### Створити динину Адміном
+POST {{host}}/api/child/add/admin
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3Njk0NjIyMDcsImV4cCI6MTc2OTU0ODYwN30.ZgDOpfl65skH5tecFRnKzUzNWe6uu4P-exMp_0l4oUs
+Content-Type: application/json
+
+{
+    "client": {"id": 3},
+    "name": "child2333",
+    "lastName": "sgddgh",
+    "secondName": "sdfgh",
+    "birthdayDate": "1884-11-11",
+    "interests": "sgdfh",
+    "requestForLessons": null,
+    "diagnosis": ""
 }

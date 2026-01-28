@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.persistence.entities.lessons;
 
+import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
@@ -38,7 +39,7 @@ public class LessonEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status",nullable = false)
-    private LessonStatus status;
+    private LessonStatus lessonStatus;
 
     @ManyToOne
     @Audited(targetAuditMode = NOT_AUDITED)

@@ -3,6 +3,7 @@ package com.sydorenko.vigvam.manager.persistence.entities.users;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.enums.users.SourceClient;
+import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -10,6 +11,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -23,7 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class ClientEntity extends UserEntity {
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST)
     private Set<ClientsOrganizationsEntity> organizationLinks;
 
     @Column(name = "photo_permissions", nullable = false)
@@ -43,4 +45,5 @@ public class ClientEntity extends UserEntity {
     public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("Role_"+this.role));
     }
+
 }
