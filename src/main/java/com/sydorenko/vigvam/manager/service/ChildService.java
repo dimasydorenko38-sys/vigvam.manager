@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ChildeService extends GenericService<ChildEntity> {
+public class ChildService extends GenericService<ChildEntity> {
 
     private final ChildRepository childRepository;
     private final AuditorAwareImpl auditorAware;

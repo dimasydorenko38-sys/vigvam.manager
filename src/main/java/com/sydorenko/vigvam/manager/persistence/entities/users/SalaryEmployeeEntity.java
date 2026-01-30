@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
+import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -29,6 +30,9 @@ public class SalaryEmployeeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "service_type_id")
     private ServiceTypeEntity serviceType;
+
+    @Column(name = "lesson_type", nullable = false)
+    private LessonType lessonType;
 
     @Column(name = "value", nullable = false)
     private Long value;

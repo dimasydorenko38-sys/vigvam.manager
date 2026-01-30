@@ -18,14 +18,10 @@ import java.util.UUID;
 public class AuthResponseDto {
     String token;
     UUID refreshToken;
-    String message;
-
-
 
     public AuthResponseDto(String token) {
         this.token = token;
     }
-
 
     public AuthResponseDto(String token, UUID refreshToken) {
         this.token = token;

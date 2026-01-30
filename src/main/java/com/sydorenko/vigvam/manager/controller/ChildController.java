@@ -1,8 +1,8 @@
 package com.sydorenko.vigvam.manager.controller;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateChildRequestDto;
-import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
-import com.sydorenko.vigvam.manager.service.ChildeService;
+import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
+import com.sydorenko.vigvam.manager.service.ChildService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/child")
 public class ChildController {
-    private final AuthResponseDto responseDto;
-    private final ChildeService childeService;
+    private final MessageResponseDto responseDto;
+    private final ChildService childeService;
 
     @PreAuthorize("hasRole('CLIENT')")
     @RequestMapping("/add/client")
-    public ResponseEntity<AuthResponseDto> clientCreatesChild(@RequestBody CreateChildRequestDto dto){
+    public ResponseEntity<MessageResponseDto> clientCreatesChild(@RequestBody CreateChildRequestDto dto){
         childeService.clientCreatesChild(dto);
         responseDto.setMessage("Successful");
         return ResponseEntity.ok(responseDto);
@@ -27,7 +27,7 @@ public class ChildController {
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @RequestMapping("/add/admin")
-    public ResponseEntity<AuthResponseDto> adminCreatesChild(@RequestBody CreateChildRequestDto dto){
+    public ResponseEntity<MessageResponseDto> adminCreatesChild(@RequestBody CreateChildRequestDto dto){
         childeService.adminCreatesChild(dto);
         responseDto.setMessage("Successful");
         return ResponseEntity.ok(responseDto);

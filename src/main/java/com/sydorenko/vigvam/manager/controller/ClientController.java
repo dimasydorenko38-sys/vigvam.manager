@@ -3,6 +3,7 @@ package com.sydorenko.vigvam.manager.controller;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.dto.request.CreateClientRequestDto;
+import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ClientController {
 
     private final ClientService clientService;
-    private final AuthResponseDto responseDto;
+    private final MessageResponseDto messageResponseDto;
 
     @PostMapping("/add")
     public ResponseEntity<AuthResponseDto> createClient(@RequestBody CreateClientRequestDto dto){
@@ -25,18 +26,18 @@ public class ClientController {
     }
 
     @PostMapping("/disable")
-    public ResponseEntity<AuthResponseDto> disableClient(@RequestBody DisabledObjectRequestDto dto){
+    public ResponseEntity<MessageResponseDto> disableClient(@RequestBody DisabledObjectRequestDto dto){
         clientService.setDisableStatus(dto);
-        responseDto.setMessage("Successful");
-        return ResponseEntity.ok(responseDto);
+        messageResponseDto.setMessage("Successful");
+        return ResponseEntity.ok(messageResponseDto);
     }
 
 
     @PostMapping("/enable")
-    public ResponseEntity<AuthResponseDto> enableClient(@RequestBody DisabledObjectRequestDto dto){
+    public ResponseEntity<MessageResponseDto> enableClient(@RequestBody DisabledObjectRequestDto dto){
         clientService.setEnableStatus(dto);
-        responseDto.setMessage("Successful");
-        return ResponseEntity.ok(responseDto);
+        messageResponseDto.setMessage("Successful");
+        return ResponseEntity.ok(messageResponseDto);
     }
 
 }

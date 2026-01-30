@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.temporal.ChronoUnit;
+
 import static java.util.function.Function.*;
 import static java.util.stream.Collectors.*;
 
@@ -35,6 +37,8 @@ public class OrganizationService extends GenericService<OrganizationEntity> {
         newOrganization.setSettingLessons(dto.getSettingLessonsTimesList()
                 .stream()
                 .peek(s -> {
+                    s.getFirstHourOfWork().truncatedTo(ChronoUnit.MINUTES);
+                    s.getLastHourOfWork().truncatedTo(ChronoUnit.MINUTES);
                     if (s.getFirstHourOfWork().isAfter(s.getLastHourOfWork())) {
                         throw new IllegalArgumentException("Час початку не може бути пізніше часу завершення");
                     }

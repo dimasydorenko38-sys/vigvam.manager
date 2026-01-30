@@ -19,13 +19,16 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Audited
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "lessons", indexes = {
@@ -41,6 +44,9 @@ public class LessonEntity {
     @Column(name = "status",nullable = false)
     private LessonStatus lessonStatus;
 
+    @Column(name = "updated_lesson_status")
+    private LocalDateTime updatedLessonStatus;
+
     @ManyToOne
     @Audited(targetAuditMode = NOT_AUDITED)
     @JoinColumn(name = "service_type_id", nullable = false)
@@ -52,11 +58,14 @@ public class LessonEntity {
     private LessonType type;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category")
+    @Column(name = "category", nullable = false)
     private LessonCategory category;
 
-    @Column(name = "lesson_date_time", nullable = false)
+    @Column(name = "lesson_date_time", nullable = false, columnDefinition = "TIMESTAMP(0)")
     private LocalDateTime lessonDateTime;
+
+    @Column(name = "lesson_end_time", nullable = false, columnDefinition = "TIMESTAMP(0)")
+    private LocalTime lessonEndTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
@@ -70,7 +79,7 @@ public class LessonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
-    @JoinColumn(name = "child_id", nullable = false)
+    @JoinColumn(name = "child_id")
     private ChildEntity child;
 
 //    TODO: create  Child OneToMany childPerformanceEntity  ManyToOne Lessons

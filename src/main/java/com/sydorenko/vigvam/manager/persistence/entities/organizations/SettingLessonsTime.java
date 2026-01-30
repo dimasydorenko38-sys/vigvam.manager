@@ -35,10 +35,10 @@ public class SettingLessonsTime {
     private LocalTime lastHourOfWork;
 
     @Column(name = "lesson_duration", nullable = false)
-    private Long lessonDuration;
+    private Long lessonDurationMinutes;
 
     @Column(name = "break_duration", nullable = false)
-    private Long breakDuration;
+    private Long breakDurationMinutes;
 
     @Column(name = "lesson_type")
     @Enumerated(EnumType.STRING)
@@ -65,11 +65,11 @@ public class SettingLessonsTime {
     private LocalDateTime lastModifiedDate;
 
 
-    public SettingLessonsTime(LocalTime firstHourOfWork, LocalTime lastHourOfWork, Long lessonDuration, Long breakDuration, OrganizationEntity organization) {
+    public SettingLessonsTime(LocalTime firstHourOfWork, LocalTime lastHourOfWork, Long lessonDurationMinutes, Long breakDurationMinutes, OrganizationEntity organization) {
         this.firstHourOfWork = firstHourOfWork;
         this.lastHourOfWork = lastHourOfWork;
-        this.lessonDuration = lessonDuration;
-        this.breakDuration = breakDuration;
+        this.lessonDurationMinutes = lessonDurationMinutes;
+        this.breakDurationMinutes = breakDurationMinutes;
         this.organization = organization;
     }
 }

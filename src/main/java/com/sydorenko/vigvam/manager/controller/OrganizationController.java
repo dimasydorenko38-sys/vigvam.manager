@@ -3,6 +3,7 @@ package com.sydorenko.vigvam.manager.controller;
 import com.sydorenko.vigvam.manager.dto.request.CreateOrganizationRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
+import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,29 +19,27 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrganizationController {
 
     private final OrganizationService service;
-    private final AuthResponseDto authResponseDto;
+    private final MessageResponseDto messageResponseDto;
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    public ResponseEntity<AuthResponseDto> createOrganizationThisSettings(@RequestBody CreateOrganizationRequestDto dto){
+    public ResponseEntity<MessageResponseDto> createOrganizationThisSettings(@RequestBody CreateOrganizationRequestDto dto){
         service.createOrganizationThisSettings(dto);
-        authResponseDto.setMessage("Organization created");
-        return ResponseEntity.ok(authResponseDto);
+        messageResponseDto.setMessage("Organization created");
+        return ResponseEntity.ok(messageResponseDto);
     }
 
     @PostMapping("/disable")
-    public ResponseEntity<AuthResponseDto> disableClient(@RequestBody DisabledObjectRequestDto dto){
+    public ResponseEntity<MessageResponseDto> disableClient(@RequestBody DisabledObjectRequestDto dto){
         service.setDisableStatus(dto);
-        AuthResponseDto responseDto = new AuthResponseDto();
-        responseDto.setMessage("Successful");
-        return ResponseEntity.ok(responseDto);
+        messageResponseDto.setMessage("Successful");
+        return ResponseEntity.ok(messageResponseDto);
     }
 
     @PostMapping("/enable")
-    public ResponseEntity<AuthResponseDto> enableClient(@RequestBody DisabledObjectRequestDto dto){
+    public ResponseEntity<MessageResponseDto> enableClient(@RequestBody DisabledObjectRequestDto dto){
         service.setEnableStatus(dto);
-        AuthResponseDto responseDto = new AuthResponseDto();
-        responseDto.setMessage("Successful");
-        return ResponseEntity.ok(responseDto);
+        messageResponseDto.setMessage("Successful");
+        return ResponseEntity.ok(messageResponseDto);
     }
 }
