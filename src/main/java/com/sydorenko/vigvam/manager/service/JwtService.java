@@ -59,13 +59,18 @@ public class JwtService {
     }
 
     public String generateToken(EmployeeEntity employee) {
+        String contracts = "";
+        if(employee.getContractsEmployee() != null){
+            contracts = employee.getContractsEmployee()
+                    .stream()
+                    .filter(contract -> contract.getStatus().equals(Status.ENABLED))
+                    .map(contract -> contract.getRole().toString())
+                    .collect(Collectors.joining(" "));
+        }
+
         Map<String, Object> map = Map.of(
                 "id",employee.getId(),
-                "scope",employee.getContractsEmployee()
-                        .stream()
-                        .filter(contract -> contract.getStatus().equals(Status.ENABLED))
-                        .map(contract -> contract.getRole().toString())
-                        .collect(Collectors.joining(" "))
+                "scope", contracts
         );
         return Jwts.builder()
                 .claims(map)

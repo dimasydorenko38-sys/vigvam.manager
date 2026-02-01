@@ -1,6 +1,5 @@
 package com.sydorenko.vigvam.manager.service.lessonsServices;
 
-import com.sun.jdi.request.DuplicateRequestException;
 import com.sydorenko.vigvam.manager.dto.request.CreateLessonRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonCategory;
@@ -33,8 +32,7 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final OrganizationRepository organizationRepository;
     private final ServiceTypeRepository serviceTypeRepository;
-    private final CheckerLessonDto checkerLessonDto;
-
+    private final CheckerLesson checkerLesson;
 
     public void createGenericLesson(@NonNull CreateLessonRequestDto dto) {
         OrganizationEntity organizationLesson = organizationRepository.findById(dto.getOrganization().getId())
@@ -52,24 +50,18 @@ public class LessonService {
                 .filter(e -> e.getStatus().equals(Status.ENABLED))
                 .findFirst().orElseThrow(() -> new EntityNotFoundException("Спеціаліста звільнено або тимчасово вимкнено в системі"));
 
-        @NonNull CreateLessonRequestDto finalDto = dto;
         contracts.stream()
                 .filter(c -> Objects.equals(organizationLesson, c.getOrganization()))
                 .flatMap(c -> c.getSalary().stream())
                 .filter(s -> Objects.equals(serviceTypeLesson, s.getServiceType())
-                        && Objects.equals(s.getLessonType(), LessonType.valueOf(finalDto.getLessonType())))
+                        && Objects.equals(s.getLessonType(), LessonType.valueOf(dto.getLessonType())))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Спеціаліст не надає цю послугу у вказаній організації"));
-
-        dto = checkerLessonDto.checkStaus(dto);
-        checkerLessonDto.checkChildIsExist(dto);
-        dto = checkerLessonDto.validationChild(dto);
-        dto = checkerLessonDto.checkEndLesson(dto,organizationLesson);
-        checkerLessonDto.checkLessonTime(dto, organizationLesson);
 
         LessonEntity lesson = LessonEntity.builder()
                 .category(LessonCategory.WINDOW)
                 .lessonStatus(LessonStatus.valueOf(dto.getLessonStatus()))
                 .lessonDateTime(dto.getLessonDateTime())
+                .lessonEndTime(dto.getLessonEndTime())
                 .type(LessonType.valueOf(dto.getLessonType()))
                 .comments(dto.getComments())
                 .serviceType(dto.getServiceType())
@@ -78,11 +70,7 @@ public class LessonService {
                 .organization(organizationLesson)
                 .build();
 
-        if(checkerLessonDto.checkDublicateLesson(lesson)){
-            throw new DuplicateRequestException("Урок на цей час уже існує");
-//            TODO: add GlobalExceptionHandler
-        };
-
+        lesson = checkerLesson.check(lesson);
         lessonRepository.save(lesson);
     }
 }

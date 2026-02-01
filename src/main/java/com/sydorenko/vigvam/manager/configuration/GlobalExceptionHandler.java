@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.configuration;
 
+import com.sun.jdi.request.DuplicateRequestException;
 import com.sydorenko.vigvam.manager.dto.response.ErrorResponseDto;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
@@ -92,6 +94,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(InvalidBearerTokenException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidBearerToken(InvalidBearerTokenException exception){
+        log.error("ERROR: incorrect Token JWT: ", exception);
+        ErrorResponseDto error = new ErrorResponseDto(
+                LocalDateTime.now(),
+                "Необхідно зареєструватися, або повторно увійти в обліковий запис.",
+                exception.toString()
+        );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponseDto> handleAuthentication( AuthenticationException exception){
         log.error("ERROR: User has not login: ", exception);
@@ -119,18 +132,21 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponseDto> handleResponseStatus(ResponseStatusException exception){
-        log.error("ERROR: Access Denied: ", exception);
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponseDto> handleResponseStatus(ResponseStatusException exception) {
+        log.error("ResponseStatusException: status {}, reason: {}",
+                exception.getStatusCode(), exception.getReason());
+
         ErrorResponseDto error = new ErrorResponseDto(
                 LocalDateTime.now(),
-                exception.getMessage(),
+                exception.getReason(),
                 exception.toString()
         );
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+        return ResponseEntity.status(exception.getStatusCode()).body(error);
     }
 
-    @ExceptionHandler
+
+    @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<ErrorResponseDto> handleNullPointer (NullPointerException exception){
         log.error("ERROR: Attribute is null: ", exception);
         ErrorResponseDto error = new ErrorResponseDto(
@@ -139,6 +155,17 @@ public class GlobalExceptionHandler {
                 exception.toString()
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(DuplicateRequestException.class)
+    public ResponseEntity<ErrorResponseDto> handleDuplicateEntity (DuplicateRequestException exception){
+        log.error("ERROR:duplicate entity: ", exception);
+        ErrorResponseDto error = new ErrorResponseDto(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                exception.toString()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
 }

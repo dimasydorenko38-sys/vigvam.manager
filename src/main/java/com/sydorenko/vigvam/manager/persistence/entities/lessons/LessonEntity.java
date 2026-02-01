@@ -49,7 +49,7 @@ public class LessonEntity {
 
     @ManyToOne
     @Audited(targetAuditMode = NOT_AUDITED)
-    @JoinColumn(name = "service_type_id", nullable = false)
+    @JoinColumn(name = "service_type", nullable = false)
     private ServiceTypeEntity serviceType;
 
     @NonNull
@@ -65,21 +65,21 @@ public class LessonEntity {
     private LocalDateTime lessonDateTime;
 
     @Column(name = "lesson_end_time", nullable = false, columnDefinition = "TIMESTAMP(0)")
-    private LocalTime lessonEndTime;
+    private LocalDateTime lessonEndTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
-    @JoinColumn(name = "organization_id", nullable = false)
+    @JoinColumn(name = "organization", nullable = false)
     private OrganizationEntity organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
-    @JoinColumn(name = "employee_id", nullable = false)
+    @JoinColumn(name = "employee", nullable = false)
     private EmployeeEntity employee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
-    @JoinColumn(name = "child_id")
+    @JoinColumn(name = "child")
     private ChildEntity child;
 
 //    TODO: create  Child OneToMany childPerformanceEntity  ManyToOne Lessons

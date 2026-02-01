@@ -28,31 +28,31 @@ Content-Type: application/json
 
 ### Створення нової організації з налаштуваннями
 POST {{host}}/api/organizations/crud/add
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NjkzODI0MTgsImV4cCI6MTc2OTQ2ODgxOH0.PG7DTH0gysc8_mySm6JcqLkaPxjbFAdDeiGtce1oc98
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3Njk5NDQ3NTgsImV4cCI6MTc3MDAzMTE1OH0.hJEBvCd0w0Cyn5Nlul_xUYnksRSzGUpJE5Nxb-szcuM
 Content-Type: application/json
 
         {
-            "organizationName": "Організація12",
+            "organizationName": "Організація24",
             "organizationCity": "Київ",
             "settingLessonsTimesList": [
             {
             "lessonType": "INDIVIDUAL",
             "firstHourOfWork": "09:00",
             "lastHourOfWork": "18:00",
-            "lessonDuration": 45,
-            "breakDuration": 15
+            "lessonDurationMinutes": 45,
+            "breakDurationMinutes": 15
             },
             {
             "lessonType": "GROUP",
             "firstHourOfWork": "10:00",
             "lastHourOfWork": "19:00",
-            "lessonDuration": 50,
-            "breakDuration": 10
+            "lessonDurationMinutes": 50,
+            "breakDurationMinutes": 10
             }
             ],
             "priceList": [
             {
-            "serviceType":  { "id": 1 },
+            "serviceType":  { "id": 2 },
             "valueOnePay": 350
             }
             ]
@@ -65,10 +65,10 @@ POST {{host}}/api/employee/add
 Content-Type: application/json
 
   {
-      "login": "admin",
-      "password": "admin",
-      "name": "UserName",
-      "lastName": "UserLastName",
+      "login": "employee",
+      "password": "employee",
+      "name": "emp",
+      "lastName": "emp;",
       "phone": "Phone"
         }
 
@@ -78,14 +78,21 @@ POST {{host}}/api/employee/contracts/add
 Content-Type: application/json
 
 {
-"employee": {"id": 1},
-"organization": {"id": 1},
+"employee": {"id": 2},
+"organization": {"id": 7},
 "masterEmployee": null,
 "salary": [
         {
-            "serviceType": {"id": 1},
-            "value": 0,
-            "premiumValue": null
+            "serviceType": {"id": 2},
+            "value": 170,
+            "premiumValue": null,
+            "lessonType" : "INDIVIDUAL"
+        },
+        {
+            "serviceType": {"id": 2},
+            "value": 100,
+            "premiumValue": null,
+            "lessonType" : "GROUP"
         }
         ],
 "role": "admin"
@@ -154,4 +161,21 @@ Content-Type: application/json
     "interests": "sgdfh",
     "requestForLessons": null,
     "diagnosis": ""
+}
+
+### Створити заняття
+POST {{host}}/api/lesson/create
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3Njk5NDQ3NTgsImV4cCI6MTc3MDAzMTE1OH0.hJEBvCd0w0Cyn5Nlul_xUYnksRSzGUpJE5Nxb-szcuM
+Content-Type: application/json
+
+{
+    "lessonStatus" : "WAIT",
+    "child" : null,
+    "serviceType" : {"id": 2},
+    "lessonType" : "GROUP",
+    "lessonDateTime" : "2026-02-02T11:00",
+    "lessonEndTime" : "2026-02-02T12:57",
+    "organization" : {"id" :  7},
+    "employee" : {"id" : 2},
+    "comments" : "test"
 }

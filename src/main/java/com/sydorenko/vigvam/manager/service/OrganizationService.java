@@ -43,15 +43,14 @@ public class OrganizationService extends GenericService<OrganizationEntity> {
                         throw new IllegalArgumentException("Час початку не може бути пізніше часу завершення");
                     }
                     s.setOrganization(newOrganization);
-                })
-                .collect(toMap(SettingLessonsTime::getLessonType, identity())));
+                }).collect(toMap(SettingLessonsTime::getLessonType, identity())));
+
         newOrganization.setPrice(dto.getPriceList()
                 .stream()
                 .peek(price -> {
                     price.setOrganization(newOrganization);
                     price.setServiceType(serviceTypeService.getServiceTypeById(price.getServiceType().getId()));
-                })
-                .collect(toSet()));
+                }).collect(toSet()));
 
         repository.save(newOrganization);
     }

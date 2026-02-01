@@ -67,6 +67,7 @@ public class CreateSuperAdminService {
             salary.setValue(0L);
             salary.setServiceType(serviceType);
             salary.setContractEmployee(contract);
+            salary.setLessonType(LessonType.INDIVIDUAL);
 
             contract.setEmployee(employeeSave);
             contract.setOrganization(organizationSave);

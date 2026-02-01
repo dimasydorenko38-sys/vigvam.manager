@@ -22,7 +22,7 @@ public class CreateLessonRequestDto {
     private String lessonType;
     @NonNull
     private LocalDateTime lessonDateTime;
-    private LocalTime lessonEndTime;
+    private LocalDateTime lessonEndTime;
     @NonNull
     private OrganizationEntity organization;
     @NonNull

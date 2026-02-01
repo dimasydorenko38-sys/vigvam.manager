@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 import javax.management.monitor.StringMonitor;
 
+@Component
 @Getter
 @Setter
 @AllArgsConstructor
