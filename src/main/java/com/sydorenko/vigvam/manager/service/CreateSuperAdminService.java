@@ -10,16 +10,14 @@ import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeE
 import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.SalaryEmployeeEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.*;
+import com.sydorenko.vigvam.manager.service.organizationsServices.ServiceTypeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-
-import static tools.jackson.databind.type.LogicalType.Map;
 
 @Service
 @RequiredArgsConstructor

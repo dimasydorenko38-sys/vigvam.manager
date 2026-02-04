@@ -1,10 +1,11 @@
-package com.sydorenko.vigvam.manager.service;
+package com.sydorenko.vigvam.manager.service.organizationsServices;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateServiceTypeRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.ServiceTypeRepository;
+import com.sydorenko.vigvam.manager.service.StatusableService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ServiceTypeService extends GenericService<ServiceTypeEntity> {
+public class ServiceTypeService extends StatusableService<ServiceTypeEntity> {
 
     private final ServiceTypeRepository serviceTypeRepository;
 

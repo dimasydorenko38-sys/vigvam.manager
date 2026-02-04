@@ -1,4 +1,4 @@
-package com.sydorenko.vigvam.manager.service;
+package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateContractEmployeeRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
@@ -8,6 +8,8 @@ import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeE
 import com.sydorenko.vigvam.manager.persistence.repository.ContractEmployeeRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.EmployeeRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
+import com.sydorenko.vigvam.manager.service.organizationsServices.ServiceTypeService;
+import com.sydorenko.vigvam.manager.service.StatusableService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ContractEmployeeService extends GenericService<ContractEmployeeEntity> {
+public class ContractEmployeeService extends StatusableService<ContractEmployeeEntity> {
 
     private final ContractEmployeeRepository contractEmployeeRepository;
     private final EmployeeRepository employeeRepository;

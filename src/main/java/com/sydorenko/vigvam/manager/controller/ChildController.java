@@ -2,7 +2,7 @@ package com.sydorenko.vigvam.manager.controller;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateChildRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
-import com.sydorenko.vigvam.manager.service.ChildService;
+import com.sydorenko.vigvam.manager.service.usersServices.ChildService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -29,7 +29,7 @@ public class EmployeeEntity extends UserEntity {
     @Column(name = "birthday")
     private LocalDate birthday;
 
-    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ContractEmployeeEntity> contractsEmployee;
 
     @Override

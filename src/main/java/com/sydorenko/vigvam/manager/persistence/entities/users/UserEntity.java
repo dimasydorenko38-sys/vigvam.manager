@@ -70,7 +70,7 @@ public abstract class UserEntity implements UserDetails, Statusable {
 
     @Override
     public boolean isEnabled() {
-        return this.status == Status.ENABLED;
+        return Status.ENABLED.equals(this.status) ;
     }
 
 

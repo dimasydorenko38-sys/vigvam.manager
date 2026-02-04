@@ -14,12 +14,14 @@ import com.sydorenko.vigvam.manager.persistence.repository.ContractEmployeeRepos
 import com.sydorenko.vigvam.manager.persistence.repository.LessonRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.ServiceTypeRepository;
+import com.sydorenko.vigvam.manager.service.GenericService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,14 +35,24 @@ public class LessonService {
     private final OrganizationRepository organizationRepository;
     private final ServiceTypeRepository serviceTypeRepository;
     private final CheckerLesson checkerLesson;
+    private final GenericService genericService;
 
     public void createGenericLesson(@NonNull CreateLessonRequestDto dto) {
-        OrganizationEntity organizationLesson = organizationRepository.findById(dto.getOrganization().getId())
+        if(!genericService.checkAuditorByOrganization(dto.getOrganization().getId())){
+            try {
+                throw new AccessDeniedException("Ви не маєте доступу до цієї організації");
+            } catch (AccessDeniedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        OrganizationEntity organizationLesson = organizationRepository.findByIdWithSettings(dto.getOrganization().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Організацію не знайдено"));
+
         ServiceTypeEntity serviceTypeLesson = serviceTypeRepository.findById(dto.getServiceType().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Такої послуги не існує в системі"));
 
-        List<ContractEmployeeEntity> contracts = contractEmployeeRepository.findAllByEmployeeId(dto.getEmployee().getId());
+        List<ContractEmployeeEntity> contracts = contractEmployeeRepository.findAllWithDetailsByEmployeeId(dto.getEmployee().getId());
         if (contracts.isEmpty()) {
             throw new EntityNotFoundException("Не знайдено спеціаліста");
         }
@@ -50,12 +62,15 @@ public class LessonService {
                 .filter(e -> e.getStatus().equals(Status.ENABLED))
                 .findFirst().orElseThrow(() -> new EntityNotFoundException("Спеціаліста звільнено або тимчасово вимкнено в системі"));
 
+        @NonNull CreateLessonRequestDto finalDto = dto;
         contracts.stream()
-                .filter(c -> Objects.equals(organizationLesson, c.getOrganization()))
+                .filter(c -> Objects.equals(organizationLesson.getId(), c.getOrganization().getId()))
                 .flatMap(c -> c.getSalary().stream())
-                .filter(s -> Objects.equals(serviceTypeLesson, s.getServiceType())
-                        && Objects.equals(s.getLessonType(), LessonType.valueOf(dto.getLessonType())))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("Спеціаліст не надає цю послугу у вказаній організації"));
+                .filter(s -> Objects.equals(serviceTypeLesson.getId(), s.getServiceType().getId())
+                        && Objects.equals(s.getLessonType(), LessonType.valueOf(finalDto.getLessonType())))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Спеціаліст не надає цю послугу, або не працює у вказаній організації"));
+
+        dto = checkerLesson.checkStausDto(dto);
 
         LessonEntity lesson = LessonEntity.builder()
                 .category(LessonCategory.WINDOW)

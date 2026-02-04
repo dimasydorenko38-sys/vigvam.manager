@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.service.lessonsServices;
 
 import com.sun.jdi.request.DuplicateRequestException;
+import com.sydorenko.vigvam.manager.dto.request.CreateLessonRequestDto;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.LessonEntity;
@@ -30,26 +31,25 @@ public class CheckerLesson {
     public LessonEntity check(@NonNull LessonEntity lesson) {
         lesson = validationChild(lesson);
         lesson = checkLessonTime(lesson);
-        lesson = checkStausDto(lesson);
         if (checkOverlayOfLessons(lesson)) throw new DuplicateRequestException("Урок на цей час уже існує");
         return lesson;
     }
 
-    public LessonEntity checkStausDto(@NonNull LessonEntity lesson) {
-        LocalDate lessonDate = lesson.getLessonDateTime().toLocalDate();
+    public CreateLessonRequestDto checkStausDto(@NonNull CreateLessonRequestDto dto) {
+        LocalDate lessonDate = dto.getLessonDateTime().toLocalDate();
         boolean isPastDate = lessonDate.isBefore(LocalDate.now());
-        if (lesson.getLessonStatus() == null) {
-            LessonStatus calculatedStatus = isPastDate ? LessonStatus.DONE : LessonStatus.WAIT;
-            lesson.setLessonStatus(calculatedStatus);
-            return lesson;
+        if (dto.getLessonStatus() == null) {
+            String calculatedStatus = isPastDate ? LessonStatus.DONE.name() : LessonStatus.WAIT.name();
+            dto.setLessonStatus(calculatedStatus);
+            return dto;
         }
 
-        if (isPastDate && lesson.getLessonStatus().equals(LessonStatus.WAIT)) {
+        if (isPastDate && dto.getLessonStatus().equalsIgnoreCase(LessonStatus.WAIT.name())) {
             throw new IllegalArgumentException("Цей статус заняття не доступний для поточної дати");
-        } else if (!isPastDate && lesson.getLessonStatus().equals(LessonStatus.DONE)) {
+        } else if (!isPastDate && dto.getLessonStatus().equalsIgnoreCase(LessonStatus.DONE.name())) {
             throw new IllegalArgumentException("Цей статус заняття не доступний для поточної дати ");
         }
-        return lesson;
+        return dto;
     }
 
 
@@ -67,7 +67,7 @@ public class CheckerLesson {
 
         if (lesson.getChild() != null) {
             ChildEntity childEntity = childRepository.findById(lesson.getChild().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Така дитина не зареэстврована або вимкнена в системы"));
+                    .orElseThrow(() -> new EntityNotFoundException("Така дитина не зареєстрована або вимкнена в системы"));
             lesson.setChild(childEntity);
         }
         return lesson;

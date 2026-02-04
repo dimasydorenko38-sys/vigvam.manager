@@ -38,11 +38,11 @@ public class ClientsOrganizationsEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_id", nullable = false)
+    @JoinColumn(name = "client", nullable = false)
     private ClientEntity client;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
+    @JoinColumn(name = "organization", nullable = false)
     private OrganizationEntity organization;
 
     @Column(name = "disable_date")

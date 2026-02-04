@@ -4,7 +4,7 @@ import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.dto.request.CreateClientRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
-import com.sydorenko.vigvam.manager.service.ClientService;
+import com.sydorenko.vigvam.manager.service.usersServices.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

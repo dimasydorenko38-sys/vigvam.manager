@@ -91,7 +91,6 @@ public class JwtService {
                 .flatMap(Optional::stream)
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token not found"));
-        System.out.println(user);
         return switch (user) {
             case ClientEntity client -> generateToken(client);
             case EmployeeEntity employee -> generateToken(employee);
@@ -101,13 +100,10 @@ public class JwtService {
 
     public @Nullable AuthResponseDto loginUserByLogPass(UserLoginDto dto) {
         UserEntity user = repositories.stream()
-                .map(repo -> repo.findByLogin(dto.getLogin()))
+                .map(repo -> repo.findByLoginAndPassword(dto.getLogin(), dto.getPassword()))
                 .flatMap(Optional::stream)
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Login not found"));
-        if(user.getPassword() == null || !user.getPassword().equals(dto.getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Password is not correct");
-        }
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Логін не знайденто, або хибний пароль"));
         UUID refreshToken = user.getRefreshToken();
         String token = switch (user){
             case ClientEntity client -> generateToken(client);

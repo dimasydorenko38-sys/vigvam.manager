@@ -32,7 +32,7 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @Audited
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "lessons", indexes = {
-        @Index(name = "lesson_organization_id_idx", columnList = "organization_id")
+        @Index(name = "lesson_organization_idx", columnList = "organization")
 })
 public class LessonEntity {
 

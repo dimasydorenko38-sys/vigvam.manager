@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface UserRepository<T extends UserEntity> extends JpaRepository<T, Long> {
     Optional<T> findByRefreshToken(UUID refreshToken);
 
-    Optional<T> findByLogin(String login);
+    Optional<T> findByLoginAndPassword(String login, String password);
 }
 
 //TODO: findEntity default only status.ENABLED

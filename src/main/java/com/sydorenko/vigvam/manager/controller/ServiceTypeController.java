@@ -2,9 +2,8 @@ package com.sydorenko.vigvam.manager.controller;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateServiceTypeRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
-import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
-import com.sydorenko.vigvam.manager.service.ServiceTypeService;
+import com.sydorenko.vigvam.manager.service.organizationsServices.ServiceTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package com.sydorenko.vigvam.manager.service;
+package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sydorenko.vigvam.manager.configuration.AuditorAwareImpl;
 import com.sydorenko.vigvam.manager.dto.request.CreateChildRequestDto;
@@ -8,6 +8,8 @@ import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.ChildRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.ClientRepository;
+import com.sydorenko.vigvam.manager.service.GenericService;
+import com.sydorenko.vigvam.manager.service.StatusableService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
@@ -17,12 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class ChildService extends GenericService<ChildEntity> {
+public class ChildService extends StatusableService<ChildEntity> {
 
     private final ChildRepository childRepository;
     private final AuditorAwareImpl auditorAware;
     private final ClientRepository clientRepository;
-
 
     public void setDisableStatus(DisabledObjectRequestDto dto) {
         super.setDisableStatus(dto, childRepository);

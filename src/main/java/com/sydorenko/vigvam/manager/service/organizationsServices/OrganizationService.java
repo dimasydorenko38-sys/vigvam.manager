@@ -1,4 +1,4 @@
-package com.sydorenko.vigvam.manager.service;
+package com.sydorenko.vigvam.manager.service.organizationsServices;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateOrganizationRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
@@ -6,6 +6,7 @@ import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.SettingLessonsTime;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
+import com.sydorenko.vigvam.manager.service.StatusableService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import static java.util.stream.Collectors.*;
 @Service
 @RequiredArgsConstructor
 @org.springframework.transaction.annotation.Transactional
-public class OrganizationService extends GenericService<OrganizationEntity> {
+public class OrganizationService extends StatusableService<OrganizationEntity> {
 
     private final OrganizationRepository repository;
     private final ServiceTypeService serviceTypeService;

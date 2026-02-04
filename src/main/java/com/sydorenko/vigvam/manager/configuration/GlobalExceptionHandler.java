@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.naming.AuthenticationException;
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -116,6 +117,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponseDto> handleAccessDenied (AccessDeniedException exception){
+        log.error("ERROR: Access Denied ", exception);
+        ErrorResponseDto error = new ErrorResponseDto(
+                LocalDateTime.now(),
+                exception.getMessage(),
+                exception.toString()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(error);
+    }
+
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponseDto> handleAuthRole(
             AuthorizationDeniedException exception,
@@ -125,7 +137,7 @@ public class GlobalExceptionHandler {
 
         ErrorResponseDto error = new ErrorResponseDto(
                 LocalDateTime.now(),
-                "Ви не маєте доступу до цих даних, зверніться до адміністратора!",
+                "Ви не маєте доступу до цих даних, спробуйте перезайти в обліковий запис!",
                 "Path: " + request.getRequestURI()
         );
 

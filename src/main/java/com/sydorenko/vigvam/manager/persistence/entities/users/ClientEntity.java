@@ -25,7 +25,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class ClientEntity extends UserEntity {
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "client", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Set<ClientsOrganizationsEntity> organizationLinks;
 
     @Column(name = "photo_permissions", nullable = false)

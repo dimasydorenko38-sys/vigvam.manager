@@ -2,9 +2,8 @@ package com.sydorenko.vigvam.manager.controller;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateOrganizationRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
-import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
-import com.sydorenko.vigvam.manager.service.OrganizationService;
+import com.sydorenko.vigvam.manager.service.organizationsServices.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

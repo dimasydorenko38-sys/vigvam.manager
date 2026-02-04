@@ -5,8 +5,8 @@ POST {{host}}/api/login
 Content-Type: application/json
 
 {
-"login": "super_admin",
-"password": "super_admin"
+"login": "employee",
+"password": "employee"
 }
 
 ### логін refresh
@@ -165,11 +165,11 @@ Content-Type: application/json
 
 ### Створити заняття
 POST {{host}}/api/lesson/create
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3Njk5NDQ3NTgsImV4cCI6MTc3MDAzMTE1OH0.hJEBvCd0w0Cyn5Nlul_xUYnksRSzGUpJE5Nxb-szcuM
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IkFETUlOIiwiaWQiOjIsInN1YiI6IjIiLCJpYXQiOjE3NzAyMTI3NzIsImV4cCI6MTc3MDI5OTE3Mn0.Ma3usPvvtjWICUlFC-d34XIBPyc6qs6Stt6RwGdjH98
 Content-Type: application/json
 
 {
-    "lessonStatus" : "WAIT",
+    "lessonStatus" : null,
     "child" : null,
     "serviceType" : {"id": 2},
     "lessonType" : "GROUP",
