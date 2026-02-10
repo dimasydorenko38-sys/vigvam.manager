@@ -3,18 +3,28 @@ package com.sydorenko.vigvam.manager.service.usersServices;
 import com.sydorenko.vigvam.manager.configuration.AuditorAwareImpl;
 import com.sydorenko.vigvam.manager.dto.request.CreateChildRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
+import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.ChildNameResponseDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
+import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.ChildRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.ClientRepository;
-import com.sydorenko.vigvam.manager.service.GenericService;
+import com.sydorenko.vigvam.manager.persistence.repository.ClientsOrganizationsRepository;
 import com.sydorenko.vigvam.manager.service.StatusableService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +34,7 @@ public class ChildService extends StatusableService<ChildEntity> {
     private final ChildRepository childRepository;
     private final AuditorAwareImpl auditorAware;
     private final ClientRepository clientRepository;
+    private final ClientsOrganizationsRepository clientsOrganizationsRepository;
 
     public void setDisableStatus(DisabledObjectRequestDto dto) {
         super.setDisableStatus(dto, childRepository);
@@ -67,6 +78,22 @@ public class ChildService extends StatusableService<ChildEntity> {
                 .status(Status.ENABLED)
                 .build();
         childRepository.save(child);
-
     }
+
+    public Set<ChildNameResponseDto> getAllChildNameByOrgId(Long organizationId){
+        List<ClientsOrganizationsEntity> clientLinks = clientsOrganizationsRepository.findAllByOrgIdAndClientStatus(Status.ENABLED,organizationId);
+        return clientLinks
+                .stream()
+                .filter(link -> Status.ENABLED.equals(link.getStatus()))
+                .map(ClientsOrganizationsEntity::getClient)
+                .flatMap(client -> Stream.ofNullable(client.getChildren()))
+                .flatMap(Collection::stream)
+                .filter(childEntity -> Status.ENABLED.equals(childEntity.getStatus()))
+                .map(ChildNameResponseDto::new)
+                .collect(toSet());
+    }
+
+//    public Set<ChildNameResponseDto> getAllChildNameByOrgId (Long organizationId){
+//        return clientsOrganizationsRepository.findAllByOrgIdAndClientStatus(Status.ENABLED,organizationId);
+//    }
 }

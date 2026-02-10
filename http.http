@@ -5,8 +5,8 @@ POST {{host}}/api/login
 Content-Type: application/json
 
 {
-"login": "employee",
-"password": "employee"
+"login": "super_admin",
+"password": "super_admin"
 }
 
 ### логін refresh
@@ -28,7 +28,7 @@ Content-Type: application/json
 
 ### Створення нової організації з налаштуваннями
 POST {{host}}/api/organizations/crud/add
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3Njk5NDQ3NTgsImV4cCI6MTc3MDAzMTE1OH0.hJEBvCd0w0Cyn5Nlul_xUYnksRSzGUpJE5Nxb-szcuM
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzA2NjQ0OTksImV4cCI6MTc3MDc1MDg5OX0.wS2cAlnfDoU7APpHUMNfKABpXhHkSbcKooO_Hh9Y4kw
 Content-Type: application/json
 
         {
@@ -67,8 +67,8 @@ Content-Type: application/json
   {
       "login": "employee",
       "password": "employee",
-      "name": "emp",
-      "lastName": "emp;",
+      "name": "employee",
+      "lastName": "employee",
       "phone": "Phone"
         }
 
@@ -79,7 +79,7 @@ Content-Type: application/json
 
 {
 "employee": {"id": 2},
-"organization": {"id": 7},
+"organization": {"id": 2},
 "masterEmployee": null,
 "salary": [
         {
@@ -95,7 +95,7 @@ Content-Type: application/json
             "lessonType" : "GROUP"
         }
         ],
-"role": "admin"
+"role": "employee"
         }
 
 ### Створення клієнта
@@ -113,8 +113,8 @@ Content-Type: application/json
     "children": [
     {
     "name": "Mira",
-    "lastName":"Dmytrovna",
-    "secondName": "Sydorenko",
+    "lastName":"Sydorenko",
+    "secondName": "Dmytrovna",
     "birthdayDate":"2021-08-11",
     "interests": "molot huiny",
     "requestForLessons":"RRRRR",
@@ -149,11 +149,11 @@ Content-Type: application/json
 
 ### Створити динину Адміном
 POST {{host}}/api/child/add/admin
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3Njk0NjIyMDcsImV4cCI6MTc2OTU0ODYwN30.ZgDOpfl65skH5tecFRnKzUzNWe6uu4P-exMp_0l4oUs
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiBBRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3NzA3MTQ5ODUsImV4cCI6MTc3MDgwMTM4NX0.JqQ9_mj_tCR5YhbFl-wLAGYwc25d9ZYlN66BOHSzekk
 Content-Type: application/json
 
 {
-    "client": {"id": 3},
+    "client": {"id": 2},
     "name": "child2333",
     "lastName": "sgddgh",
     "secondName": "sdfgh",
@@ -165,17 +165,35 @@ Content-Type: application/json
 
 ### Створити заняття
 POST {{host}}/api/lesson/create
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IkFETUlOIiwiaWQiOjIsInN1YiI6IjIiLCJpYXQiOjE3NzAyMTI3NzIsImV4cCI6MTc3MDI5OTE3Mn0.Ma3usPvvtjWICUlFC-d34XIBPyc6qs6Stt6RwGdjH98
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzA2NTk5NjgsImV4cCI6MTc3MDc0NjM2OH0.Vx50KBGplNHTM-pOCf1PnaNSAxFJ_3YiBk9Fnwsc9l4
 Content-Type: application/json
 
 {
     "lessonStatus" : null,
     "child" : null,
     "serviceType" : {"id": 2},
-    "lessonType" : "GROUP",
-    "lessonDateTime" : "2026-02-02T11:00",
-    "lessonEndTime" : "2026-02-02T12:57",
-    "organization" : {"id" :  7},
+    "lessonType" : "INDIVIDUAL",
+    "lessonDateTime" : "2026-02-02T15:00",
+    "lessonEndTime" : "2026-02-02T15:45",
+    "organization" : {"id" :  2},
     "employee" : {"id" : 2},
     "comments" : "test"
+}
+
+### Отримати графік на період
+POST {{host}}/api/schedule/period
+Content-Type: application/json
+
+{
+    "startDate": "2026-02-02",
+    "endDate": "2026-02-02",
+    "organization": {"id": 2}
+}
+
+### Отримати cписок дітей на організацію
+POST {{host}}/api/schedule/childNames
+Content-Type: application/json
+
+{
+    "organization": {"id": 2}
 }

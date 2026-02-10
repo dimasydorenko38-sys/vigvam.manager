@@ -40,7 +40,7 @@ public class SalaryEmployeeEntity {
     @Column(name = "premium_value")
     private Long premiumValue;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contract_id", nullable = false)
     private ContractEmployeeEntity contractEmployee;
 

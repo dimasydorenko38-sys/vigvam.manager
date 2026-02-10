@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.service.lessonsServices;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateLessonRequestDto;
+import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.LessonResponseProjection;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonCategory;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -87,5 +89,18 @@ public class LessonService {
 
         lesson = checkerLesson.check(lesson);
         lessonRepository.save(lesson);
+    }
+
+    public List<LessonResponseProjection> getLessonsByOrgIdForPeriod(Long organizationId, LocalDateTime startDate, LocalDateTime endDate) {
+        return lessonRepository.findAllByOrgIdForPeriod(organizationId ,startDate, endDate, List.of(LessonStatus.CANCELLED))
+//                .stream()
+//                .map(LessonResponseProjection::getChild)
+//                .map((c) -> c.getId().orElse(null))
+//                .
+
+//                .stream()
+//                .map(LessonResponseDto::new)
+//                .toList()
+                ;
     }
 }

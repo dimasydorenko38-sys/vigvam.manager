@@ -49,7 +49,7 @@ public class ChildEntity implements Statusable {
     @Column(name = "diagnosis")
     private String diagnosis;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private ClientEntity client;
 

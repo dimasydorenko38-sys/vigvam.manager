@@ -37,7 +37,7 @@ public class PlanningLessonEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name = "service", nullable = false)
     private ServiceTypeEntity serviceType;
 

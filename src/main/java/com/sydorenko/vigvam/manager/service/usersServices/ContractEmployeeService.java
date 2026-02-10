@@ -2,6 +2,7 @@ package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateContractEmployeeRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
+import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.EmployeeNameResponseProjection;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -50,6 +52,11 @@ public class ContractEmployeeService extends StatusableService<ContractEmployeeE
         contractEmployee.setRole(RoleUser.fromString(dto.getRole()));
         contractEmployee.setStatus(Status.ENABLED);
         contractEmployeeRepository.save(contractEmployee);
+    }
+
+    public List<EmployeeNameResponseProjection> getAllEmployeeNamesByOrg(Long organizationId){
+        return contractEmployeeRepository
+                .findAllEmployeesNameByOrganizationId(organizationId, RoleUser.EMPLOYEE,Status.ENABLED);
     }
 
     public void setDisableStatus(DisabledObjectRequestDto dto) {

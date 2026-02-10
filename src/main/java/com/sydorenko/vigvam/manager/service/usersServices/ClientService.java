@@ -75,8 +75,8 @@ public class ClientService extends StatusableService<ClientEntity> {
         super.setEnableStatus(dto, clientRepository);
     }
 
-    public Set<OrganizationEntity> getAllOrganizations(ClientEntity client) {
-        List<ClientsOrganizationsEntity> links = clientsOrganizationsRepository.findAllByClientId(client.getId());
+    public Set<OrganizationEntity> getAllOrganizations(Long clientId) {
+        List<ClientsOrganizationsEntity> links = clientsOrganizationsRepository.findAllByClientId(clientId);
         if (links == null || links.isEmpty()) {
             throw new IllegalArgumentException("Цей клієнт не прив'язаний до жодної організації");
         }

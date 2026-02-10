@@ -30,7 +30,6 @@ public class EmployeeService extends StatusableService<EmployeeEntity> {
 
     private final EmployeeRepository employeeRepository;
     private final JwtService jwtService;
-    private final ContractEmployeeRepository contractEmployeeRepository;
 
     public AuthResponseDto createEmployee(@NonNull CreateEmployeeRequestDto dto) {
         EmployeeEntity employee = new EmployeeEntity();

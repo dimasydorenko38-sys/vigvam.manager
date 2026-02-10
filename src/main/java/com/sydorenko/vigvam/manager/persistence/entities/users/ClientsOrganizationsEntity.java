@@ -17,15 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "client_organization"
-//        ,
-//        uniqueConstraints = {
-//                @UniqueConstraint(
-//                        name = "uc_client_organization",
-//                        columnNames = {"client_id", "organization_id"}
-//                )
-//        }
-        )
+@Table(name = "client_organization")
 @Getter
 @Setter
 @AllArgsConstructor

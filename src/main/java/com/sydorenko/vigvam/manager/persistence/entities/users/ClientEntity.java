@@ -13,6 +13,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class ClientEntity extends UserEntity {
     private SourceClient source;
 
     @OneToMany (mappedBy = "client", cascade = CascadeType.ALL)
-    private Set<ChildEntity> children;
+    private Set<ChildEntity> children = new HashSet<>();
 
     @Column(name = "role", nullable = false)
     private RoleUser role;

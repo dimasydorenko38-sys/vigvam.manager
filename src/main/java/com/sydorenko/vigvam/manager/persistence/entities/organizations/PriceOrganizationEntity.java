@@ -31,7 +31,7 @@ public class PriceOrganizationEntity {
     @JoinColumn(name = "service_type_id", nullable = false)
     private ServiceTypeEntity serviceType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false)
     private OrganizationEntity organization;
 

@@ -44,7 +44,7 @@ public class SettingLessonsTime {
     @Enumerated(EnumType.STRING)
     private LessonType lessonType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn (name = "organization_id", nullable = false)
     private OrganizationEntity organization;
 
