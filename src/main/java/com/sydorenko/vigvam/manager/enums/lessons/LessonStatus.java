@@ -4,6 +4,7 @@ public enum LessonStatus {
 
     WAIT,
     DONE,
+    DONE_FREE,
     MISSED_FREE,
     MISSED_PAYMENT,
     CANCELLED,

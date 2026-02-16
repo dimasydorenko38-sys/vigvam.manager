@@ -9,7 +9,6 @@ import com.sydorenko.vigvam.manager.enums.users.SourceClient;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
-import com.sydorenko.vigvam.manager.persistence.entities.users.UserEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.ClientRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.ClientsOrganizationsRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
@@ -47,7 +46,7 @@ public class ClientService extends StatusableService<ClientEntity> {
         client.setPhotoPermission(dto.isPhotoPermission());
         client.setSource(SourceClient.valueOf(dto.getSourceClient().toUpperCase()));
         OrganizationEntity currentOrganization = organizationRepository
-                .findById(dto.getOrganization().getId())
+                .findActiveById(dto.getOrganization().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Такої організації не існує"));
         client.setOrganizationLinks(Set.of(new ClientsOrganizationsEntity(client, currentOrganization, Status.ENABLED)));
         client.setChildren(dto.getChildren()
@@ -76,7 +75,7 @@ public class ClientService extends StatusableService<ClientEntity> {
     }
 
     public Set<OrganizationEntity> getAllOrganizations(Long clientId) {
-        List<ClientsOrganizationsEntity> links = clientsOrganizationsRepository.findAllByClientId(clientId);
+        List<ClientsOrganizationsEntity> links = clientsOrganizationsRepository.findAllActiveByClientId(clientId);
         if (links == null || links.isEmpty()) {
             throw new IllegalArgumentException("Цей клієнт не прив'язаний до жодної організації");
         }

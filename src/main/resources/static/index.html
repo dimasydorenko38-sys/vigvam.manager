@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vigvam Manager - Final Schedule</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .cell-width { min-width: 150px; }
+        /* Повертаємо темні лінії */
+        .day-border { border-left: 1.5px solid #64748b !important; }
+        .week-separator { border-left: 4px solid #0f172a !important; }
+        .sticky-col { position: sticky; left: 0; background: white; z-index: 30; border-right: 2px solid #334155; }
+        .week-bg-even { background-color: #f1f5f9; }
+        .week-bg-odd { background-color: #ffffff; }
+        .table-container { overflow-x: auto; border: 1px solid #475569; border-radius: 8px; margin-bottom: 2rem; }
+        .lesson-card { cursor: pointer; transition: all 0.1s ease; border-left-width: 4px; }
+        .lesson-card:hover { filter: brightness(0.95); }
+    </style>
+</head>
+<body class="bg-slate-200 p-2 md:p-4 font-sans text-[11px]">
+
+<!-- Модалка -->
+<div id="modal" class="fixed inset-0 bg-black/70 z-[100] hidden flex items-center justify-center p-4" onclick="closeModal()">
+    <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl border-t-8 border-indigo-600" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center mb-5">
+            <h3 class="text-lg font-black text-slate-800 uppercase tracking-tighter">Деталі заняття</h3>
+            <button onclick="closeModal()" class="bg-slate-100 hover:bg-slate-200 rounded-full w-8 h-8 flex items-center justify-center text-slate-600 font-bold">&times;</button>
+        </div>
+        <div id="modalContent" class="space-y-4 text-[13px]"></div>
+        <button onclick="closeModal()" class="w-full mt-8 bg-slate-900 text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-black transition shadow-lg">ЗАКРИТИ</button>
+    </div>
+</div>
+
+<!-- Шапка -->
+<div class="max-w-full mx-auto bg-white p-4 rounded-xl shadow-xl mb-4 border border-slate-300">
+    <div class="flex flex-col md:flex-row justify-between gap-4">
+        <div>
+            <h1 id="orgName" class="text-xl font-black text-slate-800 uppercase leading-none mb-1 tracking-tight">Завантаження...</h1>
+            <span id="orgInfo" class="text-[10px] text-slate-500 font-bold uppercase tracking-widest"></span>
+        </div>
+        <div class="flex gap-2 bg-slate-50 p-2 rounded-lg border border-slate-300 shadow-inner self-start">
+            <input type="date" id="startDate" value="2026-02-01" class="border rounded px-2 py-1 text-xs outline-none">
+            <input type="date" id="endDate" value="2026-02-16" class="border rounded px-2 py-1 text-xs outline-none">
+            <button onclick="fetchSchedule()" class="bg-indigo-600 text-white px-5 py-1 rounded font-bold text-xs hover:bg-indigo-800 transition">ОНОВИТИ</button>
+        </div>
+    </div>
+</div>
+
+<div id="mainContent">
+    <h2 class="text-[10px] font-black text-slate-500 mb-1 px-1 flex items-center gap-2 italic uppercase">
+        <span class="w-2 h-2 bg-blue-500 rounded-full"></span> Individual Lessons
+    </h2>
+    <div class="table-container shadow-2xl">
+        <table class="w-full border-collapse bg-white">
+            <thead id="headINDIVIDUAL" class="bg-slate-800 text-white text-[9px] uppercase tracking-wider border-b-2 border-slate-950"></thead>
+            <tbody id="bodyINDIVIDUAL"></tbody>
+        </table>
+    </div>
+
+    <h2 class="text-[10px] font-black text-indigo-700 mb-1 px-1 flex items-center gap-2 italic uppercase">
+        <span class="w-2 h-2 bg-purple-600 rounded-full"></span> Group Lessons
+    </h2>
+    <div class="table-container shadow-2xl">
+        <table class="w-full border-collapse bg-white">
+            <thead id="headGROUP" class="bg-indigo-900 text-white text-[9px] uppercase tracking-wider border-b-2 border-indigo-950"></thead>
+            <tbody id="bodyGROUP"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const API_URL = `http://${window.location.hostname}:8082/api/schedule/period`;
+
+    function getWeekNumber(date) {
+        const d = new Date(date); d.setHours(0,0,0,0);
+        d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+        return Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 86400000) + 1) / 7);
+    }
+
+    function showLessonDetails(lessonJson, employeeName) {
+        const l = JSON.parse(decodeURIComponent(lessonJson));
+        const content = document.getElementById('modalContent');
+        content.innerHTML = `
+            <div class="flex justify-between items-center bg-slate-50 p-2 rounded border border-slate-100">
+                <span class="text-slate-400 font-bold uppercase text-[10px]">Статус</span>
+                <span class="px-2 py-0.5 ${l.lessonStatus==='DONE'?'bg-green-100 text-green-700':'bg-blue-100 text-blue-700'} rounded font-black text-[11px]">${l.lessonStatus}</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="text-[10px] text-slate-400 font-bold uppercase">ID</label><p class="font-bold text-slate-800">#${l.id}</p></div>
+                <div><label class="text-[10px] text-slate-400 font-bold uppercase">Тип</label><p class="font-bold text-indigo-600">${l.type}</p></div>
+            </div>
+            <div><label class="text-[10px] text-slate-400 font-bold uppercase">Викладач</label><p class="font-bold text-slate-800">👤 ${employeeName}</p></div>
+            <div><label class="text-[10px] text-slate-400 font-bold uppercase">Дитина</label><p class="font-bold text-slate-800">👶 ${l.child || '—'}</p></div>
+            <div><label class="text-[10px] text-slate-400 font-bold uppercase">Час заняття</label><p class="font-bold text-slate-800 font-mono">${l.lessonDateTime.split('T')[1].substring(0,5)} – ${l.lessonEndTime.split('T')[1].substring(0,5)}</p></div>
+            <div class="pt-2"><label class="text-[10px] text-slate-400 font-bold uppercase">Коментар</label><div class="mt-1 bg-amber-50 p-3 rounded-lg text-amber-900 leading-normal border-l-4 border-amber-400 font-medium">"${l.comments || 'Коментарі відсутні'}"</div></div>
+        `;
+        document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
+    async function fetchSchedule() {
+        const payload = {
+            organization: { id: 2 },
+            startDate: document.getElementById('startDate').value,
+            endDate: document.getElementById('endDate').value
+        };
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            document.getElementById('orgName').innerText = data.organization.organizationName;
+            document.getElementById('orgInfo').innerText = `📍 ${data.organization.organizationCity} | ID: ${data.organization.id}`;
+            render(data, 'INDIVIDUAL', 'headINDIVIDUAL', 'bodyINDIVIDUAL');
+            render(data, 'GROUP', 'headGROUP', 'bodyGROUP');
+        } catch (e) { alert("Помилка з'єднання!"); }
+    }
+
+    function render(data, type, headId, bodyId) {
+        const schedule = data.schedule;
+        const employees = data.employeesData;
+        const dates = Object.keys(schedule).sort();
+        const settings = data.organization.settingLessons[type];
+
+        const head = document.getElementById(headId);
+        const body = document.getElementById(bodyId);
+        head.innerHTML = ""; body.innerHTML = "";
+
+        let r1 = `<tr><th rowspan="2" class="p-2 sticky-col bg-slate-900 text-white text-center w-16 shadow-lg border-b border-slate-700 font-black">⏰</th>`;
+        let r2 = `<tr>`;
+
+        dates.forEach(date => {
+            const isMon = new Date(date).getDay() === 1;
+            const empIds = [...new Set(schedule[date].employeeIds)];
+            const count = empIds.length || 1;
+            const border = isMon ? 'week-separator' : 'day-border';
+            const weekBg = getWeekNumber(date) % 2 === 0 ? 'bg-slate-700' : 'bg-slate-600';
+
+            r1 += `<th colspan="${count}" class="p-2 text-center ${weekBg} ${border} border-b border-white/10">
+                     <div class="text-[7px] uppercase font-medium opacity-70">${new Date(date).toLocaleDateString('uk-UA', {weekday: 'short'})}</div>
+                     <div class="text-[10px] font-black tracking-widest">${date.split('-').reverse().slice(0,2).join('.')}</div>
+                   </th>`;
+
+            empIds.forEach(id => {
+                const e = employees.find(x => x.id === id);
+                r2 += `<th class="p-1.5 cell-width text-center bg-black/10 border-r border-white/5 uppercase text-[8px] font-bold tracking-tighter">
+                         ${e ? e.name : 'ID:'+id}
+                       </th>`;
+            });
+            if (empIds.length === 0) r2 += `<th class="cell-width border-r"></th>`;
+        });
+
+        head.innerHTML = r1 + "</tr>" + r2 + "</tr>";
+
+        let cur = new Date(`1970-01-01T${settings.firstHourOfWork}`);
+        const end = new Date(`1970-01-01T${settings.lastHourOfWork}`);
+
+        while (cur <= end) {
+            const timeStr = cur.toTimeString().substring(0, 5);
+            let row = `<tr class="border-b border-slate-100 hover:bg-slate-50/50"><td class="p-2 font-black text-slate-500 text-center sticky-col border-r bg-white text-[10px] shadow-sm">${timeStr}</td>`;
+
+            dates.forEach(date => {
+                const isMon = new Date(date).getDay() === 1;
+                const weekBg = getWeekNumber(date) % 2 === 0 ? 'week-bg-even' : 'week-bg-odd';
+                const empIds = [...new Set(schedule[date].employeeIds)];
+                const border = isMon ? 'week-separator' : 'day-border';
+
+                empIds.forEach((id, idx) => {
+                    const lessons = schedule[date].lessons.filter(l => l.type === type && l.lessonDateTime.includes(timeStr) && l.employee === id);
+                    const finalBorder = idx === 0 ? border : 'border-l border-slate-200';
+                    let content = "";
+
+                    lessons.forEach(l => {
+                        const emp = employees.find(x => x.id === id);
+                        const empName = emp ? `${emp.name} ${emp.lastName}` : `ID ${id}`;
+                        const accent = type==='GROUP'?'border-indigo-700 bg-indigo-50/30':'border-blue-600 bg-blue-50/30';
+
+                        content += `
+                            <div onclick="showLessonDetails('${encodeURIComponent(JSON.stringify(l))}', '${empName}')"
+                                 class="lesson-card ${accent} p-2 mb-2 bg-white shadow-sm rounded border-r border-t border-b hover:shadow-md">
+                                <div class="font-black text-slate-800 tracking-tight text-[10px] mb-1 leading-none">👶 ${l.child || 'ВІКНО'}</div>
+                                <div class="text-[9px] text-slate-600 font-medium leading-tight line-clamp-2">💬 ${l.comments || ''}</div>
+                            </div>`;
+                    });
+                    row += `<td class="p-1 border-r border-slate-100 align-top ${weekBg} ${finalBorder}">${content}</td>`;
+                });
+                if (empIds.length === 0) row += `<td class="p-1 border-r border-slate-100 ${weekBg} ${border}"></td>`;
+            });
+            body.innerHTML += row + "</tr>";
+            cur.setMinutes(cur.getMinutes() + settings.lessonDurationMinutes + settings.breakDurationMinutes);
+        }
+    }
+    window.onload = fetchSchedule;
+</script>
+</body>
+</html>

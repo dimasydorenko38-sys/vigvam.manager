@@ -34,19 +34,19 @@ public class ContractEmployeeService extends StatusableService<ContractEmployeeE
     public void createContract(@NonNull CreateContractEmployeeRequestDto dto) {
         ContractEmployeeEntity contractEmployee = new ContractEmployeeEntity();
 
-        contractEmployee.setEmployee(employeeRepository.findById(dto.getEmployee().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + dto.getEmployee().getId())));
-        contractEmployee.setOrganization(organizationRepository.findById(dto.getOrganization().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + dto.getOrganization().getId())));
+        contractEmployee.setEmployee(employeeRepository.findActiveById(dto.getEmployee().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Active Employee not found with id: " + dto.getEmployee().getId())));
+        contractEmployee.setOrganization(organizationRepository.findActiveById(dto.getOrganization().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Active Organization not found with id: " + dto.getOrganization().getId())));
         if (dto.getMasterEmployee() != null) {
-            contractEmployee.setMasterEmployee(employeeRepository.findById(dto.getMasterEmployee().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Employee not found with id: " + dto.getMasterEmployee().getId())));
+            contractEmployee.setMasterEmployee(employeeRepository.findActiveById(dto.getMasterEmployee().getId())
+                    .orElseThrow(() -> new EntityNotFoundException("Active Employee not found with id: " + dto.getMasterEmployee().getId())));
         }
         contractEmployee.setSalary(dto.getSalary()
                 .stream()
                 .peek(salary -> {
                     salary.setContractEmployee(contractEmployee);
-                    salary.setServiceType(serviceTypeService.getServiceTypeById(salary.getServiceType().getId()));
+                    salary.setServiceType(serviceTypeService.getServiceTypeAndCheck(salary.getServiceType().getId()));
                         }
                 ).collect(Collectors.toSet()));
         contractEmployee.setRole(RoleUser.fromString(dto.getRole()));
@@ -56,7 +56,7 @@ public class ContractEmployeeService extends StatusableService<ContractEmployeeE
 
     public List<EmployeeNameResponseProjection> getAllEmployeeNamesByOrg(Long organizationId){
         return contractEmployeeRepository
-                .findAllEmployeesNameByOrganizationId(organizationId, RoleUser.EMPLOYEE,Status.ENABLED);
+                .findAllEmployeesNameByOrganizationId(organizationId, RoleUser.EMPLOYEE, Status.ENABLED);
     }
 
     public void setDisableStatus(DisabledObjectRequestDto dto) {
@@ -66,5 +66,6 @@ public class ContractEmployeeService extends StatusableService<ContractEmployeeE
     public void setEnableStatus(DisabledObjectRequestDto dto) {
         super.setEnableStatus(dto, contractEmployeeRepository);
     }
+
 }
 

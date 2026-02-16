@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.service.lessonsServices;
 
 import com.sun.jdi.request.DuplicateRequestException;
+import com.sydorenko.vigvam.manager.configuration.BusinessConfig;
 import com.sydorenko.vigvam.manager.dto.request.CreateLessonRequestDto;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
@@ -27,6 +28,7 @@ public class CheckerLesson {
 
     private final ChildRepository childRepository;
     private final LessonRepository lessonRepository;
+    private final BusinessConfig businessConfig;
 
     public LessonEntity check(@NonNull LessonEntity lesson) {
         lesson = validationChild(lesson);
@@ -54,19 +56,14 @@ public class CheckerLesson {
 
 
     public @NonNull LessonEntity validationChild(@NonNull LessonEntity lesson) {
-        List<LessonStatus> independentChildStatuses = List.of(
-                LessonStatus.ACCOMPANIMENT,
-                LessonStatus.COMMENTATION,
-                LessonStatus.CANCELLED
-        );
 
-        if (!independentChildStatuses.contains(lesson.getLessonStatus())
+        if (!businessConfig.getIndependentOfChildStatuses().contains(lesson.getLessonStatus())
                 && lesson.getChild() == null && lesson.getComments() == null) {
             throw new IllegalArgumentException("Необхідно вказати дитину або коментар");
         }
 
         if (lesson.getChild() != null) {
-            ChildEntity childEntity = childRepository.findById(lesson.getChild().getId())
+            ChildEntity childEntity = childRepository.findActiveById(lesson.getChild().getId())
                     .orElseThrow(() -> new EntityNotFoundException("Така дитина не зареєстрована або вимкнена в системы"));
             lesson.setChild(childEntity);
         }
@@ -74,12 +71,6 @@ public class CheckerLesson {
     }
 
     public boolean checkOverlayOfLessons(LessonEntity lesson) {
-        List<LessonStatus> canIgnoreStatuses = List.of(
-                LessonStatus.CANCELLED,
-                LessonStatus.MISSED_FREE,
-                LessonStatus.MISSED_PAYMENT,
-                LessonStatus.COMMENTATION
-        );
         List<LessonType> checkTypes = new ArrayList<>(List.of());
         switch (lesson.getType()) {
             case LessonType.INDIVIDUAL -> {
@@ -94,10 +85,9 @@ public class CheckerLesson {
                 checkTypes,
                 lesson.getLessonDateTime(),
                 lesson.getLessonEndTime(),
-                canIgnoreStatuses,
+                businessConfig.getCanIgnoreStatusesInOverlayLessons(),
                 lesson.getId());
     }
-
 
     public @NonNull LessonEntity checkLessonTime(@NonNull LessonEntity lesson) {
         LocalTime lessonTime = lesson.getLessonDateTime().toLocalTime().truncatedTo(ChronoUnit.MINUTES);

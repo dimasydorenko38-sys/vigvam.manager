@@ -35,15 +35,6 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    public String generateToken(Long id) {
-        return Jwts.builder()
-                .subject(String.valueOf(id))
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+expiration))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)), Jwts.SIG.HS256)
-                .compact();
-    }
-
     public String generateToken(ClientEntity client) {
         Map<String, Object> map = Map.of(
                 "id",client.getId(),
@@ -84,13 +75,13 @@ public class JwtService {
 
     public String generateTokenByRefreshToken(RefreshTokenDto dto) {
         if(dto.getRefreshToken() == null){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ваш профіль було деактивовано, зверніться до Адміністратора");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ваш профіль було деактивовано, австоризуйтеся повторно або зверніться до Адміністратора");
         }
         UserEntity user = repositories.stream()
-                .map(repo -> repo.findByRefreshToken(dto.getRefreshToken()))
+                .map(repo -> repo.findByRefreshTokenAndStatus(dto.getRefreshToken(), Status.ENABLED))
                 .flatMap(Optional::stream)
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Користувача деактивовано або не зареєстровано"));
         return switch (user) {
             case ClientEntity client -> generateToken(client);
             case EmployeeEntity employee -> generateToken(employee);
@@ -100,7 +91,7 @@ public class JwtService {
 
     public @Nullable AuthResponseDto loginUserByLogPass(UserLoginDto dto) {
         UserEntity user = repositories.stream()
-                .map(repo -> repo.findByLoginAndPassword(dto.getLogin(), dto.getPassword()))
+                .map(repo -> repo.findByLoginAndPasswordAndStatus(dto.getLogin(), dto.getPassword(), Status.ENABLED))
                 .flatMap(Optional::stream)
                 .findFirst()
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Логін не знайденто, або хибний пароль"));

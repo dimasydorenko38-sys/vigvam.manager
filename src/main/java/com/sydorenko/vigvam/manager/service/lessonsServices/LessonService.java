@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.service.lessonsServices;
 
+import com.sydorenko.vigvam.manager.configuration.BusinessConfig;
 import com.sydorenko.vigvam.manager.dto.request.CreateLessonRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.LessonResponseProjection;
 import com.sydorenko.vigvam.manager.enums.Status;
@@ -16,6 +17,7 @@ import com.sydorenko.vigvam.manager.persistence.repository.LessonRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.ServiceTypeRepository;
 import com.sydorenko.vigvam.manager.service.GenericService;
+import com.sydorenko.vigvam.manager.service.organizationsServices.ServiceTypeService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +38,10 @@ public class LessonService {
     private final LessonRepository lessonRepository;
     private final OrganizationRepository organizationRepository;
     private final ServiceTypeRepository serviceTypeRepository;
+    private final ServiceTypeService serviceTypeService;
     private final CheckerLesson checkerLesson;
     private final GenericService genericService;
+    private final BusinessConfig businessConfig;
 
     public void createGenericLesson(@NonNull CreateLessonRequestDto dto) {
         if(!genericService.checkAuditorByOrganization(dto.getOrganization().getId())){
@@ -48,13 +52,12 @@ public class LessonService {
             }
         }
 
-        OrganizationEntity organizationLesson = organizationRepository.findByIdWithSettings(dto.getOrganization().getId())
+        OrganizationEntity organizationLesson = organizationRepository.findActiveByIdWithSettings(dto.getOrganization().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Організацію не знайдено"));
 
-        ServiceTypeEntity serviceTypeLesson = serviceTypeRepository.findById(dto.getServiceType().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Такої послуги не існує в системі"));
+        ServiceTypeEntity serviceTypeLesson = serviceTypeService.getServiceTypeAndCheck(dto.getServiceType().getId());
 
-        List<ContractEmployeeEntity> contracts = contractEmployeeRepository.findAllWithDetailsByEmployeeId(dto.getEmployee().getId());
+        List<ContractEmployeeEntity> contracts = contractEmployeeRepository.findAllActiveWithDetailsByEmployeeId(dto.getEmployee().getId());
         if (contracts.isEmpty()) {
             throw new EntityNotFoundException("Не знайдено спеціаліста");
         }
@@ -92,15 +95,6 @@ public class LessonService {
     }
 
     public List<LessonResponseProjection> getLessonsByOrgIdForPeriod(Long organizationId, LocalDateTime startDate, LocalDateTime endDate) {
-        return lessonRepository.findAllByOrgIdForPeriod(organizationId ,startDate, endDate, List.of(LessonStatus.CANCELLED))
-//                .stream()
-//                .map(LessonResponseProjection::getChild)
-//                .map((c) -> c.getId().orElse(null))
-//                .
-
-//                .stream()
-//                .map(LessonResponseDto::new)
-//                .toList()
-                ;
+        return lessonRepository.findAllByOrgIdForPeriod(organizationId ,startDate, endDate, businessConfig.getIgnoreLessonStatusesInSchedule());
     }
 }

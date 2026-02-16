@@ -65,9 +65,9 @@ POST {{host}}/api/employee/add
 Content-Type: application/json
 
   {
-      "login": "employee",
+      "login": "employee3",
       "password": "employee",
-      "name": "employee",
+      "name": "employee3",
       "lastName": "employee",
       "phone": "Phone"
         }
@@ -78,7 +78,7 @@ POST {{host}}/api/employee/contracts/add
 Content-Type: application/json
 
 {
-"employee": {"id": 2},
+"employee": {"id": 3},
 "organization": {"id": 2},
 "masterEmployee": null,
 "salary": [
@@ -124,12 +124,12 @@ Content-Type: application/json
 
 }
 
-### Вимкнути клієнта
-POST {{host}}/api/clients/disable
+### Вимкнути ентіті
+POST {{host}}/api/child/enable
 Content-Type: application/json
 
 {
-"id": 4
+"id": 1
 }
 
 ### Створити динину клієнтом
@@ -165,16 +165,16 @@ Content-Type: application/json
 
 ### Створити заняття
 POST {{host}}/api/lesson/create
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzA2NTk5NjgsImV4cCI6MTc3MDc0NjM2OH0.Vx50KBGplNHTM-pOCf1PnaNSAxFJ_3YiBk9Fnwsc9l4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIEFETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzEyNjMwNTQsImV4cCI6MTc3MTM0OTQ1NH0.pUFXUSvGBZStCew2iMlK_nGPkGLVH2dGHNMSUH7NQhc
 Content-Type: application/json
 
 {
     "lessonStatus" : null,
-    "child" : null,
+    "child" : {"id": 1},
     "serviceType" : {"id": 2},
-    "lessonType" : "INDIVIDUAL",
-    "lessonDateTime" : "2026-02-02T15:00",
-    "lessonEndTime" : "2026-02-02T15:45",
+    "lessonType" : "GROUP",
+    "lessonDateTime" : "2026-02-12T15:00",
+    "lessonEndTime" : "2026-02-12T15:45",
     "organization" : {"id" :  2},
     "employee" : {"id" : 2},
     "comments" : "test"
@@ -182,16 +182,18 @@ Content-Type: application/json
 
 ### Отримати графік на період
 POST {{host}}/api/schedule/period
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIEFETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzEyNjMwNTQsImV4cCI6MTc3MTM0OTQ1NH0.pUFXUSvGBZStCew2iMlK_nGPkGLVH2dGHNMSUH7NQhc
 Content-Type: application/json
 
 {
     "startDate": "2026-02-02",
-    "endDate": "2026-02-02",
+    "endDate": "2026-02-16",
     "organization": {"id": 2}
 }
 
 ### Отримати cписок дітей на організацію
 POST {{host}}/api/schedule/childNames
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIEFETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzEyNjMwNTQsImV4cCI6MTc3MTM0OTQ1NH0.pUFXUSvGBZStCew2iMlK_nGPkGLVH2dGHNMSUH7NQhc
 Content-Type: application/json
 
 {

@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.*;
@@ -47,8 +46,8 @@ public class ChildService extends StatusableService<ChildEntity> {
     public void clientCreatesChild(CreateChildRequestDto dto) {
         Long currentClientId =  auditorAware.getCurrentAuditor().orElseThrow(()-> new AuthenticationException("Незареэстрований юзер не може створити профіль для дитини") {
         });
-        ClientEntity currentClient = clientRepository.findById(currentClientId)
-                .orElseThrow(()->new EntityNotFoundException("Юзер не існує в базі"));
+        ClientEntity currentClient = clientRepository.findActiveById(currentClientId)
+                .orElseThrow(()->new EntityNotFoundException("Юзера деактивовано або не існує в базі"));
         ChildEntity child = ChildEntity.builder()
                 .client(currentClient)
                 .name(dto.getName())
@@ -64,8 +63,8 @@ public class ChildService extends StatusableService<ChildEntity> {
     }
 
     public void adminCreatesChild(CreateChildRequestDto dto) {
-        ClientEntity currentClient = clientRepository.findById(dto.getClient().getId())
-                .orElseThrow(()->new EntityNotFoundException("Такого клієнта не існує в базі"));
+        ClientEntity currentClient = clientRepository.findActiveById(dto.getClient().getId())
+                .orElseThrow(()->new EntityNotFoundException("Такого клієнта деактивовано або не існує в базі"));
         ChildEntity child = ChildEntity.builder()
                 .client(currentClient)
                 .name(dto.getName())
@@ -81,7 +80,7 @@ public class ChildService extends StatusableService<ChildEntity> {
     }
 
     public Set<ChildNameResponseDto> getAllChildNameByOrgId(Long organizationId){
-        List<ClientsOrganizationsEntity> clientLinks = clientsOrganizationsRepository.findAllByOrgIdAndClientStatus(Status.ENABLED,organizationId);
+        List<ClientsOrganizationsEntity> clientLinks = clientsOrganizationsRepository.findAllByClientStatusAndOrgId(Status.ENABLED,organizationId);
         return clientLinks
                 .stream()
                 .filter(link -> Status.ENABLED.equals(link.getStatus()))
@@ -93,7 +92,4 @@ public class ChildService extends StatusableService<ChildEntity> {
                 .collect(toSet());
     }
 
-//    public Set<ChildNameResponseDto> getAllChildNameByOrgId (Long organizationId){
-//        return clientsOrganizationsRepository.findAllByOrgIdAndClientStatus(Status.ENABLED,organizationId);
-//    }
 }

@@ -50,12 +50,11 @@ public class OrganizationService extends StatusableService<OrganizationEntity> {
                 .stream()
                 .peek(price -> {
                     price.setOrganization(newOrganization);
-                    price.setServiceType(serviceTypeService.getServiceTypeById(price.getServiceType().getId()));
+                    price.setServiceType(serviceTypeService.getServiceTypeAndCheck(price.getServiceType().getId()));
                 }).collect(toSet()));
 
         repository.save(newOrganization);
     }
-
 
     public void setDisableStatus(DisabledObjectRequestDto dto) {
         super.setDisableStatus(dto, repository);

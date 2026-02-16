@@ -3,6 +3,7 @@ package com.sydorenko.vigvam.manager.service.usersServices;
 import com.sydorenko.vigvam.manager.dto.request.CreateEmployeeRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
+import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.EmployeeNameResponseProjection;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
@@ -71,5 +72,9 @@ public class EmployeeService extends StatusableService<EmployeeEntity> {
         } else throw new EntityNotFoundException("Не знайдено активної організації за контрактами працівника");
 
 
+    }
+
+    public Set<EmployeeNameResponseProjection> getAllEmployeesByIds(Set<Long> employeeIds) {
+        return employeeRepository.findAllByIdIn(employeeIds);
     }
 }

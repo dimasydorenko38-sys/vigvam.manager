@@ -19,10 +19,17 @@ public interface ContractEmployeeRepository extends JpaRepository<ContractEmploy
     List<ContractEmployeeEntity> findAllByEmployeeId(Long id);
 
     @EntityGraph(attributePaths = {"employee", "salary", "organization"})
-    List<ContractEmployeeEntity> findAllWithDetailsByEmployeeId(Long id);
+    List<ContractEmployeeEntity> findAllWithDetailsByEmployeeIdAndStatus(Long id, Status status);
+    default     List<ContractEmployeeEntity> findAllActiveWithDetailsByEmployeeId(Long id){
+        return findAllWithDetailsByEmployeeIdAndStatus(id, Status.ENABLED);
+    }
+
 
     @EntityGraph(attributePaths = {"organization"})
-    List<ContractEmployeeEntity> findAllWithOrgByEmployeeId(Long id);
+    List<ContractEmployeeEntity> findAllWithOrgByEmployeeIdAndStatus(Long id, Status status);
+    default List<ContractEmployeeEntity> findAllActiveWithOrgByEmployeeId(Long id){
+        return findAllWithOrgByEmployeeIdAndStatus(id, Status.ENABLED);
+    };
 
     @Query("""
             SELECT

@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.service;
 
 import com.sydorenko.vigvam.manager.configuration.AuditorAwareImpl;
+import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
@@ -36,26 +37,31 @@ public class GenericService {
         Set<RoleUser> currentAuditorRoles = auditorAware.getCurrentAuditorRoles();
         Collection<OrganizationEntity> organizations;
         if (currentAuditorRoles.contains(RoleUser.CLIENT)) {
-            organizations = clientsOrganizationsRepository.findAllByClientId(currentUserID)
+            organizations = clientsOrganizationsRepository.findAllActiveByClientId(currentUserID)
                     .stream()
                     .map(ClientsOrganizationsEntity::getOrganization)
+                    .filter(organization -> organization.getStatus().equals(Status.ENABLED))
                     .collect(Collectors.toSet());
         } else {
-            organizations = contractEmployeeRepository.findAllWithOrgByEmployeeId(currentUserID)
+            organizations = contractEmployeeRepository.findAllActiveWithOrgByEmployeeId(currentUserID)
                     .stream()
                     .map(ContractEmployeeEntity::getOrganization)
+                    .filter(organization -> organization.getStatus().equals(Status.ENABLED))
                     .collect(Collectors.toSet());
         }
         return organizations.stream().anyMatch(organization -> organization.getId().equals(organizationId));
     }
 
 
-    public UserEntity getUserByTokenFields(Long userId, Set<RoleUser> roles) {
+    public UserEntity getUserByTokenFields() {
+        Long userId = auditorAware.getCurrentAuditor()
+                .orElseThrow(() -> new AuthorizationDeniedException("Неможливо визначити Ваш ID, Ваш токен невалідний"));
+        Set<RoleUser> roles = auditorAware.getCurrentAuditorRoles();
         if (roles.contains(RoleUser.CLIENT)) {
-            return clientRepository.findById(userId)
+            return clientRepository.findActiveById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("Клієнта не знайдено"));
         } else {
-            return employeeRepository.findById(userId)
+            return employeeRepository.findActiveById(userId)
                     .orElseThrow(() -> new EntityNotFoundException("Працівника не знайдено"));
         }
     }

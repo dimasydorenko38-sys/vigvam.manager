@@ -26,11 +26,11 @@ public class ServiceTypeService extends StatusableService<ServiceTypeEntity> {
         serviceTypeRepository.save(serviceTypeEntity);
     }
 
-    public ServiceTypeEntity getServiceTypeById(Long id){
+    public ServiceTypeEntity getServiceTypeAndCheck(Long id){
         ServiceTypeEntity checkServiceType = serviceTypeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Полуга відсутня в системі "));
+                .orElseThrow(() -> new EntityNotFoundException("Послуга відсутня в системі "));
         if(checkServiceType.getStatus() != Status.ENABLED){
-            throw new EntityNotFoundException("Полуга " + checkServiceType.getServiceType() +" ("+checkServiceType.getDisplayName()+")" + " вже не активна в системі");
+            throw new EntityNotFoundException("Послуга " + checkServiceType.getServiceType() +" ("+checkServiceType.getDisplayName()+")" + " вже не активна в системі");
         };
         return checkServiceType;
     }

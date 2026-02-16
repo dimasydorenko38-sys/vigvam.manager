@@ -56,6 +56,8 @@ public class ChildEntity implements Statusable {
     @Column(name = "disable_date")
     private LocalDateTime disableDate;
 
+    //TODO change ColumnName "status_user" for "status"
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status_user", nullable = false)
     private Status status;
