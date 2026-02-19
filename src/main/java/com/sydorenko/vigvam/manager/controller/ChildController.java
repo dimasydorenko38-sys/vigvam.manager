@@ -1,7 +1,7 @@
 package com.sydorenko.vigvam.manager.controller;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateChildRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.usersServices.ChildService;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class ChildController {
     }
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/disable")
-    public ResponseEntity<MessageResponseDto> disableChilde(@RequestBody DisabledObjectRequestDto dto){
+    public ResponseEntity<MessageResponseDto> disableChilde(@RequestBody NewStatusObjectByIdRequestDto dto){
         childeService.setDisableStatus(dto);
         messageResponseDto.setMessage("Successful");
         return ResponseEntity.ok(messageResponseDto);
@@ -45,7 +45,7 @@ public class ChildController {
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/enable")
-    public ResponseEntity<MessageResponseDto> enableChilde(@RequestBody DisabledObjectRequestDto dto){
+    public ResponseEntity<MessageResponseDto> enableChilde(@RequestBody NewStatusObjectByIdRequestDto dto){
         childeService.setEnableStatus(dto);
         messageResponseDto.setMessage("Successful");
         return ResponseEntity.ok(messageResponseDto);

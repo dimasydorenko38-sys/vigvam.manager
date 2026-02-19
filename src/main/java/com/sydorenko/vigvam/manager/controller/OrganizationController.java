@@ -1,7 +1,7 @@
 package com.sydorenko.vigvam.manager.controller;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateOrganizationRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.organizationsServices.OrganizationService;
 import lombok.RequiredArgsConstructor;
@@ -28,15 +28,17 @@ public class OrganizationController {
         return ResponseEntity.ok(messageResponseDto);
     }
 
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/disable")
-    public ResponseEntity<MessageResponseDto> disableClient(@RequestBody DisabledObjectRequestDto dto){
+    public ResponseEntity<MessageResponseDto> disableClient(@RequestBody NewStatusObjectByIdRequestDto dto){
         service.setDisableStatus(dto);
         messageResponseDto.setMessage("Successful");
         return ResponseEntity.ok(messageResponseDto);
     }
 
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/enable")
-    public ResponseEntity<MessageResponseDto> enableClient(@RequestBody DisabledObjectRequestDto dto){
+    public ResponseEntity<MessageResponseDto> enableClient(@RequestBody NewStatusObjectByIdRequestDto dto){
         service.setEnableStatus(dto);
         messageResponseDto.setMessage("Successful");
         return ResponseEntity.ok(messageResponseDto);

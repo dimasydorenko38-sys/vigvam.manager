@@ -9,14 +9,14 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.server.resource.InvalidBearerTokenException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.naming.AuthenticationException;
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -27,12 +27,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleAllExceptions (Exception exception){
         log.error("|?| Unexpected ERROR |?|: ", exception);
-        ErrorResponseDto responseDto = new ErrorResponseDto(
+        ErrorResponseDto error = new ErrorResponseDto(
                 LocalDateTime.now(),
                 "Виникла невідома помилка, спробуйте пізніше, або зверніться до адміністратора",
                 exception.toString()
         );
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
     @ExceptionHandler(DataAccessResourceFailureException.class)

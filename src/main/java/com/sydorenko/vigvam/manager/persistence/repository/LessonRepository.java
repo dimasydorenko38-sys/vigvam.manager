@@ -19,20 +19,20 @@ public interface LessonRepository extends JpaRepository<LessonEntity, Long> {
 
     @Query("""
             SELECT COUNT(l) > 0 FROM LessonEntity l
-            WHERE l.organization = :org
-            AND  l.employee = :empl
+            WHERE l.organization.id = :org
+            AND  l.employee.id = :empl
             AND l.type IN :types
-            AND l.lessonEndTime > :yourStart
-            AND l.lessonDateTime < :yourEnd
+            AND l.lessonEndTime > :periodStart
+            AND l.lessonDateTime < :periodEnd
             AND l.lessonStatus NOT IN :inactiveStatuses
             AND (:id IS NULL OR l.id <> :id)
             """)
     boolean existsOverlayOfLessons(
-            @Param("org") OrganizationEntity organization,
-            @Param("empl") EmployeeEntity employee,
+            @Param("org") Long organizationId,
+            @Param("empl") Long employeeId,
             @Param("types") List<LessonType> checkTypes,
-            @Param("yourStart") LocalDateTime startLessonTime,
-            @Param("yourEnd") LocalDateTime endLessonTime,
+            @Param("periodStart") LocalDateTime startLessonTime,
+            @Param("periodEnd") LocalDateTime endLessonTime,
             @Param("inactiveStatuses") List<LessonStatus> inactiveStatuses,
             @Param("id") Long id
             );

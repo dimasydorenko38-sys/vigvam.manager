@@ -79,7 +79,7 @@ public class LessonEntity {
     @JoinColumn(name = "child")
     private ChildEntity child;
 
-//    TODO: create  Child OneToMany childPerformanceEntity  ManyToOne Lessons
+//    TODO: create  Child -> (OneToMany) childPerformanceEntity (ManyToOne) -> Lessons
     // childPerformanceEntity: id/ stars / comments / entity_id /
 
     @Column(name = "comments")

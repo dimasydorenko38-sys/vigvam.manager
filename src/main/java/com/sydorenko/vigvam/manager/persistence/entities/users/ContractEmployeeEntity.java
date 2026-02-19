@@ -17,6 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -43,8 +44,8 @@ public class ContractEmployeeEntity implements Statusable {
     private EmployeeEntity masterEmployee;
 
     @NotEmpty
-    @OneToMany(mappedBy = "contractEmployee", cascade = CascadeType.ALL)
-    private Set<SalaryEmployeeEntity> salary;
+    @OneToMany(mappedBy = "contractEmployee", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SalaryEmployeeEntity> salary;
 
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)

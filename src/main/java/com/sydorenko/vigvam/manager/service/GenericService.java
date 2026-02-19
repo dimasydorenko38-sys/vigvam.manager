@@ -13,6 +13,7 @@ import com.sydorenko.vigvam.manager.persistence.repository.ContractEmployeeRepos
 import com.sydorenko.vigvam.manager.persistence.repository.EmployeeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +31,18 @@ public class GenericService {
     private final ClientsOrganizationsRepository clientsOrganizationsRepository;
     private final ContractEmployeeRepository contractEmployeeRepository;
 
-
-    public boolean checkAuditorByOrganization(Long organizationId) {
+//TODO need optimize request to DB
+    public void checkAuditorByOrganization(Long organizationId) {
         Long currentUserID = auditorAware.getCurrentAuditor()
                 .orElseThrow(() -> new AuthorizationDeniedException("Неможливо визначити Ваш ID, Ваш токен невалідний"));
         Set<RoleUser> currentAuditorRoles = auditorAware.getCurrentAuditorRoles();
+        if(currentAuditorRoles.isEmpty()){
+            throw new AccessDeniedException("Вам необхідно отримати хоча б одну роль у системі");
+        }
+        if(currentAuditorRoles.contains(RoleUser.SUPER_ADMIN)) return;
         Collection<OrganizationEntity> organizations;
         if (currentAuditorRoles.contains(RoleUser.CLIENT)) {
-            organizations = clientsOrganizationsRepository.findAllActiveByClientId(currentUserID)
+            organizations = clientsOrganizationsRepository.findAllActiveWithOrgByClientId(currentUserID)
                     .stream()
                     .map(ClientsOrganizationsEntity::getOrganization)
                     .filter(organization -> organization.getStatus().equals(Status.ENABLED))
@@ -49,7 +54,9 @@ public class GenericService {
                     .filter(organization -> organization.getStatus().equals(Status.ENABLED))
                     .collect(Collectors.toSet());
         }
-        return organizations.stream().anyMatch(organization -> organization.getId().equals(organizationId));
+        if(organizations.stream().noneMatch(organization -> organization.getId().equals(organizationId))) {
+            throw new AccessDeniedException("Користувач не має доступу до організації з ID: " + organizationId);
+        }
     }
 
 

@@ -1,5 +1,7 @@
 package com.sydorenko.vigvam.manager.enums.users;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import java.util.Arrays;
 
 public enum RoleUser {
@@ -13,6 +15,6 @@ public enum RoleUser {
         return Arrays.stream(values())
                 .filter(r -> r.name().equalsIgnoreCase(roleStr))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Роль " + roleStr + " не знайдена"));
+                .orElseThrow(() -> new EntityNotFoundException("Роль " + roleStr + " не знайдена"));
     }
 }

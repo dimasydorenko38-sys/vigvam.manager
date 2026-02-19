@@ -12,10 +12,7 @@ import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEnti
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
-import com.sydorenko.vigvam.manager.persistence.repository.ContractEmployeeRepository;
-import com.sydorenko.vigvam.manager.persistence.repository.LessonRepository;
-import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
-import com.sydorenko.vigvam.manager.persistence.repository.ServiceTypeRepository;
+import com.sydorenko.vigvam.manager.persistence.repository.*;
 import com.sydorenko.vigvam.manager.service.GenericService;
 import com.sydorenko.vigvam.manager.service.organizationsServices.ServiceTypeService;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -37,27 +33,18 @@ public class LessonService {
     private final ContractEmployeeRepository contractEmployeeRepository;
     private final LessonRepository lessonRepository;
     private final OrganizationRepository organizationRepository;
-    private final ServiceTypeRepository serviceTypeRepository;
     private final ServiceTypeService serviceTypeService;
     private final CheckerLesson checkerLesson;
-    private final GenericService genericService;
     private final BusinessConfig businessConfig;
+    private final ChildRepository childRepository;
 
     public void createGenericLesson(@NonNull CreateLessonRequestDto dto) {
-        if(!genericService.checkAuditorByOrganization(dto.getOrganization().getId())){
-            try {
-                throw new AccessDeniedException("Ви не маєте доступу до цієї організації");
-            } catch (AccessDeniedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        OrganizationEntity organizationLesson = organizationRepository.findActiveByIdWithSettings(dto.getOrganization().getId())
+        OrganizationEntity organizationLesson = organizationRepository.findActiveByIdWithSettings(dto.getOrganizationId())
                 .orElseThrow(() -> new EntityNotFoundException("Організацію не знайдено"));
 
-        ServiceTypeEntity serviceTypeLesson = serviceTypeService.getServiceTypeAndCheck(dto.getServiceType().getId());
+        ServiceTypeEntity serviceTypeLesson = serviceTypeService.getServiceTypeAndCheck(dto.getServiceTypeId());
 
-        List<ContractEmployeeEntity> contracts = contractEmployeeRepository.findAllActiveWithDetailsByEmployeeId(dto.getEmployee().getId());
+        List<ContractEmployeeEntity> contracts = contractEmployeeRepository.findAllActiveWithDetailsByEmployeeId(dto.getEmployeeId());
         if (contracts.isEmpty()) {
             throw new EntityNotFoundException("Не знайдено спеціаліста");
         }
@@ -84,8 +71,8 @@ public class LessonService {
                 .lessonEndTime(dto.getLessonEndTime())
                 .type(LessonType.valueOf(dto.getLessonType()))
                 .comments(dto.getComments())
-                .serviceType(dto.getServiceType())
-                .child(dto.getChild())
+                .serviceType(serviceTypeLesson)
+                .child(childRepository.getReferenceById(dto.getChildId()))
                 .employee(employee)
                 .organization(organizationLesson)
                 .build();

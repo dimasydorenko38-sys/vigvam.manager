@@ -2,7 +2,7 @@ package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sydorenko.vigvam.manager.configuration.AuditorAwareImpl;
 import com.sydorenko.vigvam.manager.dto.request.CreateChildRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.ChildNameResponseDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
@@ -35,21 +35,21 @@ public class ChildService extends StatusableService<ChildEntity> {
     private final ClientRepository clientRepository;
     private final ClientsOrganizationsRepository clientsOrganizationsRepository;
 
-    public void setDisableStatus(DisabledObjectRequestDto dto) {
-        super.setDisableStatus(dto, childRepository);
+    public void setDisableStatus(NewStatusObjectByIdRequestDto dto) {
+        super.setDisableStatus(dto.getId(), childRepository);
     }
-    public void setEnableStatus(DisabledObjectRequestDto dto) {
-        super.setEnableStatus(dto, childRepository);
+    public void setEnableStatus(NewStatusObjectByIdRequestDto dto) {
+        super.setEnableStatus(dto.getId(), childRepository);
     }
-
 
     public void clientCreatesChild(CreateChildRequestDto dto) {
         Long currentClientId =  auditorAware.getCurrentAuditor().orElseThrow(()-> new AuthenticationException("Незареэстрований юзер не може створити профіль для дитини") {
         });
-        ClientEntity currentClient = clientRepository.findActiveById(currentClientId)
-                .orElseThrow(()->new EntityNotFoundException("Юзера деактивовано або не існує в базі"));
+        if(!clientRepository.existsActiveById(currentClientId)){
+            throw new EntityNotFoundException("Юзера деактивовано або не існує в базі");
+        }
         ChildEntity child = ChildEntity.builder()
-                .client(currentClient)
+                .client(clientRepository.getReferenceById(currentClientId))
                 .name(dto.getName())
                 .lastName(dto.getLastName())
                 .secondName(dto.getSecondName())
@@ -63,10 +63,11 @@ public class ChildService extends StatusableService<ChildEntity> {
     }
 
     public void adminCreatesChild(CreateChildRequestDto dto) {
-        ClientEntity currentClient = clientRepository.findActiveById(dto.getClient().getId())
-                .orElseThrow(()->new EntityNotFoundException("Такого клієнта деактивовано або не існує в базі"));
+        if(!clientRepository.existsActiveById(dto.getClientId())){
+            throw new EntityNotFoundException("Юзера деактивовано або не існує в базі");
+        }
         ChildEntity child = ChildEntity.builder()
-                .client(currentClient)
+                .client(clientRepository.getReferenceById(dto.getClientId()))
                 .name(dto.getName())
                 .lastName(dto.getLastName())
                 .secondName(dto.getSecondName())

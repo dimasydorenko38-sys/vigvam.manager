@@ -4,7 +4,6 @@ import com.sun.jdi.request.DuplicateRequestException;
 import com.sydorenko.vigvam.manager.configuration.BusinessConfig;
 import com.sydorenko.vigvam.manager.dto.request.CreateLessonRequestDto;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
-import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.LessonEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.SettingLessonsTime;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
@@ -19,8 +18,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -71,18 +68,10 @@ public class CheckerLesson {
     }
 
     public boolean checkOverlayOfLessons(LessonEntity lesson) {
-        List<LessonType> checkTypes = new ArrayList<>(List.of());
-        switch (lesson.getType()) {
-            case LessonType.INDIVIDUAL -> {
-                checkTypes.add(LessonType.GROUP);
-                checkTypes.add(LessonType.INDIVIDUAL);
-            }
-            case LessonType.GROUP -> checkTypes.add(LessonType.INDIVIDUAL);
-        }
         return lessonRepository.existsOverlayOfLessons(
-                lesson.getOrganization(),
-                lesson.getEmployee(),
-                checkTypes,
+                lesson.getOrganization().getId(),
+                lesson.getEmployee().getId(),
+                businessConfig.getTypesForCheckOfOverlayOfLessons(lesson.getType()),
                 lesson.getLessonDateTime(),
                 lesson.getLessonEndTime(),
                 businessConfig.getCanIgnoreStatusesInOverlayLessons(),

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 
 //      {
-//        "serviceType": "art-terapia",
+//        "serviceTypeId": "art-terapia",
 //        "displayName": "арт терапія"
 //        }
 

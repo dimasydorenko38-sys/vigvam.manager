@@ -1,12 +1,13 @@
 package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sydorenko.vigvam.manager.dto.request.CreateClientRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.DisabledObjectRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.enums.users.SourceClient;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
+import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.ClientRepository;
@@ -45,16 +46,25 @@ public class ClientService extends StatusableService<ClientEntity> {
         client.setPhone(dto.getPhone());
         client.setPhotoPermission(dto.isPhotoPermission());
         client.setSource(SourceClient.valueOf(dto.getSourceClient().toUpperCase()));
-        OrganizationEntity currentOrganization = organizationRepository
-                .findActiveById(dto.getOrganization().getId())
-                .orElseThrow(() -> new EntityNotFoundException("Такої організації не існує"));
+        if(!organizationRepository.existsActiveById(dto.getOrganizationId())){
+            throw new EntityNotFoundException("Такої організації не існує");
+        }
+        OrganizationEntity currentOrganization = organizationRepository.getReferenceById(dto.getOrganizationId());
         client.setOrganizationLinks(Set.of(new ClientsOrganizationsEntity(client, currentOrganization, Status.ENABLED)));
         client.setChildren(dto.getChildren()
                 .stream()
-                .peek(child -> {
-                    child.setClient(client);
-                    child.setStatus(Status.ENABLED);
-                })
+                .map(child -> ChildEntity.builder()
+                                .client(client)
+                                .secondName(child.getSecondName())
+                                .birthdayDate(child.getBirthdayDate())
+                                .diagnosis(child.getDiagnosis())
+                                .name(child.getName())
+                                .interests(child.getInterests())
+                                .lastName(child.getLastName())
+                                .requestForLessons(child.getRequestForLessons())
+                                .status(Status.ENABLED)
+                                .build()
+                )
                 .collect(Collectors.toSet()));
         if (client.getChildren().isEmpty()) {
             throw new IllegalArgumentException("Дані дитини не заповнено");
@@ -63,29 +73,25 @@ public class ClientService extends StatusableService<ClientEntity> {
         UUID refreshToken = saveClient.getRefreshToken();
         String token = jwtService.generateToken(saveClient);
         return new AuthResponseDto(token, refreshToken);
-
     }
 
-    public void setDisableStatus(DisabledObjectRequestDto dto) {
-        super.setDisableStatus(dto, clientRepository);
+    public void setDisableStatus(NewStatusObjectByIdRequestDto dto) {
+        super.setDisableStatus(dto.getId(), clientRepository);
     }
-
-    public void setEnableStatus(DisabledObjectRequestDto dto) {
-        super.setEnableStatus(dto, clientRepository);
+    public void setEnableStatus(NewStatusObjectByIdRequestDto dto) {
+        super.setEnableStatus(dto.getId(), clientRepository);
     }
 
     public Set<OrganizationEntity> getAllOrganizations(Long clientId) {
-        List<ClientsOrganizationsEntity> links = clientsOrganizationsRepository.findAllActiveByClientId(clientId);
+        List<ClientsOrganizationsEntity> links = clientsOrganizationsRepository.findAllActiveWithOrgByClientId(clientId);
         if (links == null || links.isEmpty()) {
             throw new IllegalArgumentException("Цей клієнт не прив'язаний до жодної організації");
         }
-
         Set<OrganizationEntity> organizations = links.stream()
                 .map(ClientsOrganizationsEntity::getOrganization)
                 .filter(org -> Status.ENABLED.equals(org.getStatus()))
                 .collect(Collectors.toSet());
         if (!organizations.isEmpty()) {
-
             return organizations;
         } else throw new EntityNotFoundException("Не знайдено жодної активної організації з клієнтом");
     }

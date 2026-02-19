@@ -1,4 +1,5 @@
 @host = http://localhost:8082
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIEFETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzEzNTg1MzIsImV4cCI6MTc3MTQ0NDkzMn0.14pI1hVnaR7ZrGJpAbhsBuW923Px7eQntvLUq3lwM1s
 
 ### логін
 POST {{host}}/api/login
@@ -19,6 +20,7 @@ Content-Type: application/json
 
 ### Створення видів послуги
 POST {{host}}/api/service-type/add
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
       {
@@ -28,7 +30,7 @@ Content-Type: application/json
 
 ### Створення нової організації з налаштуваннями
 POST {{host}}/api/organizations/crud/add
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzA2NjQ0OTksImV4cCI6MTc3MDc1MDg5OX0.wS2cAlnfDoU7APpHUMNfKABpXhHkSbcKooO_Hh9Y4kw
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
         {
@@ -52,7 +54,7 @@ Content-Type: application/json
             ],
             "priceList": [
             {
-            "serviceType":  { "id": 2 },
+            "serviceTypeId": 2,
             "valueOnePay": 350
             }
             ]
@@ -62,10 +64,11 @@ Content-Type: application/json
 
 ### Створення персоналу
 POST {{host}}/api/employee/add
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
   {
-      "login": "employee3",
+      "login": "employee6",
       "password": "employee",
       "name": "employee3",
       "lastName": "employee",
@@ -75,21 +78,22 @@ Content-Type: application/json
 
 ### Створення контракту
 POST {{host}}/api/employee/contracts/add
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-"employee": {"id": 3},
-"organization": {"id": 2},
-"masterEmployee": null,
+"employeeId": 7,
+"organizationId": 2,
+"masterEmployeeId": null,
 "salary": [
         {
-            "serviceType": {"id": 2},
+            "serviceTypeId": 2,
             "value": 170,
             "premiumValue": null,
             "lessonType" : "INDIVIDUAL"
         },
         {
-            "serviceType": {"id": 2},
+            "serviceTypeId": 2,
             "value": 100,
             "premiumValue": null,
             "lessonType" : "GROUP"
@@ -100,14 +104,15 @@ Content-Type: application/json
 
 ### Створення клієнта
 POST {{host}}/api/clients/add
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-"login": "login24",
+"login": "login25",
 "password": "pass",
 "phone": "095111111",
 "name": "Dima",
-    "organization": {"id":  2},
+    "organizationId": 2,
     "photoPermission": true,
     "sourceClient": "OLX",
     "children": [
@@ -124,8 +129,19 @@ Content-Type: application/json
 
 }
 
+### Додати Організацію Клієнту
+POST {{host}}/api/clients/add_organization
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+"clientId": 2,
+"organizationId": 1
+}
+
 ### Вимкнути ентіті
 POST {{host}}/api/child/enable
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -134,7 +150,7 @@ Content-Type: application/json
 
 ### Створити динину клієнтом
 POST {{host}}/api/child/add/client
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IkNMSUVOVCIsImlkIjozLCJzdWIiOiIzIiwiaWF0IjoxNzY5NDYwNzM5LCJleHAiOjE3Njk1NDcxMzl9.5zXYNzEZ7WrcnX3hXOa6X-q9zPRilj-bhSXKS0F7w2o
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -149,11 +165,11 @@ Content-Type: application/json
 
 ### Створити динину Адміном
 POST {{host}}/api/child/add/admin
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiBBRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3NzA3MTQ5ODUsImV4cCI6MTc3MDgwMTM4NX0.JqQ9_mj_tCR5YhbFl-wLAGYwc25d9ZYlN66BOHSzekk
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "client": {"id": 2},
+    "clientId": 2,
     "name": "child2333",
     "lastName": "sgddgh",
     "secondName": "sdfgh",
@@ -165,37 +181,37 @@ Content-Type: application/json
 
 ### Створити заняття
 POST {{host}}/api/lesson/create
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIEFETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzEyNjMwNTQsImV4cCI6MTc3MTM0OTQ1NH0.pUFXUSvGBZStCew2iMlK_nGPkGLVH2dGHNMSUH7NQhc
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
     "lessonStatus" : null,
-    "child" : {"id": 1},
-    "serviceType" : {"id": 2},
+    "childId" : 1,
+    "serviceTypeId" : 2,
     "lessonType" : "GROUP",
     "lessonDateTime" : "2026-02-12T15:00",
     "lessonEndTime" : "2026-02-12T15:45",
-    "organization" : {"id" :  2},
-    "employee" : {"id" : 2},
+    "organizationId" : 2,
+    "employeeId" : 2,
     "comments" : "test"
 }
 
 ### Отримати графік на період
 POST {{host}}/api/schedule/period
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIEFETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzEyNjMwNTQsImV4cCI6MTc3MTM0OTQ1NH0.pUFXUSvGBZStCew2iMlK_nGPkGLVH2dGHNMSUH7NQhc
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
     "startDate": "2026-02-02",
     "endDate": "2026-02-16",
-    "organization": {"id": 2}
+    "organizationId": 2
 }
 
 ### Отримати cписок дітей на організацію
 POST {{host}}/api/schedule/childNames
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIEFETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzEyNjMwNTQsImV4cCI6MTc3MTM0OTQ1NH0.pUFXUSvGBZStCew2iMlK_nGPkGLVH2dGHNMSUH7NQhc
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "organization": {"id": 2}
+    "organizationId": 2
 }

@@ -15,5 +15,3 @@ public interface UserRepository<T extends UserEntity> extends JpaRepository<T, L
 
     Optional<T> findByLoginAndPasswordAndStatus(String login, String password, Status status);
 }
-
-//TODO: findEntity default only status.ENABLED

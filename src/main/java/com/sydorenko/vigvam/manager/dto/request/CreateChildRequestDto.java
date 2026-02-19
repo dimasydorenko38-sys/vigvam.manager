@@ -1,9 +1,9 @@
 package com.sydorenko.vigvam.manager.dto.request;
 
-import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.time.LocalDate;
 
@@ -11,10 +11,15 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateChildRequestDto {
-    private ClientEntity client;
+    @NonNull
+    private Long clientId;
+    @NonNull
     private String name;
+    @NonNull
     private String lastName;
+    @NonNull
     private String secondName;
+    @NonNull
     private LocalDate birthdayDate;
     private String interests;
     private String requestForLessons;

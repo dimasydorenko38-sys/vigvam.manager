@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -71,7 +72,7 @@ public class CreateSuperAdminService {
             contract.setOrganization(organizationSave);
             contract.setRole(RoleUser.SUPER_ADMIN);
             contract.setStatus(Status.ENABLED);
-            contract.setSalary(Set.of(salary));
+            contract.setSalary(List.of(salary));
             contractEmployeeRepository.save(contract);
             System.out.println("-->> адміна було створено");
         }

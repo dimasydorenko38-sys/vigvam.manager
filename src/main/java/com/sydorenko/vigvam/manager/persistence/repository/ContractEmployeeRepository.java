@@ -48,5 +48,6 @@ public interface ContractEmployeeRepository extends JpaRepository<ContractEmploy
             @Param("status")Status status
     );
 
+    boolean existsByEmployeeIdAndOrganizationIdAndRoleAndStatus(Long idEmp, Long idOrg, RoleUser role, Status status);
 }
 

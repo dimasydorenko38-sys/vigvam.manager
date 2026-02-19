@@ -44,13 +44,13 @@ public class ScheduledService {
             period.add(i);
         }
 
-        OrganizationEntity organization = organizationRepository.findActiveByIdWithSettings(dto.getOrganization().getId())
+        OrganizationEntity organization = organizationRepository.findActiveByIdWithSettings(dto.getOrganizationId())
                 .orElseThrow(() -> new EntityNotFoundException("Не знайдено цієї організації"));
 
-        Set<EmployeeNameResponseProjection> employees = new HashSet<>(contractEmployeeService.getAllEmployeeNamesByOrg(dto.getOrganization().getId()));
+        Set<EmployeeNameResponseProjection> employees = new HashSet<>(contractEmployeeService.getAllEmployeeNamesByOrg(dto.getOrganizationId()));
 
         List<LessonResponseProjection> lessons = lessonService
-                .getLessonsByOrgIdForPeriod(dto.getOrganization().getId(), startDate, endDate);
+                .getLessonsByOrgIdForPeriod(dto.getOrganizationId(), startDate, endDate);
 
         Map<LocalDate, List<LessonResponseProjection>> lessonsByDate = lessons.stream()
                 .collect(Collectors.groupingBy(lesson -> lesson.getLessonDateTime().toLocalDate(), Collectors.toList()));

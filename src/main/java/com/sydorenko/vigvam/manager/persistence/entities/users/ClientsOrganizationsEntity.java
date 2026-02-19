@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
 import com.sydorenko.vigvam.manager.enums.Status;
+import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class ClientsOrganizationsEntity {
+public class ClientsOrganizationsEntity implements Statusable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
