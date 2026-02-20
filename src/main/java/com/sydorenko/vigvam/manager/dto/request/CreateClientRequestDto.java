@@ -1,6 +1,5 @@
 package com.sydorenko.vigvam.manager.dto.request;
 
-import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
 import lombok.*;
 
 import java.util.Set;
@@ -24,7 +23,6 @@ public class CreateClientRequestDto {
     private String name;
     @NonNull
     private Long organizationId;
-    @NonNull
     private boolean photoPermission;
     private String sourceClient;
     private Set<CreateChildRequestDto> children;

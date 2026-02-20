@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ChildRepository extends JpaRepository<ChildEntity,Long>, GenericActiveRepository<ChildEntity> {
+public interface
+ChildRepository extends JpaRepository<ChildEntity,Long>, GenericActiveRepository<ChildEntity> {
 }

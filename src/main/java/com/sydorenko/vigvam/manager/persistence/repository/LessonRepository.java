@@ -4,8 +4,6 @@ import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.LessonResponse
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.LessonEntity;
-import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
-import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

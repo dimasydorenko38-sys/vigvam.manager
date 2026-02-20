@@ -1,5 +1,6 @@
 @host = http://localhost:8082
-@token = eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIEFETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzEzNTg1MzIsImV4cCI6MTc3MTQ0NDkzMn0.14pI1hVnaR7ZrGJpAbhsBuW923Px7eQntvLUq3lwM1s
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzE1OTY5OTgsImV4cCI6MTc3MTY4MzM5OH0.e0PZMBqSWqikFRf9v5x_Ffp_102kwWHIBqxx0OKypGU
+
 
 ### логін
 POST {{host}}/api/login
@@ -15,7 +16,7 @@ POST {{host}}/api/login/refresh
 Content-Type: application/json
 
 {
-"refreshToken": "c4b45610-d8e2-475c-a213-333a22d125dd"
+"refreshToken": "4de7f9a8-19cf-4e10-8525-bf0c236e2d71"
 }
 
 ### Створення видів послуги
@@ -23,10 +24,10 @@ POST {{host}}/api/service-type/add
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
-      {
-        "serviceType": "logo",
-        "displayName": "logo"
-        }
+{
+"serviceType": "logo",
+"displayName": "logo"
+}
 
 ### Створення нової організації з налаштуваннями
 POST {{host}}/api/organizations/crud/add
@@ -68,9 +69,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
   {
-      "login": "employee6",
+      "login": "employee",
       "password": "employee",
-      "name": "employee3",
+      "name": "employee01",
       "lastName": "employee",
       "phone": "Phone"
         }
@@ -82,7 +83,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-"employeeId": 7,
+"employeeId": 2,
 "organizationId": 2,
 "masterEmployeeId": null,
 "salary": [
@@ -104,11 +105,10 @@ Content-Type: application/json
 
 ### Створення клієнта
 POST {{host}}/api/clients/add
-Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-"login": "login25",
+"login": "loginСlient12",
 "password": "pass",
 "phone": "095111111",
 "name": "Dima",
@@ -135,7 +135,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-"clientId": 2,
+"clientId": 1,
 "organizationId": 1
 }
 
@@ -169,7 +169,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "clientId": 2,
+    "clientId": 1,
     "name": "child2333",
     "lastName": "sgddgh",
     "secondName": "sdfgh",
@@ -189,8 +189,8 @@ Content-Type: application/json
     "childId" : 1,
     "serviceTypeId" : 2,
     "lessonType" : "GROUP",
-    "lessonDateTime" : "2026-02-12T15:00",
-    "lessonEndTime" : "2026-02-12T15:45",
+    "lessonDateTime" : "2026-02-21T15:00",
+    "lessonEndTime" : "2026-02-21T15:45",
     "organizationId" : 2,
     "employeeId" : 2,
     "comments" : "test"
@@ -202,8 +202,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "startDate": "2026-02-02",
-    "endDate": "2026-02-16",
+    "startDate": "2026-02-10",
+    "endDate": "2026-02-13",
     "organizationId": 2
 }
 

@@ -1,6 +1,5 @@
 package com.sydorenko.vigvam.manager.enums.lessons;
 
-import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import jakarta.persistence.EntityNotFoundException;
 
 import java.util.Arrays;

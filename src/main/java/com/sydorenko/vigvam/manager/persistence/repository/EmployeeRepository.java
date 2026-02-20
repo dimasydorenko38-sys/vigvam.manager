@@ -3,7 +3,6 @@ package com.sydorenko.vigvam.manager.persistence.repository;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.EmployeeNameResponseProjection;
 import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
 import lombok.NonNull;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Set;

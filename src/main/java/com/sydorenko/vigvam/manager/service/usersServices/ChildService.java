@@ -5,6 +5,7 @@ import com.sydorenko.vigvam.manager.dto.request.CreateChildRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.ChildNameResponseDto;
 import com.sydorenko.vigvam.manager.enums.Status;
+import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ChildEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
@@ -19,10 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.*;
 
 @Service
@@ -58,6 +61,7 @@ public class ChildService extends StatusableService<ChildEntity> {
                 .interests(dto.getInterests())
                 .requestForLessons(dto.getRequestForLessons())
                 .status(Status.ENABLED)
+                .createdByRole(RoleUser.CLIENT)
                 .build();
         childRepository.save(child);
     }
@@ -76,6 +80,7 @@ public class ChildService extends StatusableService<ChildEntity> {
                 .interests(dto.getInterests())
                 .requestForLessons(dto.getRequestForLessons())
                 .status(Status.ENABLED)
+                .createdByRole(RoleUser.ADMIN)
                 .build();
         childRepository.save(child);
     }
@@ -89,6 +94,7 @@ public class ChildService extends StatusableService<ChildEntity> {
                 .flatMap(client -> Stream.ofNullable(client.getChildren()))
                 .flatMap(Collection::stream)
                 .filter(childEntity -> Status.ENABLED.equals(childEntity.getStatus()))
+                .sorted(comparing(ChildEntity::getLastName))
                 .map(ChildNameResponseDto::new)
                 .collect(toSet());
     }

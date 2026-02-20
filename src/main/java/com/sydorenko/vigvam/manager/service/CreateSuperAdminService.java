@@ -10,7 +10,6 @@ import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeE
 import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.SalaryEmployeeEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.*;
-import com.sydorenko.vigvam.manager.service.organizationsServices.ServiceTypeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,16 +17,13 @@ import org.springframework.stereotype.Service;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class CreateSuperAdminService {
-    private final ClientRepository clientRepository;
     private final OrganizationRepository organizationRepository;
     private final EmployeeRepository employeeRepository;
-    private final ServiceTypeService serviceTypeService;
     private final ContractEmployeeRepository contractEmployeeRepository;
     private final ServiceTypeRepository serviceTypeRepository;
 

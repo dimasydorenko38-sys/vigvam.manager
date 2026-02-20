@@ -1,5 +1,7 @@
 package com.sydorenko.vigvam.manager.service.usersServices;
 
+import com.sun.jdi.request.DuplicateRequestException;
+import com.sydorenko.vigvam.manager.configuration.AuditorAwareImpl;
 import com.sydorenko.vigvam.manager.dto.request.CreateClientRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
@@ -34,9 +36,13 @@ public class ClientService extends StatusableService<ClientEntity> {
     private final OrganizationRepository organizationRepository;
     private final JwtService jwtService;
     private final ClientsOrganizationsRepository clientsOrganizationsRepository;
+    private final AuditorAwareImpl auditorAware;
 
 
     public AuthResponseDto createClient(CreateClientRequestDto dto) {
+        if(clientRepository.existsByLogin(dto.getLogin())){
+            throw new DuplicateRequestException("Цей логін або номер телефону вже використовується в системі, вигадайте новий логін для реєстрації");
+        }
         ClientEntity client = new ClientEntity();
         client.setStatus(Status.ENABLED);
         client.setRole(RoleUser.CLIENT);

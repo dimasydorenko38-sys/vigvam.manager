@@ -29,7 +29,7 @@ import static org.hibernate.envers.RelationTargetAuditMode.NOT_AUDITED;
 @Audited
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "lessons", indexes = {
-        @Index(name = "lesson_organization_idx", columnList = "organization")
+        @Index(name = "idx_lessonentity", columnList = "organization_id, lesson_date_time, employee_id")
 })
 public class LessonEntity {
 
@@ -46,7 +46,7 @@ public class LessonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
-    @JoinColumn(name = "service_type", nullable = false)
+    @JoinColumn(name = "service_type_id", nullable = false)
     private ServiceTypeEntity serviceType;
 
     @NonNull
@@ -66,17 +66,17 @@ public class LessonEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
-    @JoinColumn(name = "organization", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = false)
     private OrganizationEntity organization;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
-    @JoinColumn(name = "employee", nullable = false)
+    @JoinColumn(name = "employee_id", nullable = false)
     private EmployeeEntity employee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Audited(targetAuditMode = NOT_AUDITED)
-    @JoinColumn(name = "child")
+    @JoinColumn(name = "child_id")
     private ChildEntity child;
 
 //    TODO: create  Child -> (OneToMany) childPerformanceEntity (ManyToOne) -> Lessons

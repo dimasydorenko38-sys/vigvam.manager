@@ -15,9 +15,6 @@ import java.util.List;
 @Repository
 public interface ContractEmployeeRepository extends JpaRepository<ContractEmployeeEntity,Long> {
 
-    List<ContractEmployeeEntity> findAllByOrganizationId(Long id);
-    List<ContractEmployeeEntity> findAllByEmployeeId(Long id);
-
     @EntityGraph(attributePaths = {"employee", "salary", "organization"})
     List<ContractEmployeeEntity> findAllWithDetailsByEmployeeIdAndStatus(Long id, Status status);
     default     List<ContractEmployeeEntity> findAllActiveWithDetailsByEmployeeId(Long id){
@@ -29,7 +26,7 @@ public interface ContractEmployeeRepository extends JpaRepository<ContractEmploy
     List<ContractEmployeeEntity> findAllWithOrgByEmployeeIdAndStatus(Long id, Status status);
     default List<ContractEmployeeEntity> findAllActiveWithOrgByEmployeeId(Long id){
         return findAllWithOrgByEmployeeIdAndStatus(id, Status.ENABLED);
-    };
+    }
 
     @Query("""
             SELECT

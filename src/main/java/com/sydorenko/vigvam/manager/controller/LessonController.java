@@ -24,7 +24,7 @@ public class LessonController {
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<MessageResponseDto> createGenericLesson (@RequestBody CreateLessonRequestDto dto){
-        genericService.checkAuditorByOrganization(dto.getOrganizationId().getId());
+        genericService.checkAuditorByOrganization(dto.getOrganizationId());
         lessonService.createGenericLesson(dto);
         messageResponseDto.setMessage("Successful");
         return ResponseEntity.ok(messageResponseDto);

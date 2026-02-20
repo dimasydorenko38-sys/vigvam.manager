@@ -22,8 +22,10 @@ public class ServiceTypeController {
     private final MessageResponseDto messageResponseDto;
 
     @PostMapping("/add")
-    private void createServiceType(@RequestBody CreateServiceTypeRequestDto dto){
+    public ResponseEntity<MessageResponseDto> createServiceType(@RequestBody CreateServiceTypeRequestDto dto){
         serviceTypeService.createServiceType(dto);
+        messageResponseDto.setMessage("Successful");
+        return ResponseEntity.ok(messageResponseDto);
     }
 
     @PostMapping("/disable")

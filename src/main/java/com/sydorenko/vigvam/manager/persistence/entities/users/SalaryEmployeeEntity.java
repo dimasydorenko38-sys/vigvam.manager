@@ -3,7 +3,6 @@ package com.sydorenko.vigvam.manager.persistence.entities.users;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -14,7 +13,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "salary")
+@Table(name = "salary", indexes = {
+        @Index(name = "idx_salaryemployeeentity", columnList = "contract_id")
+})
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)

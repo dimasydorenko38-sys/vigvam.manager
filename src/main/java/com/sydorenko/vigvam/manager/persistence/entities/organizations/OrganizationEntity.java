@@ -6,7 +6,6 @@ import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeE
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

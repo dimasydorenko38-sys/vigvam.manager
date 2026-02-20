@@ -1,10 +1,10 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
 import com.sydorenko.vigvam.manager.enums.Status;
+import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -15,7 +15,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "children")
+@Table(name = "children", indexes = {
+        @Index(name = "idx_childentity_status", columnList = "status, client_id")
+})
 @Getter
 @Setter
 @EntityListeners(AuditingEntityListener.class)
@@ -57,8 +59,11 @@ public class ChildEntity implements Statusable {
     private LocalDateTime disableDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status_user", nullable = false)
+    @Column(name = "status", nullable = false)
     private Status status;
+
+    @Column(name = "created_by_role")
+    private RoleUser createdByRole;
 
     @CreatedBy
     @Column(name = "created_by_id", updatable = false)

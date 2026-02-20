@@ -1,28 +1,25 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
-import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.enums.users.SourceClient;
-import com.sydorenko.vigvam.manager.interfaces.Statusable;
-import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
-@Table(name = "clients")
+@Table(name = "clients", indexes = {
+        @Index(name = "idx_cliententity_status", columnList = "status")
+})
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class ClientEntity extends UserEntity {
 
@@ -42,9 +39,27 @@ public class ClientEntity extends UserEntity {
     @Column(name = "role", nullable = false)
     private RoleUser role;
 
+    @Column(name = "created_by_client")
+    private boolean createdByClient;
+
     @Override
     public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("Role_"+this.role));
     }
 
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        ClientEntity client = (ClientEntity) o;
+        return getId() != null && Objects.equals(getId(), client.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
 }

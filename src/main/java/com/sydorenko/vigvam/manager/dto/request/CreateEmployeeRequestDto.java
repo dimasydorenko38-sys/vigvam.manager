@@ -1,14 +1,10 @@
 package com.sydorenko.vigvam.manager.dto.request;
 
-import com.sydorenko.vigvam.manager.enums.users.RoleUser;
-import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 
 //  {

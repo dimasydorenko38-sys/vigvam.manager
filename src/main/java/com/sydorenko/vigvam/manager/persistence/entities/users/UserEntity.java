@@ -4,8 +4,11 @@ import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,9 +40,19 @@ public abstract class UserEntity implements UserDetails, Statusable {
     @Column(name = "phone", length = 20, nullable = false)
     private String phone;
 
-    @CreationTimestamp
-    @Column(name = "created_date", updatable = false, columnDefinition = "DATE")
+    @CreatedDate
+    @Column(name = "created_date", updatable = false)
     private LocalDate createdDate;
+
+    @CreatedBy
+    @Column(name = "created_by_id", updatable = false)
+    private Long createdBy;
+
+    @LastModifiedBy
+    private Long lastModifiedBy;
+
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
 
     @Column(name = "disable_date")
     private LocalDateTime disableDate;
@@ -70,7 +83,7 @@ public abstract class UserEntity implements UserDetails, Statusable {
 
     @Override
     public boolean isEnabled() {
-        return Status.ENABLED.equals(this.status) ;
+        return Status.ENABLED.equals(this.status);
     }
 
 

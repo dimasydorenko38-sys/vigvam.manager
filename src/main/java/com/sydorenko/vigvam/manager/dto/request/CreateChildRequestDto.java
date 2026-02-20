@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateChildRequestDto {
-    @NonNull
     private Long clientId;
     @NonNull
     private String name;

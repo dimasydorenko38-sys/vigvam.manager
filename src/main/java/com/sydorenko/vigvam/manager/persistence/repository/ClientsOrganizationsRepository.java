@@ -1,7 +1,6 @@
 package com.sydorenko.vigvam.manager.persistence.repository;
+
 import com.sydorenko.vigvam.manager.enums.Status;
-import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
-import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +18,7 @@ public interface ClientsOrganizationsRepository extends JpaRepository<ClientsOrg
     List<ClientsOrganizationsEntity> findAllByClientIdAndStatus(Long clientId, Status status);
     default List<ClientsOrganizationsEntity> findAllActiveWithOrgByClientId(Long clientId){
         return findAllByClientIdAndStatus(clientId, Status.ENABLED);
-    };
+    }
 
     @EntityGraph(attributePaths = {"client.children"})
     @Query("""

@@ -21,11 +21,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class ServiceTypeEntity implements Statusable {
 
-    // LOGOPED
-    // SI
-    // GROUP
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

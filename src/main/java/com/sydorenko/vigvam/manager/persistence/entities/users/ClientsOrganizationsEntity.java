@@ -18,7 +18,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "client_organization")
+@Table(name = "client_organization", indexes = {
+        @Index(name = "idx_clientsorganizationsentity", columnList = "organization_id, status")
+})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -31,11 +33,11 @@ public class ClientsOrganizationsEntity implements Statusable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client", nullable = false)
+    @JoinColumn(name = "client_id", nullable = false)
     private ClientEntity client;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization", nullable = false)
+    @JoinColumn(name = "organization_id", nullable = false)
     private OrganizationEntity organization;
 
     @Column(name = "disable_date")
