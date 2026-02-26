@@ -1,6 +1,8 @@
 package com.sydorenko.vigvam.manager.persistence.entities.users;
 
+import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
+import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,7 +24,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SalaryEmployeeEntity {
+public class SalaryEmployeeEntity implements Statusable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +48,9 @@ public class SalaryEmployeeEntity {
     @JoinColumn(name = "contract_id", nullable = false)
     private ContractEmployeeEntity contractEmployee;
 
+    @Column(name = "activated_date", updatable = false)
+    private LocalDateTime activatedDate;
+
     @CreatedBy
     @Column(name = "created_by_id", updatable = false)
     private Long createdById;
@@ -61,5 +66,12 @@ public class SalaryEmployeeEntity {
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
+
+    @Column(name = "disable_date")
+    private LocalDateTime disableDate;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private Status status;
 
 }

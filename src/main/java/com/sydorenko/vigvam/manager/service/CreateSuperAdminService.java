@@ -58,11 +58,13 @@ public class CreateSuperAdminService {
             ContractEmployeeEntity contract = new ContractEmployeeEntity();
             ServiceTypeEntity serviceType = serviceTypeRepository.save(new ServiceTypeEntity("MANAGE", "Адміністрування", Status.ENABLED));
 
+
             SalaryEmployeeEntity salary = new SalaryEmployeeEntity();
             salary.setValue(0L);
             salary.setServiceType(serviceType);
             salary.setContractEmployee(contract);
             salary.setLessonType(LessonType.INDIVIDUAL);
+            salary.setStatus(Status.ENABLED);
 
             contract.setEmployee(employeeSave);
             contract.setOrganization(organizationSave);

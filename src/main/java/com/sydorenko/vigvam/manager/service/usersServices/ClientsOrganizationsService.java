@@ -1,8 +1,8 @@
 package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sun.jdi.request.DuplicateRequestException;
-import com.sydorenko.vigvam.manager.dto.request.CreateLinkClientOrgRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.NewStatusLinkClientOrgRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.CreateLinkClientOrgRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.NewStatusLinkClientOrgRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;
@@ -40,14 +40,14 @@ public class ClientsOrganizationsService extends StatusableService<ClientsOrgani
     }
 
     public void addLinkClientOrganization(CreateLinkClientOrgRequestDto dto) {
+        if(clientsOrganizationsRepository
+                .existsByClientIdAndOrganizationIdAndStatus(dto.clientId(), dto.organizationId(), Status.ENABLED)){
+            throw new DuplicateRequestException("Цей клієнт вже прив'язаний до обраної організації");
+        }
         ClientEntity client = clientRepository.findActiveById(dto.clientId())
                 .orElseThrow(() -> new EntityNotFoundException("Цей клієнт не існує або вимкнений"));
         OrganizationEntity organization = organizationRepository.findActiveById(dto.organizationId())
                 .orElseThrow(()-> new EntityNotFoundException("Організація вимкнена або не існує"));
-        if(clientsOrganizationsRepository
-                .existsByClientIdAndOrganizationIdAndStatus(client.getId(),organization.getId(),Status.ENABLED)){
-            throw new DuplicateRequestException("Цей клієнт вже прив'язаний до обраної організації");
-        }
         ClientsOrganizationsEntity clientsOrganizationsEntity =
                 new ClientsOrganizationsEntity(client,organization,Status.ENABLED);
         clientsOrganizationsRepository.save(clientsOrganizationsEntity);

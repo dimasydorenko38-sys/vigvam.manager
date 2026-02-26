@@ -12,6 +12,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+
+// LOGO
+// Sensorica
+
+
 @Entity
 @Table(name = "service_type")
 @Getter

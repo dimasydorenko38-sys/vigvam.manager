@@ -2,7 +2,7 @@ package com.sydorenko.vigvam.manager.service.lessonsServices;
 
 import com.sun.jdi.request.DuplicateRequestException;
 import com.sydorenko.vigvam.manager.configuration.BusinessConfig;
-import com.sydorenko.vigvam.manager.dto.request.CreateLessonRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.lessons.CreateLessonRequestDto;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.LessonEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.SettingLessonsTime;
@@ -61,7 +61,7 @@ public class CheckerLesson {
 
         if (lesson.getChild() != null) {
             ChildEntity childEntity = childRepository.findActiveById(lesson.getChild().getId())
-                    .orElseThrow(() -> new EntityNotFoundException("Така дитина не зареєстрована або вимкнена в системы"));
+                    .orElseThrow(() -> new EntityNotFoundException("Така дитина не зареєстрована або вимкнена в системі"));
             lesson.setChild(childEntity);
         }
         return lesson;

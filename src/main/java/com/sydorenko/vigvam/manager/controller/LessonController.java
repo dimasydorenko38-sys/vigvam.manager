@@ -1,10 +1,11 @@
 package com.sydorenko.vigvam.manager.controller;
 
-import com.sydorenko.vigvam.manager.dto.request.CreateLessonRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.lessons.CreateLessonRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.GenericService;
 import com.sydorenko.vigvam.manager.service.lessonsServices.LessonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +27,7 @@ public class LessonController {
     public ResponseEntity<MessageResponseDto> createGenericLesson (@RequestBody CreateLessonRequestDto dto){
         genericService.checkAuditorByOrganization(dto.getOrganizationId());
         lessonService.createGenericLesson(dto);
-        messageResponseDto.setMessage("Successful");
-        return ResponseEntity.ok(messageResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }
 
 }

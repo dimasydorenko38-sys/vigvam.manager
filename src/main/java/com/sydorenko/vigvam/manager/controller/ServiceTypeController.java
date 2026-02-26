@@ -1,7 +1,7 @@
 package com.sydorenko.vigvam.manager.controller;
 
-import com.sydorenko.vigvam.manager.dto.request.CreateServiceTypeRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.organizations.CreateServiceTypeRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.organizationsServices.ServiceTypeService;
 import lombok.RequiredArgsConstructor;
@@ -29,14 +29,14 @@ public class ServiceTypeController {
     }
 
     @PostMapping("/disable")
-    public ResponseEntity<MessageResponseDto> disableClient(@RequestBody NewStatusObjectByIdRequestDto dto){
+    public ResponseEntity<MessageResponseDto> disableClient(@RequestBody UpdateStatusObjectByIdRequestDto dto){
         serviceTypeService.setDisableStatus(dto);
         messageResponseDto.setMessage("Successful");
         return ResponseEntity.ok(messageResponseDto);
     }
 
     @PostMapping("/enable")
-    public ResponseEntity<MessageResponseDto> enableClient(@RequestBody NewStatusObjectByIdRequestDto dto){
+    public ResponseEntity<MessageResponseDto> enableClient(@RequestBody UpdateStatusObjectByIdRequestDto dto){
         serviceTypeService.setEnableStatus(dto);
         messageResponseDto.setMessage("Successful");
         return ResponseEntity.ok(messageResponseDto);

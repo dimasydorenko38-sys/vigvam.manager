@@ -1,12 +1,13 @@
 package com.sydorenko.vigvam.manager.controller;
 
-import com.sydorenko.vigvam.manager.dto.request.GetScheduleRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.lessons.GetScheduleRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.ChildNameResponseDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.ScheduleResponseDto;
 import com.sydorenko.vigvam.manager.service.GenericService;
 import com.sydorenko.vigvam.manager.service.ScheduledService;
 import com.sydorenko.vigvam.manager.service.usersServices.ChildService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class ScheduleController {
     public ResponseEntity<ScheduleResponseDto> getScheduleByPeriod(@RequestBody GetScheduleRequestDto dto){
         genericService.checkAuditorByOrganization(dto.getOrganizationId());
         ScheduleResponseDto scheduleResponseDto =  scheduledService.getScheduleByPeriod(dto);
-        return ResponseEntity.ok(scheduleResponseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(scheduleResponseDto);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
@@ -36,6 +37,6 @@ public class ScheduleController {
     public ResponseEntity<Set<ChildNameResponseDto>> getAllChildName(@RequestBody GetScheduleRequestDto dto){
         genericService.checkAuditorByOrganization(dto.getOrganizationId());
         Set<ChildNameResponseDto> childNameResponseProjection =  childService.getAllChildNameByOrgId(dto.getOrganizationId());
-        return ResponseEntity.ok(childNameResponseProjection);
+        return ResponseEntity.status(HttpStatus.OK).body(childNameResponseProjection);
     }
 }

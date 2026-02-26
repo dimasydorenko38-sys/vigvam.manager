@@ -54,9 +54,12 @@ public class ContractEmployeeEntity implements Statusable {
     @Column(name = "disable_date")
     private LocalDateTime disableDate;
 
+    @Column(name = "activated_date", updatable = false)
+    private LocalDate activatedDate;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @CreatedBy
     @Column(name = "created_by_id", updatable = false)

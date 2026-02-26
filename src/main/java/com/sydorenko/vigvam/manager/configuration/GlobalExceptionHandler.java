@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -47,6 +48,8 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
     }
+
+
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponseDto> handleDataUniqueRequest (DataIntegrityViolationException exception){
@@ -93,6 +96,17 @@ public class GlobalExceptionHandler {
                 exception.toString()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadable(HttpMessageNotReadableException exception) {
+        log.error("ERROR: Not correct Request: ", exception);
+        ErrorResponseDto error = new ErrorResponseDto(
+                LocalDateTime.now(),
+                "Виявлено помилку в запиті, ймовірно не заповнено обов'язкові поля",
+                exception.toString()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
     @ExceptionHandler(InvalidBearerTokenException.class)

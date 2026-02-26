@@ -8,7 +8,7 @@ import lombok.NonNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class NewStatusObjectByIdRequestDto {
+public class UpdateStatusObjectByIdRequestDto {
     @NonNull
     private Long id;
 }

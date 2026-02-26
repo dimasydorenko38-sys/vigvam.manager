@@ -1,6 +1,6 @@
 package com.sydorenko.vigvam.manager.service;
 
-import com.sydorenko.vigvam.manager.dto.request.GetScheduleRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.lessons.GetScheduleRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.*;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;

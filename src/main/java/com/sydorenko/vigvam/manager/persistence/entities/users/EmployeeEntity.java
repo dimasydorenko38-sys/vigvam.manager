@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class EmployeeEntity extends UserEntity {
 
     @Column(name = "last_name", nullable = false)

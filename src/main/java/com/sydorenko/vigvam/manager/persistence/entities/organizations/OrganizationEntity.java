@@ -16,6 +16,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,10 +45,10 @@ public class OrganizationEntity implements Statusable {
     private Set<ClientsOrganizationsEntity> clientLinks;
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-    private Set<ContractEmployeeEntity> employeeContracts;
+    private List<ContractEmployeeEntity> employeeContracts;
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-    private Set<PriceOrganizationEntity> price;
+    private List<PriceOrganizationEntity> price;
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     @MapKeyEnumerated(EnumType.STRING)

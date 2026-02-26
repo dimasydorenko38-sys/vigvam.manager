@@ -1,4 +1,4 @@
-package com.sydorenko.vigvam.manager.dto.request;
+package com.sydorenko.vigvam.manager.dto.request.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

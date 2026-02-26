@@ -2,8 +2,8 @@ package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sun.jdi.request.DuplicateRequestException;
 import com.sydorenko.vigvam.manager.configuration.AuditorAwareImpl;
-import com.sydorenko.vigvam.manager.dto.request.CreateClientRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.CreateClientRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
@@ -81,10 +81,10 @@ public class ClientService extends StatusableService<ClientEntity> {
         return new AuthResponseDto(token, refreshToken);
     }
 
-    public void setDisableStatus(NewStatusObjectByIdRequestDto dto) {
+    public void setDisableStatus(UpdateStatusObjectByIdRequestDto dto) {
         super.setDisableStatus(dto.getId(), clientRepository);
     }
-    public void setEnableStatus(NewStatusObjectByIdRequestDto dto) {
+    public void setEnableStatus(UpdateStatusObjectByIdRequestDto dto) {
         super.setEnableStatus(dto.getId(), clientRepository);
     }
 

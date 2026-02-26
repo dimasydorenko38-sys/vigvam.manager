@@ -1,10 +1,13 @@
 package com.sydorenko.vigvam.manager.controller;
 
-import com.sydorenko.vigvam.manager.dto.request.CreateOrganizationRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.organizations.CreateOrganizationRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.organizations.UpdateOrganizationRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.organizationsServices.OrganizationService;
+import com.sydorenko.vigvam.manager.service.organizationsServices.SupportOrganizationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,30 +20,50 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OrganizationController {
 
-    private final OrganizationService service;
-    private final MessageResponseDto messageResponseDto;
+    private final OrganizationService organizationService;
+    private final SupportOrganizationService supportOrganizationService;
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     public ResponseEntity<MessageResponseDto> createOrganizationThisSettings(@RequestBody CreateOrganizationRequestDto dto){
-        service.createOrganizationThisSettings(dto);
-        messageResponseDto.setMessage("Organization created");
-        return ResponseEntity.ok(messageResponseDto);
+        organizationService.createOrganizationThisSettings(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Organization created"));
+    }
+
+    @PostMapping("/update")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    public ResponseEntity<MessageResponseDto> updateOrganization(@RequestBody UpdateOrganizationRequestDto dto){
+        organizationService.updateOrganization(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/disable")
-    public ResponseEntity<MessageResponseDto> disableClient(@RequestBody NewStatusObjectByIdRequestDto dto){
-        service.setDisableStatus(dto);
-        messageResponseDto.setMessage("Successful");
-        return ResponseEntity.ok(messageResponseDto);
+    public ResponseEntity<MessageResponseDto> disableOrganization(@RequestBody UpdateStatusObjectByIdRequestDto dto){
+        organizationService.setDisableStatus(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
+
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/enable")
-    public ResponseEntity<MessageResponseDto> enableClient(@RequestBody NewStatusObjectByIdRequestDto dto){
-        service.setEnableStatus(dto);
-        messageResponseDto.setMessage("Successful");
-        return ResponseEntity.ok(messageResponseDto);
+    public ResponseEntity<MessageResponseDto> enableOrganization(@RequestBody UpdateStatusObjectByIdRequestDto dto){
+        organizationService.setEnableStatus(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
+    }
+
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PostMapping("/price/disable")
+    public ResponseEntity<MessageResponseDto> disablePrice(@RequestBody UpdateStatusObjectByIdRequestDto dto){
+        supportOrganizationService.setDisableStatusPrice(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
+
+    }
+
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @PostMapping("/price/enable")
+    public ResponseEntity<MessageResponseDto> enablePrice(@RequestBody UpdateStatusObjectByIdRequestDto dto){
+        supportOrganizationService.setEnableStatusPrice(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 }

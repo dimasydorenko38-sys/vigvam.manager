@@ -1,7 +1,7 @@
 package com.sydorenko.vigvam.manager.service.organizationsServices;
 
-import com.sydorenko.vigvam.manager.dto.request.CreateServiceTypeRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.organizations.CreateServiceTypeRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.ServiceTypeRepository;
@@ -35,11 +35,11 @@ public class ServiceTypeService extends StatusableService<ServiceTypeEntity> {
         return checkServiceType;
     }
 
-    public void setDisableStatus(NewStatusObjectByIdRequestDto dto) {
+    public void setDisableStatus(UpdateStatusObjectByIdRequestDto dto) {
         super.setDisableStatus(dto.getId(), serviceTypeRepository);
     }
 
-    public void setEnableStatus(NewStatusObjectByIdRequestDto dto) {
+    public void setEnableStatus(UpdateStatusObjectByIdRequestDto dto) {
         super.setEnableStatus(dto.getId(), serviceTypeRepository);
     }
 }

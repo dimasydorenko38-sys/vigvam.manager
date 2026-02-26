@@ -1,4 +1,4 @@
-package com.sydorenko.vigvam.manager.dto.request;
+package com.sydorenko.vigvam.manager.dto.request.organizations;
 
 import java.time.LocalTime;
 

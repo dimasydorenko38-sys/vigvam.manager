@@ -3,14 +3,12 @@ package com.sydorenko.vigvam.manager.service;
 import com.sydorenko.vigvam.manager.configuration.AuditorAwareImpl;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
+import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.UserEntity;
-import com.sydorenko.vigvam.manager.persistence.repository.ClientRepository;
-import com.sydorenko.vigvam.manager.persistence.repository.ClientsOrganizationsRepository;
-import com.sydorenko.vigvam.manager.persistence.repository.ContractEmployeeRepository;
-import com.sydorenko.vigvam.manager.persistence.repository.EmployeeRepository;
+import com.sydorenko.vigvam.manager.persistence.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -31,7 +29,7 @@ public class GenericService {
     private final ClientsOrganizationsRepository clientsOrganizationsRepository;
     private final ContractEmployeeRepository contractEmployeeRepository;
 
-//TODO need optimize request to DB
+//TODO: need optimize request to DB
     public void checkAuditorByOrganization(Long organizationId) {
         Long currentUserID = auditorAware.getCurrentAuditor()
                 .orElseThrow(() -> new AuthorizationDeniedException("Неможливо визначити Ваш ID, Ваш токен невалідний"));
@@ -58,7 +56,6 @@ public class GenericService {
             throw new AccessDeniedException("Користувач не має доступу до організації з ID: " + organizationId);
         }
     }
-
 
     public UserEntity getUserByTokenFields() {
         Long userId = auditorAware.getCurrentAuditor()

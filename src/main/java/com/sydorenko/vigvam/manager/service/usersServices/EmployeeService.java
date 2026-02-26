@@ -1,7 +1,8 @@
 package com.sydorenko.vigvam.manager.service.usersServices;
 
-import com.sydorenko.vigvam.manager.dto.request.CreateEmployeeRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.NewStatusObjectByIdRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.UpdateEmployeeRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.CreateEmployeeRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.EmployeeNameResponseProjection;
 import com.sydorenko.vigvam.manager.enums.Status;
@@ -44,10 +45,20 @@ public class EmployeeService extends StatusableService<EmployeeEntity> {
         return new AuthResponseDto(token,refreshToken);
     }
 
-    public void setDisableStatus(NewStatusObjectByIdRequestDto dto) {
+    public void updateEmployee (UpdateEmployeeRequestDto dto){
+        EmployeeEntity employee = employeeRepository.findActiveById(dto.getEmployeeId())
+                .orElseThrow(()-> new EntityNotFoundException("Профіль не активний або не існує"));
+        employee.setName(dto.getName());
+        employee.setLastName(dto.getLastName());
+        employee.setPhone(dto.getPhone());
+        employee.setBirthday(dto.getBirthday());
+        employeeRepository.save(employee);
+    }
+
+    public void setDisableStatus(UpdateStatusObjectByIdRequestDto dto) {
         super.setDisableStatus(dto.getId(), employeeRepository);
     }
-    public void setEnableStatus(NewStatusObjectByIdRequestDto dto) {
+    public void setEnableStatus(UpdateStatusObjectByIdRequestDto dto) {
         super.setEnableStatus(dto.getId(), employeeRepository);
     }
 

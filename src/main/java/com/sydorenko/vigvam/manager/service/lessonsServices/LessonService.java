@@ -1,7 +1,7 @@
 package com.sydorenko.vigvam.manager.service.lessonsServices;
 
 import com.sydorenko.vigvam.manager.configuration.BusinessConfig;
-import com.sydorenko.vigvam.manager.dto.request.CreateLessonRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.lessons.CreateLessonRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.LessonResponseProjection;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonCategory;
@@ -10,10 +10,10 @@ import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.LessonEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
+import com.sydorenko.vigvam.manager.persistence.entities.organizations.PriceOrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.EmployeeEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.*;
-import com.sydorenko.vigvam.manager.service.GenericService;
 import com.sydorenko.vigvam.manager.service.organizationsServices.ServiceTypeService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.NonNull;
@@ -38,11 +38,18 @@ public class LessonService {
     private final BusinessConfig businessConfig;
     private final ChildRepository childRepository;
 
+
     public void createGenericLesson(@NonNull CreateLessonRequestDto dto) {
         OrganizationEntity organizationLesson = organizationRepository.findActiveByIdWithSettings(dto.getOrganizationId())
                 .orElseThrow(() -> new EntityNotFoundException("Організацію не знайдено"));
 
         ServiceTypeEntity serviceTypeLesson = serviceTypeService.getServiceTypeAndCheck(dto.getServiceTypeId());
+
+        //TODO: check N+1
+        List<PriceOrganizationEntity> priceList = organizationLesson.getPrice();
+        priceList.stream().filter(price -> serviceTypeLesson.getId().equals(price.getServiceType().getId()))
+                .filter(price -> price.getStatus().equals(Status.ENABLED))
+                .findFirst().orElseThrow(()-> new EntityNotFoundException("Прайс організації не містить такої послуги"));
 
         List<ContractEmployeeEntity> contracts = contractEmployeeRepository.findAllActiveWithDetailsByEmployeeId(dto.getEmployeeId());
         if (contracts.isEmpty()) {

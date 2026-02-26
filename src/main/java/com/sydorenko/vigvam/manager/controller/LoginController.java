@@ -1,7 +1,7 @@
 package com.sydorenko.vigvam.manager.controller;
 
-import com.sydorenko.vigvam.manager.dto.request.RefreshTokenDto;
-import com.sydorenko.vigvam.manager.dto.request.UserLoginDto;
+import com.sydorenko.vigvam.manager.dto.request.users.RefreshTokenDto;
+import com.sydorenko.vigvam.manager.dto.request.users.UserLoginDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.service.JwtService;
 import lombok.RequiredArgsConstructor;

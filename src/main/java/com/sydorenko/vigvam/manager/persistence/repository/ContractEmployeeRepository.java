@@ -10,10 +10,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface ContractEmployeeRepository extends JpaRepository<ContractEmployeeEntity,Long> {
+public interface ContractEmployeeRepository extends JpaRepository<ContractEmployeeEntity,Long>, GenericActiveRepository<ContractEmployeeEntity> {
 
     @EntityGraph(attributePaths = {"employee", "salary", "organization"})
     List<ContractEmployeeEntity> findAllWithDetailsByEmployeeIdAndStatus(Long id, Status status);

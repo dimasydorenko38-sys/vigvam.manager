@@ -1,8 +1,9 @@
-package com.sydorenko.vigvam.manager.dto.request;
+package com.sydorenko.vigvam.manager.dto.request.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.time.LocalDate;
 
@@ -21,10 +22,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class CreateEmployeeRequestDto {
 
-    private String login;
-    private String password;
-    private String name;
-    private String lastName;
-    private String phone;
-    private LocalDate birthday;
+    @NonNull private String login;
+    @NonNull private String password;
+    @NonNull private String name;
+    @NonNull private String lastName;
+    @NonNull private String phone;
+    @NonNull private LocalDate birthday;
 }

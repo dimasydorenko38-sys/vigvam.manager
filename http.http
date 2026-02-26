@@ -1,5 +1,5 @@
 @host = http://localhost:8082
-@token = eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzE1OTY5OTgsImV4cCI6MTc3MTY4MzM5OH0.e0PZMBqSWqikFRf9v5x_Ffp_102kwWHIBqxx0OKypGU
+@token = eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzIwMjEyOTgsImV4cCI6MTc3MjEwNzY5OH0.3YGFKyIWrkR1U5AgOe55g4hWw7wuvYeVVt8FbZDtzJY
 
 
 ### логін
@@ -34,9 +34,10 @@ POST {{host}}/api/organizations/crud/add
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
-        {
+    {
             "organizationName": "Організація24",
             "organizationCity": "Київ",
+            "address": "Майдан незалежності",
             "settingLessonsTimesList": [
             {
             "lessonType": "INDIVIDUAL",
@@ -56,10 +57,58 @@ Content-Type: application/json
             "priceList": [
             {
             "serviceTypeId": 2,
+            "lessonType": "INDIVIDUAL",
             "valueOnePay": 350
+            },    {
+            "serviceTypeId": 2,
+            "lessonType": "GROUP",
+            "valueOnePay": 200
             }
             ]
         }
+
+### Редагування організації з налаштуваннями
+POST {{host}}/api/organizations/crud/update
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "organizationId": 3,
+    "organizationName": "Організація24",
+    "organizationCity": "Київ",
+     "address": "address",
+    "settingLessonsTimesList": [
+    {
+    "lessonType": "INDIVIDUAL",
+    "firstHourOfWork": "15:00",
+    "lastHourOfWork": "18:00",
+    "lessonDurationMinutes": 45,
+    "breakDurationMinutes": 15
+    },
+    {
+    "lessonType": "GROUP",
+    "firstHourOfWork": "09:00",
+    "lastHourOfWork": "15:00",
+    "lessonDurationMinutes": 50,
+    "breakDurationMinutes": 10
+    }
+    ],
+    "priceList": [
+    {
+    "activatedDate": "2026-02-26T12:00",
+    "serviceTypeId": 2,
+    "lessonType": "INDIVIDUAL",
+    "valueOnePay": 350,
+    "valueSubscriptionPay": 300
+    },
+    {
+    "serviceTypeId": 2,
+    "lessonType": "GROUP",
+    "valueOnePay": 200,
+    "valueSubscriptionPay": 150
+    }
+    ]
+}
 
 
 
@@ -78,13 +127,13 @@ Content-Type: application/json
 
 
 ### Створення контракту
-POST {{host}}/api/employee/contracts/add
+POST {{host}}/api/contract/add
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
 "employeeId": 2,
-"organizationId": 2,
+"organizationId": 3,
 "masterEmployeeId": null,
 "salary": [
         {
@@ -103,6 +152,30 @@ Content-Type: application/json
 "role": "employee"
         }
 
+### Редагування контракту
+POST {{host}}/api/contract/update
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+        {
+            "contractId": 2,
+            "activatedDate": "2026-02-26T00:00",
+            "salary": [
+                    {
+                        "serviceTypeId": 2,
+                        "value": 15,
+                        "premiumValue": null,
+                        "lessonType" : "INDIVIDUAL"
+                    },
+                    {
+                        "serviceTypeId": 2,
+                        "value": 10,
+                        "premiumValue": null,
+                        "lessonType" : "GROUP"
+                    }
+            ]
+        }
+
 ### Створення клієнта
 POST {{host}}/api/clients/add
 Content-Type: application/json
@@ -112,7 +185,7 @@ Content-Type: application/json
 "password": "pass",
 "phone": "095111111",
 "name": "Dima",
-    "organizationId": 2,
+    "organizationId": 3,
     "photoPermission": true,
     "sourceClient": "OLX",
     "children": [
@@ -140,12 +213,12 @@ Content-Type: application/json
 }
 
 ### Вимкнути ентіті
-POST {{host}}/api/child/enable
+POST {{host}}/api/organizations/crud/price/disable
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-"id": 1
+"id": 5
 }
 
 ### Створити динину клієнтом
@@ -186,12 +259,12 @@ Content-Type: application/json
 
 {
     "lessonStatus" : null,
-    "childId" : 1,
+    "childId" : 2,
     "serviceTypeId" : 2,
     "lessonType" : "GROUP",
     "lessonDateTime" : "2026-02-21T15:00",
     "lessonEndTime" : "2026-02-21T15:45",
-    "organizationId" : 2,
+    "organizationId" : 3,
     "employeeId" : 2,
     "comments" : "test"
 }
@@ -202,9 +275,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "startDate": "2026-02-10",
-    "endDate": "2026-02-13",
-    "organizationId": 2
+    "startDate": "2026-02-20",
+    "endDate": "2026-02-22",
+    "organizationId": 3
 }
 
 ### Отримати cписок дітей на організацію
@@ -213,5 +286,5 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "organizationId": 2
+    "organizationId": 3
 }

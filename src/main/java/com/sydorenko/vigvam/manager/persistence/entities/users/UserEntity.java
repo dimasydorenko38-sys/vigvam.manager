@@ -34,6 +34,8 @@ public abstract class UserEntity implements UserDetails, Statusable {
     @Column(name = "password", length = 15, nullable = false)
     private String password;
 
+    //TODO: настав час зашифрувати пароль
+
     @Column(name = "name", nullable = false)
     private String name;
 
