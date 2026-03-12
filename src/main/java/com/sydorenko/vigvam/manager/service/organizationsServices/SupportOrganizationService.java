@@ -1,6 +1,5 @@
 package com.sydorenko.vigvam.manager.service.organizationsServices;
 
-import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.organizations.CreatePriceRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.organizations.CreateSettingLessonsTimeRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
@@ -64,11 +63,6 @@ public class SupportOrganizationService extends StatusableService<PriceOrganizat
 
         return priceDtoList
                 .stream()
-//                .peek(price -> {
-//                    if (price.activatedDate().truncatedTo(ChronoUnit.MINUTES).isBefore(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES))) {
-//                        throw new IllegalArgumentException("Неможливо змінити прайс організації заднім числом");
-//                    }
-//                })
                 .map(price -> {
                     LocalDateTime date = price.activatedDate();
                     if (date != null && date.truncatedTo(ChronoUnit.MINUTES)
@@ -107,8 +101,8 @@ public class SupportOrganizationService extends StatusableService<PriceOrganizat
         return createdDate;
     }
 
-    public void setDisableStatusPrice(UpdateStatusObjectByIdRequestDto dto) {
-        PriceOrganizationEntity price = priceRepository.findActiveById(dto.getId())
+    public void setInvalidatedPrice(Long priceId) {
+        PriceOrganizationEntity price = priceRepository.findActiveById(priceId)
                 .orElseThrow(() -> new EntityNotFoundException("Цей запис деактивовано або не існує в системі"));
         Long organizationID = price.getOrganization().getId();
         Long serviceTypeId = price.getServiceType().getId();
@@ -119,14 +113,15 @@ public class SupportOrganizationService extends StatusableService<PriceOrganizat
         if (priceAnalogList.size() < 2) {
             throw new IllegalArgumentException("Ви не можете вимкнути єдиний діючий запис");
         }
-        if (priceAnalogList.getFirst().getId().equals(dto.getId())) {
+        if (priceAnalogList.getFirst().getId().equals(priceId)) {
+            price.setDisableDate(LocalDateTime.now());
             price.setStatus(Status.DISABLED);
             priceRepository.save(price);
         } else throw new IllegalArgumentException("Деактивувати можливо лише останній запис цієї категорії ПРАЙСУ");
     }
 
-    public void setEnableStatusPrice(UpdateStatusObjectByIdRequestDto dto) {
-        super.setEnableStatus(dto.getId(), priceRepository);
+    public void setEnableStatusPrice(Long priceId) {
+        super.setEnableStatus(priceId, priceRepository);
     }
 
 }

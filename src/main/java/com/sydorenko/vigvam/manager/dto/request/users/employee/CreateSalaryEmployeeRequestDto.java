@@ -1,8 +1,6 @@
-package com.sydorenko.vigvam.manager.dto.request.users;
+package com.sydorenko.vigvam.manager.dto.request.users.employee;
 
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

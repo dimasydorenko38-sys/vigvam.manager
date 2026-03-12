@@ -1,7 +1,6 @@
 package com.sydorenko.vigvam.manager.service.usersServices;
 
-import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.users.CreateSalaryEmployeeRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.employee.CreateSalaryEmployeeRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
@@ -69,8 +68,8 @@ public class SalaryService extends StatusableService<SalaryEmployeeEntity> {
         return activatedDate;
     }
 
-    public void setDisableStatus(UpdateStatusObjectByIdRequestDto dto) {
-        SalaryEmployeeEntity salaryEmployee = salaryRepository.findActiveById(dto.getId())
+    public void setInvalidated(Long salaryId) {
+        SalaryEmployeeEntity salaryEmployee = salaryRepository.findActiveById(salaryId)
                 .orElseThrow(() -> new EntityNotFoundException("Цей запис деактивовано або не існує в системі"));
         Long contractID = salaryEmployee.getContractEmployee().getId();
         Long serviceTypeId = salaryEmployee.getServiceType().getId();
@@ -81,13 +80,14 @@ public class SalaryService extends StatusableService<SalaryEmployeeEntity> {
         if (salaryAnalogList.size() < 2) {
             throw new IllegalArgumentException("Ви не можете вимкнути єдиний запис ЗП");
         }
-        if (salaryAnalogList.getFirst().getId().equals(dto.getId())) {
+        if (salaryAnalogList.getFirst().getId().equals(salaryId)) {
+            salaryEmployee.setDisableDate(LocalDateTime.now());
             salaryEmployee.setStatus(Status.DISABLED);
             salaryRepository.save(salaryEmployee);
         } else throw new IllegalArgumentException("Деактивувати можливо лише останній запис цієї категорії зарплат");
     }
 
-    public void setEnableStatus(UpdateStatusObjectByIdRequestDto dto) {
-        super.setEnableStatus(dto.getId(), salaryRepository);
+    public void setEnableStatus(Long salaryId) {
+        super.setEnableStatus(salaryId, salaryRepository);
     }
 }

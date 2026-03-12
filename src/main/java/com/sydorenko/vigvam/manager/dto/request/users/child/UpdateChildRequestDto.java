@@ -1,4 +1,4 @@
-package com.sydorenko.vigvam.manager.dto.request.users;
+package com.sydorenko.vigvam.manager.dto.request.users.child;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,12 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDate;
-
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateChildRequestDto {
-    private Long clientId;
+public class UpdateChildRequestDto {
+    @NonNull
+    private Long childId;
     @NonNull
     private String name;
     @NonNull

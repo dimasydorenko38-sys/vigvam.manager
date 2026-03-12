@@ -22,3 +22,4 @@ public interface SalaryRepository extends JpaRepository<SalaryEmployeeEntity,Lon
     List<SalaryEmployeeEntity> findAllActiveAnalogsAndSortByActivatedDate(Status status, Long contractID, Long serviceTypeId, LessonType lessonType);
 }
 
+

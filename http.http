@@ -1,5 +1,5 @@
 @host = http://localhost:8082
-@token = eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6IlNVUEVSX0FETUlOIiwiaWQiOjEsInN1YiI6IjEiLCJpYXQiOjE3NzIwMjEyOTgsImV4cCI6MTc3MjEwNzY5OH0.3YGFKyIWrkR1U5AgOe55g4hWw7wuvYeVVt8FbZDtzJY
+@token = eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3NzMwNjE0OTIsImV4cCI6MTc3MzE0Nzg5Mn0.ccbA8E32uAGyNdb_TdMLndrpN0goWx4Jr_jSxuKKTsc
 
 
 ### логін
@@ -17,6 +17,15 @@ Content-Type: application/json
 
 {
 "refreshToken": "4de7f9a8-19cf-4e10-8525-bf0c236e2d71"
+}
+
+### Вимкнути ентіті
+POST {{host}}/api/employee/enable
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+"id": 2
 }
 
 ### Створення видів послуги
@@ -73,14 +82,14 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "organizationId": 3,
-    "organizationName": "Організація24",
-    "organizationCity": "Київ",
-     "address": "address",
+    "organizationId": 2,
+    "organizationName": "VigVam",
+    "organizationCity": "Харків",
+     "address": "Полтавський шлях",
     "settingLessonsTimesList": [
     {
     "lessonType": "INDIVIDUAL",
-    "firstHourOfWork": "15:00",
+    "firstHourOfWork": "09:00",
     "lastHourOfWork": "18:00",
     "lessonDurationMinutes": 45,
     "breakDurationMinutes": 15
@@ -88,14 +97,14 @@ Content-Type: application/json
     {
     "lessonType": "GROUP",
     "firstHourOfWork": "09:00",
-    "lastHourOfWork": "15:00",
+    "lastHourOfWork": "18:00",
     "lessonDurationMinutes": 50,
     "breakDurationMinutes": 10
     }
     ],
     "priceList": [
     {
-    "activatedDate": "2026-02-26T12:00",
+    "activatedDate": "2026-03-03T12:00",
     "serviceTypeId": 2,
     "lessonType": "INDIVIDUAL",
     "valueOnePay": 350,
@@ -118,12 +127,13 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
   {
-      "login": "employee",
-      "password": "employee",
-      "name": "employee01",
-      "lastName": "employee",
-      "phone": "Phone"
-        }
+        "login": "employee4",
+        "password": "employee",
+        "name": "Каріна",
+        "lastName": "employee",
+        "phone": "380949105847",
+        "birthday": "2026-02-22"
+          }
 
 
 ### Створення контракту
@@ -132,8 +142,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-"employeeId": 2,
-"organizationId": 3,
+"employeeId": 4,
+"organizationId": 2,
 "masterEmployeeId": null,
 "salary": [
         {
@@ -183,9 +193,9 @@ Content-Type: application/json
 {
 "login": "loginСlient12",
 "password": "pass",
-"phone": "095111111",
+"phone": "0959104455",
 "name": "Dima",
-    "organizationId": 3,
+    "organizationId": 2,
     "photoPermission": true,
     "sourceClient": "OLX",
     "children": [
@@ -209,17 +219,9 @@ Content-Type: application/json
 
 {
 "clientId": 1,
-"organizationId": 1
+"organizationId": 2
 }
 
-### Вимкнути ентіті
-POST {{host}}/api/organizations/crud/price/disable
-Authorization: Bearer {{token}}
-Content-Type: application/json
-
-{
-"id": 5
-}
 
 ### Створити динину клієнтом
 POST {{host}}/api/child/add/client
@@ -259,11 +261,29 @@ Content-Type: application/json
 
 {
     "lessonStatus" : null,
-    "childId" : 2,
+    "childId" : 1,
+    "serviceTypeId" : 2,
+    "lessonType" : "INDIVIDUAL",
+    "lessonDateTime" : "2026-03-11T12:00",
+    "lessonEndTime" : null,
+    "organizationId" : 2,
+    "employeeId" : 4,
+    "comments" : "nullsadasd"
+}
+
+### оновити заняття
+POST {{host}}/api/lesson/update
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "lessonId": 13,
+    "lessonStatus" : "COMMENTATION",
+    "childId" : 1,
     "serviceTypeId" : 2,
     "lessonType" : "GROUP",
-    "lessonDateTime" : "2026-02-21T15:00",
-    "lessonEndTime" : "2026-02-21T15:45",
+    "lessonDateTime" : "2026-03-09T15:00",
+    "lessonEndTime" : null,
     "organizationId" : 3,
     "employeeId" : 2,
     "comments" : "test"
@@ -275,9 +295,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "startDate": "2026-02-20",
-    "endDate": "2026-02-22",
-    "organizationId": 3
+    "startDate": "2026-03-11",
+    "endDate": "2026-03-11",
+    "organizationId": 2
 }
 
 ### Отримати cписок дітей на організацію
@@ -287,4 +307,65 @@ Content-Type: application/json
 
 {
     "organizationId": 3
+}
+
+### Створити планове заняття
+POST {{host}}/api/planning_lesson/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+        "status": null,
+        "serviceTypeId": 2,
+        "type": "INDIVIDUAL",
+        "lessonTime": "09:00",
+        "lessonEndTime": null,
+        "lessonDayOfWeek": 1,
+        "organizationId": 2,
+        "employeeId": 2,
+        "comments": "має бути 3 уроки",
+        "childId": 1
+}
+
+### Оновити планове заняття
+POST {{host}}/api/planning_lesson/update
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+        "id": 14,
+        "status": "wait",
+        "serviceTypeId": 2,
+        "type": "INDIVIDUAL",
+        "lessonTime": "15:00",
+        "lessonEndTime": null,
+        "lessonDayOfWeek": "WEDNESDAY",
+        "organizationId": 2,
+        "employeeId": 2,
+        "comments": null,
+        "childId": 1
+}
+
+### Створити записку на пропуск планове заняття
+POST {{host}}/api/notebook_plan/create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+        "childId": 1,
+        "organizationId": 2,
+        "startDate": "2026-03-11T11:45",
+        "endDate": "2026-03-11T00:00",
+        "lessonTypeList": null,
+        "serviceTypeIds": null,
+        "message": "Захворіли"
+}
+
+### Отримати ПЛАН графік на період
+POST {{host}}/api/planning_lesson/getPlanSchedule
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "organizationId": 2
 }

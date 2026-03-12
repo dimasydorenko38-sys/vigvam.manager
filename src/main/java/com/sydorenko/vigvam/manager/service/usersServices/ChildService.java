@@ -1,7 +1,8 @@
 package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sydorenko.vigvam.manager.configuration.AuditorAwareImpl;
-import com.sydorenko.vigvam.manager.dto.request.users.CreateChildRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.child.UpdateChildRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.child.CreateChildRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.ChildNameResponseDto;
 import com.sydorenko.vigvam.manager.enums.Status;
@@ -38,12 +39,12 @@ public class ChildService extends StatusableService<ChildEntity> {
     private final ClientsOrganizationsRepository clientsOrganizationsRepository;
     private final OrganizationRepository organizationRepository;
 
-    public void setDisableStatus(UpdateStatusObjectByIdRequestDto dto) {
-        super.setDisableStatus(dto.getId(), childRepository);
+    public void setDisableStatus(Long id) {
+        super.setDisableStatus(id, childRepository);
     }
 
-    public void setEnableStatus(UpdateStatusObjectByIdRequestDto dto) {
-        super.setEnableStatus(dto.getId(), childRepository);
+    public void setEnableStatus(Long id) {
+        super.setEnableStatus(id, childRepository);
     }
 
     public void clientCreatesChild(CreateChildRequestDto dto) {
@@ -83,6 +84,19 @@ public class ChildService extends StatusableService<ChildEntity> {
                 .status(Status.ENABLED)
                 .createdByRole(RoleUser.ADMIN)
                 .build();
+        childRepository.save(child);
+    }
+
+    public void updateChilde(UpdateChildRequestDto dto){
+        ChildEntity child = childRepository.findActiveById(dto.getChildId())
+                .orElseThrow(()-> new EntityNotFoundException("Цей запис деактивовано або не існує"));
+        child.setName(dto.getName());
+        child.setLastName(dto.getLastName());
+        child.setSecondName(dto.getSecondName());
+        child.setBirthdayDate(dto.getBirthdayDate());
+        child.setInterests(dto.getInterests());
+        child.setDiagnosis(dto.getDiagnosis());
+        child.setRequestForLessons(dto.getRequestForLessons());
         childRepository.save(child);
     }
 

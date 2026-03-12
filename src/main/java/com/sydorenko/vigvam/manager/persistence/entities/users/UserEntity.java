@@ -44,7 +44,7 @@ public abstract class UserEntity implements UserDetails, Statusable {
 
     @CreatedDate
     @Column(name = "created_date", updatable = false)
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     @CreatedBy
     @Column(name = "created_by_id", updatable = false)

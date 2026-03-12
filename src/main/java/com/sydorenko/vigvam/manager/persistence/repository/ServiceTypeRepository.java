@@ -1,15 +1,17 @@
 package com.sydorenko.vigvam.manager.persistence.repository;
 
 import com.sydorenko.vigvam.manager.enums.Status;
-import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
+import com.sydorenko.vigvam.manager.persistence.entities.organizations.ServiceTypeEntity;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Repository
-public interface ServiceTypeRepository extends JpaRepository<ServiceTypeEntity,Long> {
+public interface ServiceTypeRepository extends JpaRepository<ServiceTypeEntity,Long>, GenericActiveRepository<ServiceTypeEntity> {
     Long countByStatusAndIdIn(Status status, Collection<Long> ids);
     boolean existsByIdAndStatus(Long id, Status status);
 
@@ -19,4 +21,6 @@ public interface ServiceTypeRepository extends JpaRepository<ServiceTypeEntity,L
         }
         return getReferenceById(serviceTypeId);
     }
+
+    Set<ServiceTypeEntity> getReferenceByIdInAndStatus(Set<Long> ids, Status status);
 }

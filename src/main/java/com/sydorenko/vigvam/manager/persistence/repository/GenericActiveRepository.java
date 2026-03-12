@@ -19,4 +19,10 @@ public interface GenericActiveRepository<E> extends JpaRepository<E, Long> {
     }
     boolean existsByIdAndStatus(Long id, Status status);
 
+    Optional<E> getReferenceByIdAndStatus(Long Id, Status status);
+
+    default Optional<E> getReferenceActiveById(Long id){
+        return getReferenceByIdAndStatus(id, Status.ENABLED);
+    }
+
 }

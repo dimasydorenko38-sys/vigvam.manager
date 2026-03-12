@@ -1,6 +1,4 @@
-package com.sydorenko.vigvam.manager.dto.request;
-
-import com.sydorenko.vigvam.manager.dto.request.users.CreateSalaryEmployeeRequestDto;
+package com.sydorenko.vigvam.manager.dto.request.users.employee;
 
 import java.time.LocalDateTime;
 import java.util.List;

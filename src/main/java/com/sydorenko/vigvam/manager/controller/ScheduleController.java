@@ -4,7 +4,7 @@ import com.sydorenko.vigvam.manager.dto.request.lessons.GetScheduleRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.ChildNameResponseDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.ScheduleResponseDto;
 import com.sydorenko.vigvam.manager.service.GenericService;
-import com.sydorenko.vigvam.manager.service.ScheduledService;
+import com.sydorenko.vigvam.manager.service.lessonsServices.ScheduledService;
 import com.sydorenko.vigvam.manager.service.usersServices.ChildService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

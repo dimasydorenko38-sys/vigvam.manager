@@ -34,4 +34,7 @@ public interface ClientsOrganizationsRepository extends JpaRepository<ClientsOrg
     boolean existsByClientIdAndOrganizationIdAndStatus(Long clientId, Long organizationId, Status status);
 
     Optional<ClientsOrganizationsEntity> findByClientIdAndOrganizationId(Long clientId, Long OrganizationId);
+
+    List<ClientsOrganizationsEntity> getReferenceByClientIdAndStatus(Long clientId, Status status);
+
 }

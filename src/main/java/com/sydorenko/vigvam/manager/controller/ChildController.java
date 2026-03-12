@@ -1,6 +1,7 @@
 package com.sydorenko.vigvam.manager.controller;
 
-import com.sydorenko.vigvam.manager.dto.request.users.CreateChildRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.child.UpdateChildRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.child.CreateChildRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.usersServices.ChildService;
@@ -33,17 +34,25 @@ public class ChildController {
         childeService.adminCreatesChild(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
+    @RequestMapping("/update")
+    public ResponseEntity<MessageResponseDto> updateChild(@RequestBody UpdateChildRequestDto dto){
+        childeService.updateChilde(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/disable")
     public ResponseEntity<MessageResponseDto> disableChilde(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        childeService.setDisableStatus(dto);
+        childeService.setDisableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/enable")
     public ResponseEntity<MessageResponseDto> enableChilde(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        childeService.setEnableStatus(dto);
+        childeService.setEnableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 }

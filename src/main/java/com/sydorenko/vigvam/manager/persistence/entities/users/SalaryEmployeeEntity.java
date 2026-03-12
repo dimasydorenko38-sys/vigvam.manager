@@ -3,7 +3,7 @@ package com.sydorenko.vigvam.manager.persistence.entities.users;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.interfaces.Statusable;
-import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
+import com.sydorenko.vigvam.manager.persistence.entities.organizations.ServiceTypeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;

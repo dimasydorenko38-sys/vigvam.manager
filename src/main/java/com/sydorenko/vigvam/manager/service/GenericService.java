@@ -3,7 +3,6 @@ package com.sydorenko.vigvam.manager.service;
 import com.sydorenko.vigvam.manager.configuration.AuditorAwareImpl;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
-import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientsOrganizationsEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;
@@ -29,15 +28,15 @@ public class GenericService {
     private final ClientsOrganizationsRepository clientsOrganizationsRepository;
     private final ContractEmployeeRepository contractEmployeeRepository;
 
-//TODO: need optimize request to DB
+    //TODO: need optimize request to DB
     public void checkAuditorByOrganization(Long organizationId) {
         Long currentUserID = auditorAware.getCurrentAuditor()
                 .orElseThrow(() -> new AuthorizationDeniedException("Неможливо визначити Ваш ID, Ваш токен невалідний"));
         Set<RoleUser> currentAuditorRoles = auditorAware.getCurrentAuditorRoles();
-        if(currentAuditorRoles.isEmpty()){
+        if (currentAuditorRoles.isEmpty()) {
             throw new AccessDeniedException("Вам необхідно отримати хоча б одну роль у системі");
         }
-        if(currentAuditorRoles.contains(RoleUser.SUPER_ADMIN)) return;
+        if (currentAuditorRoles.contains(RoleUser.SUPER_ADMIN)) return;
         Collection<OrganizationEntity> organizations;
         if (currentAuditorRoles.contains(RoleUser.CLIENT)) {
             organizations = clientsOrganizationsRepository.findAllActiveWithOrgByClientId(currentUserID)
@@ -52,10 +51,28 @@ public class GenericService {
                     .filter(organization -> organization.getStatus().equals(Status.ENABLED))
                     .collect(Collectors.toSet());
         }
-        if(organizations.stream().noneMatch(organization -> organization.getId().equals(organizationId))) {
+        if (organizations.stream().noneMatch(organization -> organization.getId().equals(organizationId))) {
             throw new AccessDeniedException("Користувач не має доступу до організації з ID: " + organizationId);
         }
     }
+
+    public String formatPhone(String phone) {
+        if (phone == null || phone.isEmpty()) {
+            throw new IllegalArgumentException("Телефон має бути заповненим");
+        }
+        String digits = phone.replaceAll("\\D", "");
+
+        if (digits.length() == 10) {
+            digits = "38" + digits;
+        } else if (digits.length() == 12 && digits.startsWith("38")) {
+        } else if (digits.length() == 9 && !digits.startsWith("3") && !digits.startsWith("8") && !digits.startsWith("0")) { // Без нуля: 971234567
+            digits = "380" + digits;
+        } else {
+            throw new IllegalArgumentException("Некоректний формат номера телефону: " + phone + " - Необхфдний формат: 380ХХХХХХХХХ");
+        }
+        return "+" + digits;
+    }
+
 
     public UserEntity getUserByTokenFields() {
         Long userId = auditorAware.getCurrentAuditor()

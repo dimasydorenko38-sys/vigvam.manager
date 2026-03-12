@@ -1,4 +1,4 @@
-package com.sydorenko.vigvam.manager.dto.request.users;
+package com.sydorenko.vigvam.manager.dto.request.users.employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 

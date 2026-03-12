@@ -1,8 +1,8 @@
 package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sun.jdi.request.DuplicateRequestException;
-import com.sydorenko.vigvam.manager.dto.request.users.CreateLinkClientOrgRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.users.NewStatusLinkClientOrgRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.client.CreateLinkClientOrgRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.client.NewStatusLinkClientOrgRequestDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ClientEntity;

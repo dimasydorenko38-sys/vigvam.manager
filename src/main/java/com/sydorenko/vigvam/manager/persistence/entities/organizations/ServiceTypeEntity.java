@@ -1,4 +1,4 @@
-package com.sydorenko.vigvam.manager.persistence.entities.lessons;
+package com.sydorenko.vigvam.manager.persistence.entities.organizations;
 
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.interfaces.Statusable;

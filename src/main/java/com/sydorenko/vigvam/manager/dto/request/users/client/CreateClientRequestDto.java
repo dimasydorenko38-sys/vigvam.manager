@@ -1,5 +1,6 @@
-package com.sydorenko.vigvam.manager.dto.request.users;
+package com.sydorenko.vigvam.manager.dto.request.users.client;
 
+import com.sydorenko.vigvam.manager.dto.request.users.child.CreateChildRequestDto;
 import lombok.*;
 
 import java.util.Set;

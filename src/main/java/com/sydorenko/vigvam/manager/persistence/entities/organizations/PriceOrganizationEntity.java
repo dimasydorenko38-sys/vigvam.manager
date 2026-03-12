@@ -3,7 +3,6 @@ package com.sydorenko.vigvam.manager.persistence.entities.organizations;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.interfaces.Statusable;
-import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
@@ -62,7 +61,7 @@ public class PriceOrganizationEntity implements Statusable {
 
     @CreatedDate
     @Column(name = "created_date", updatable = false)
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     @CreatedBy
     @Column(name = "created_by_id", updatable = false)

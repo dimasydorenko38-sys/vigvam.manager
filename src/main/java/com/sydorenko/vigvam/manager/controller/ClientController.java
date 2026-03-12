@@ -1,10 +1,11 @@
 package com.sydorenko.vigvam.manager.controller;
 
-import com.sydorenko.vigvam.manager.dto.request.users.CreateLinkClientOrgRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.users.NewStatusLinkClientOrgRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.client.UpdateClientRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.client.CreateLinkClientOrgRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.client.NewStatusLinkClientOrgRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
-import com.sydorenko.vigvam.manager.dto.request.users.CreateClientRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.client.CreateClientRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.GenericService;
 import com.sydorenko.vigvam.manager.service.usersServices.ClientService;
@@ -40,16 +41,23 @@ public class ClientController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
+    @PostMapping("/update")
+    public ResponseEntity<MessageResponseDto> updateClientUsingAdmin(@RequestBody UpdateClientRequestDto dto){
+        clientService.updateClient(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/disable")
     public ResponseEntity<MessageResponseDto> disableClient(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        clientService.setDisableStatus(dto);
+        clientService.setDisableStatusCascade(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/enable")
     public ResponseEntity<MessageResponseDto> enableClient(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        clientService.setEnableStatus(dto);
+        clientService.setEnableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 

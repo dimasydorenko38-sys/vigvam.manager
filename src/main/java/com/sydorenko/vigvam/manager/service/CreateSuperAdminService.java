@@ -3,7 +3,7 @@ package com.sydorenko.vigvam.manager.service;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
-import com.sydorenko.vigvam.manager.persistence.entities.lessons.ServiceTypeEntity;
+import com.sydorenko.vigvam.manager.persistence.entities.organizations.ServiceTypeEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.SettingLessonsTime;
 import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeEntity;

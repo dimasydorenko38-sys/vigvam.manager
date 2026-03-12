@@ -13,20 +13,26 @@ import java.util.List;
 public class BusinessConfig {
 
     private final List<LessonStatus> ignoreLessonStatusesInSchedule = List.of(
-            LessonStatus.CANCELLED
+            LessonStatus.CANCELED
+    );
+
+    private final List<LessonStatus> StatusesCanBeInPlanSchedule = List.of(
+            LessonStatus.CANCELED,
+            LessonStatus.WAIT,
+            LessonStatus.COMMENTATION,
+            LessonStatus.ACCOMPANIMENT
     );
 
     private final List<LessonStatus> independentOfChildStatuses = List.of(
             LessonStatus.ACCOMPANIMENT,
             LessonStatus.COMMENTATION,
-            LessonStatus.CANCELLED
+            LessonStatus.CANCELED
     );
 
     private final List<LessonStatus> canIgnoreStatusesInOverlayLessons = List.of(
-            LessonStatus.CANCELLED,
+            LessonStatus.CANCELED,
             LessonStatus.MISSED_FREE,
-            LessonStatus.MISSED_PAYMENT,
-            LessonStatus.COMMENTATION
+            LessonStatus.MISSED_PAYMENT
     );
 
     public List<LessonType> getTypesForCheckOfOverlayOfLessons(LessonType lessonType) {

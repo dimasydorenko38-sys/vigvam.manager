@@ -1,9 +1,8 @@
 package com.sydorenko.vigvam.manager.service.usersServices;
 
 import com.sun.jdi.request.DuplicateRequestException;
-import com.sydorenko.vigvam.manager.dto.request.UpdateSalaryRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.users.CreateContractEmployeeRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.employee.UpdateSalaryRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.employee.CreateContractEmployeeRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.EmployeeNameResponseProjection;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.users.RoleUser;
@@ -11,6 +10,7 @@ import com.sydorenko.vigvam.manager.persistence.entities.users.ContractEmployeeE
 import com.sydorenko.vigvam.manager.persistence.repository.ContractEmployeeRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.EmployeeRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
+import com.sydorenko.vigvam.manager.persistence.repository.SalaryRepository;
 import com.sydorenko.vigvam.manager.service.StatusableService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 
@@ -32,6 +30,7 @@ public class ContractEmployeeService extends StatusableService<ContractEmployeeE
     private final EmployeeRepository employeeRepository;
     private final OrganizationRepository organizationRepository;
     private final SalaryService salaryService;
+    private final SalaryRepository salaryRepository;
 
     public void createContract(CreateContractEmployeeRequestDto dto) {
         boolean existActiveContract = contractEmployeeRepository
@@ -80,12 +79,12 @@ public class ContractEmployeeService extends StatusableService<ContractEmployeeE
                 .findAllEmployeesNameByOrganizationId(organizationId, RoleUser.EMPLOYEE, Status.ENABLED);
     }
 
-    public void setDisableStatus(UpdateStatusObjectByIdRequestDto dto) {
-        super.setDisableStatus(dto.getId(), contractEmployeeRepository);
+    public void setDisableStatus(Long contractId) {
+        super.setDisableStatus(contractId, contractEmployeeRepository);
     }
 
-    public void setEnableStatus(UpdateStatusObjectByIdRequestDto dto) {
-        super.setEnableStatus(dto.getId(), contractEmployeeRepository);
+    public void setEnableStatus(Long contractId) {
+        super.setEnableStatus(contractId, contractEmployeeRepository);
     }
 
 }

@@ -50,12 +50,12 @@ public class OrganizationService extends StatusableService<OrganizationEntity> {
         organizationRepository.save(currentOrg);
     }
 
-    public void setDisableStatus(UpdateStatusObjectByIdRequestDto dto) {
-        super.setDisableStatus(dto.getId(), organizationRepository);
+    public void setDisableStatus(Long organizationId) {
+        super.setDisableStatus(organizationId, organizationRepository);
     }
 
-    public void setEnableStatus(UpdateStatusObjectByIdRequestDto dto) {
-        super.setEnableStatus(dto.getId(), organizationRepository);
+    public void setEnableStatus(Long organizationId) {
+        super.setEnableStatus(organizationId, organizationRepository);
     }
 
 

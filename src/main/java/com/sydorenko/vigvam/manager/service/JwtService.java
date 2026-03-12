@@ -75,7 +75,7 @@ public class JwtService {
 
     public String generateTokenByRefreshToken(RefreshTokenDto dto) {
         if(dto.getRefreshToken() == null){
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ваш профіль було деактивовано, австоризуйтеся повторно або зверніться до Адміністратора");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Ваш профіль було деактивовано, авторизуйтеся повторно або зверніться до Адміністратора");
         }
         UserEntity user = repositories.stream()
                 .map(repo -> repo.findByRefreshTokenAndStatus(dto.getRefreshToken(), Status.ENABLED))

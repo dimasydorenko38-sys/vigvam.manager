@@ -40,7 +40,7 @@ public class OrganizationController {
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/disable")
     public ResponseEntity<MessageResponseDto> disableOrganization(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        organizationService.setDisableStatus(dto);
+        organizationService.setDisableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
 
     }
@@ -48,14 +48,14 @@ public class OrganizationController {
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/enable")
     public ResponseEntity<MessageResponseDto> enableOrganization(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        organizationService.setEnableStatus(dto);
+        organizationService.setEnableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    @PostMapping("/price/disable")
-    public ResponseEntity<MessageResponseDto> disablePrice(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        supportOrganizationService.setDisableStatusPrice(dto);
+    @PostMapping("/price/invalidate")
+    public ResponseEntity<MessageResponseDto> invalidatedPrice(@RequestBody UpdateStatusObjectByIdRequestDto dto){
+        supportOrganizationService.setInvalidatedPrice(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
 
     }
@@ -63,7 +63,7 @@ public class OrganizationController {
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/price/enable")
     public ResponseEntity<MessageResponseDto> enablePrice(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        supportOrganizationService.setEnableStatusPrice(dto);
+        supportOrganizationService.setEnableStatusPrice(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 }

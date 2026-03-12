@@ -10,15 +10,15 @@ import java.util.Optional;
 public interface LessonResponseProjection {
     Long getId();
     LessonStatus getLessonStatus();
-    LessonType getType();
+    LessonType getLessonType();
     LessonCategory getCategory();
     LocalDateTime getLessonDateTime();
     LocalDateTime getLessonEndTime();
+    LocalDateTime getUpdatedLessonStatus();
     String getComments();
 
-    Long getServiceType();
-    Long getOrganization();
-    Long getEmployee();
-    Optional<Long> getChild();
-
+    Long getServiceTypeId();
+    Long getOrganizationId();
+    Long getEmployeeId();
+    Optional<Long> getChildId();
 }

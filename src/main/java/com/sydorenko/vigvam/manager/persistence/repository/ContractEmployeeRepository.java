@@ -47,5 +47,8 @@ public interface ContractEmployeeRepository extends JpaRepository<ContractEmploy
     );
 
     boolean existsByEmployeeIdAndOrganizationIdAndRoleAndStatus(Long idEmp, Long idOrg, RoleUser role, Status status);
+
+    List<ContractEmployeeEntity> getReferenceByEmployeeIdAndStatus(Long employeeId, Status status);
 }
+
 

@@ -51,7 +51,7 @@ public class ClientsOrganizationsEntity implements Statusable {
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @CreatedBy
     @Column(name = "created_by_id", updatable = false)

@@ -1,8 +1,8 @@
 package com.sydorenko.vigvam.manager.controller;
 
-import com.sydorenko.vigvam.manager.dto.request.UpdateSalaryRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.employee.UpdateSalaryRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.users.CreateContractEmployeeRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.users.employee.CreateContractEmployeeRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.usersServices.ContractEmployeeService;
 import com.sydorenko.vigvam.manager.service.usersServices.SalaryService;
@@ -40,28 +40,28 @@ public class ContractEmployeeController {
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/disable")
     public ResponseEntity<MessageResponseDto> disableContract(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        contractEmployeeService.setDisableStatus(dto);
+        contractEmployeeService.setDisableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/enable")
     public ResponseEntity<MessageResponseDto> enableContract(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        contractEmployeeService.setEnableStatus(dto);
+        contractEmployeeService.setEnableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    @PostMapping("/salary/disable")
-    public ResponseEntity<MessageResponseDto> disableSalary(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        salaryService.setDisableStatus(dto);
+    @PostMapping("/salary/invalidatedSalary")
+    public ResponseEntity<MessageResponseDto> invalidatedSalary(@RequestBody UpdateStatusObjectByIdRequestDto dto){
+        salaryService.setInvalidated(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/salary/enable")
     public ResponseEntity<MessageResponseDto> enableSalary(@RequestBody UpdateStatusObjectByIdRequestDto dto){
-        salaryService.setEnableStatus(dto);
+        salaryService.setEnableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 }
