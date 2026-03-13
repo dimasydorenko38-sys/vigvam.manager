@@ -13,7 +13,7 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class PlanningLessonDto {
+public class PlanningLessonResponseDto {
     private Long id;
     private LocalTime lessonTime;
     private LocalTime lessonEndTime;
@@ -29,7 +29,7 @@ public class PlanningLessonDto {
     private String comments;
 
 
-    public PlanningLessonDto(PlanningLessonEntity planningLesson) {
+    public PlanningLessonResponseDto(PlanningLessonEntity planningLesson) {
 
         this.id = planningLesson.getId();
         this.lessonTime = planningLesson.getLessonTime();

@@ -52,7 +52,7 @@
     </div>
     <div class="flex gap-2 p-1 bg-slate-100 rounded-xl">
         <input type="date" id="startDate" value="2026-03-05" class="bg-transparent px-3 py-1 outline-none font-bold text-slate-700">
-        <input type="date" id="endDate" value="2026-03-11" class="bg-transparent px-3 py-1 outline-none font-bold text-slate-700">
+        <input type="date" id="endDate" value="2026-03-14" class="bg-transparent px-3 py-1 outline-none font-bold text-slate-700">
     </div>
 </div>
 
@@ -90,6 +90,8 @@
         </div>
         <form id="lessonForm" class="p-8 space-y-4">
             <input type="hidden" id="fieldLessonId">
+            <input type="hidden" id="fieldParentPlanId">
+
             <div class="grid grid-cols-2 gap-4">
                 <div><label class="text-[9px] font-bold text-slate-400 uppercase">Тип</label>
                     <select id="fieldType" class="w-full border-2 border-slate-100 p-2.5 rounded-xl text-xs font-bold">
@@ -207,16 +209,22 @@
         head.innerHTML = ""; body.innerHTML = "";
         const step = settings.lessonDurationMinutes + settings.breakDurationMinutes;
 
-        // Headers
         let hRow1 = `<tr><th rowspan="2" class="p-4 sticky-col bg-slate-900 text-white w-20 border-r border-slate-700 text-[10px]">⏱ ЧАС</th>`;
         let hRow2 = `<tr>`;
+
         dates.forEach(date => {
-            const empIds = [...new Set(schedule[date].employeeIds)];
-            hRow1 += `<th colspan="${empIds.length || 1}" class="p-3 text-center bg-slate-800 border-l border-slate-700 text-white uppercase text-[9px] font-black tracking-widest">${date.split('-').reverse().join('.')}</th>`;
-            empIds.forEach(id => {
-                const emp = employees.find(e => e.id === id);
-                hRow2 += `<th class="p-2 cell-width text-center bg-slate-50 text-slate-400 border-l border-b border-slate-200 font-black uppercase text-[8px] tracking-tighter">${emp ? emp.name : id}</th>`;
-            });
+            const dayEmpIds = schedule[date].employeeIds || [];
+            // Рендеримо стільки стовпчиків, скільки ID в масиві дня. Якщо масив порожній —colspan=1 для пустого місця.
+            hRow1 += `<th colspan="${dayEmpIds.length || 1}" class="p-3 text-center bg-slate-800 border-l border-slate-700 text-white uppercase text-[9px] font-black tracking-widest">${date.split('-').reverse().join('.')}</th>`;
+
+            if (dayEmpIds.length > 0) {
+                dayEmpIds.forEach(id => {
+                    const emp = employees.find(e => e.id === id);
+                    hRow2 += `<th class="p-2 cell-width text-center bg-slate-50 text-slate-400 border-l border-b border-slate-200 font-black uppercase text-[8px] tracking-tighter">${emp ? emp.name : 'ID: ' + id}</th>`;
+                });
+            } else {
+                hRow2 += `<th class="cell-width bg-slate-50 border-l border-b border-slate-200"></th>`;
+            }
         });
         head.innerHTML = hRow1 + "</tr>" + hRow2 + "</tr>";
 
@@ -226,26 +234,33 @@
         while (time <= end) {
             const tStr = time.toTimeString().substring(0, 5);
             let row = `<tr><td class="p-4 font-mono font-black text-center sticky-col bg-white border-r-2 text-slate-400">${tStr}</td>`;
+
             dates.forEach(date => {
                 const dayData = schedule[date];
-                const empIds = [...new Set(dayData.employeeIds)];
-                empIds.forEach(id => {
-                    let cell = "";
-                    const hasConflict = dayData.conflictList && dayData.conflictList.some(c => c.lessonType === type && c.employeeId === id && c.startTime.substring(0, 5) === tStr);
+                const dayEmpIds = dayData.employeeIds || [];
 
-                    if (!hasConflict && dayData.planningLessons) {
-                        dayData.planningLessons.filter(p => p.lessonType === type && p.employeeId === id && p.lessonTime.substring(0, 5) === tStr)
-                            .forEach(p => cell += createCard(p, tStr, true, false));
-                    }
-                    dayData.lessons.filter(l => (l.lessonType || l.type) === type && l.employeeId === id && l.lessonDateTime.split('T')[1].substring(0, 5) === tStr)
-                        .forEach(l => cell += createCard(l, tStr, false, hasConflict));
+                if (dayEmpIds.length > 0) {
+                    dayEmpIds.forEach(id => {
+                        let cell = "";
+                        const hasConflict = dayData.conflictList && dayData.conflictList.some(c => c.lessonType === type && c.employeeId === id && c.startTime.substring(0, 5) === tStr);
 
-                    const qf = JSON.stringify({ date, time: tStr, employeeId: id, type });
-                    row += `<td class="p-2 border-l border-slate-100 align-top empty-slot" onclick='openFormModal(false, null, ${qf})'>
-                                <div class="add-btn-quick">➕ Додати</div>
-                                ${cell}
-                            </td>`;
-                });
+                        if (!hasConflict && dayData.planningLessons) {
+                            dayData.planningLessons.filter(p => p.lessonType === type && p.employeeId === id && p.lessonTime.substring(0, 5) === tStr)
+                                .forEach(p => cell += createCard(p, tStr, true, false));
+                        }
+                        dayData.lessons.filter(l => (l.lessonType || l.type) === type && l.employeeId === id && l.lessonDateTime.split('T')[1].substring(0, 5) === tStr)
+                            .forEach(l => cell += createCard(l, tStr, false, hasConflict));
+
+                        const qf = JSON.stringify({ date, time: tStr, employeeId: id, type });
+                        row += `<td class="p-2 border-l border-slate-100 align-top empty-slot" onclick='openFormModal(false, null, ${qf})'>
+                                    <div class="add-btn-quick">➕ Додати</div>
+                                    ${cell}
+                                </td>`;
+                    });
+                } else {
+                    // Пуста клітинка для дня без викладачів
+                    row += `<td class="border-l border-slate-100 bg-slate-50/30"></td>`;
+                }
             });
             body.innerHTML += row + "</tr>";
             time = new Date(time.getTime() + step * 60000);
@@ -261,6 +276,7 @@
         const form = document.getElementById('lessonForm');
         form.reset();
         document.getElementById('fieldLessonId').value = "";
+        document.getElementById('fieldParentPlanId').value = "";
 
         if (isEdit && lessonData) {
             document.getElementById('fieldLessonId').value = lessonData.id;
@@ -272,8 +288,10 @@
             document.getElementById('fieldStart').value = lessonData.lessonDateTime.substring(0,16);
             document.getElementById('fieldComments').value = lessonData.comments || "";
             document.getElementById('formTitle').innerText = `Редагування #${lessonData.id}`;
-        } else if (lessonData && !isEdit) { // Клік по плану
+        } else if (lessonData && !isEdit) {
+            document.getElementById('fieldParentPlanId').value = lessonData.id;
             document.getElementById('fieldEmployeeId').value = lessonData.employeeId;
+            document.getElementById('fieldChildId').value = lessonData.childId || "";
             document.getElementById('fieldServiceId').value = lessonData.serviceTypeId || "";
             document.getElementById('fieldType').value = lessonData.lessonType || "";
             const dt = document.getElementById('startDate').value;
@@ -291,8 +309,11 @@
     document.getElementById('lessonForm').onsubmit = async (e) => {
         e.preventDefault();
         const id = document.getElementById('fieldLessonId').value;
+        const parentId = document.getElementById('fieldParentPlanId').value;
+
         const payload = {
             lessonId: id ? parseInt(id) : null,
+            parentPlanId: parentId ? parseInt(parentId) : null,
             lessonStatus: document.getElementById('fieldStatus').value || null,
             childId: document.getElementById('fieldChildId').value ? parseInt(document.getElementById('fieldChildId').value) : null,
             serviceTypeId: parseInt(document.getElementById('fieldServiceId').value),

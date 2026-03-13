@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface ContractEmployeeRepository extends JpaRepository<ContractEmployeeEntity,Long>, GenericActiveRepository<ContractEmployeeEntity> {
@@ -47,6 +48,8 @@ public interface ContractEmployeeRepository extends JpaRepository<ContractEmploy
     );
 
     boolean existsByEmployeeIdAndOrganizationIdAndRoleAndStatus(Long idEmp, Long idOrg, RoleUser role, Status status);
+
+    long countByEmployeeIdInAndOrganizationIdAndRoleAndStatus(Set<Long> idsEmp, Long idOrg, RoleUser role, Status status);
 
     List<ContractEmployeeEntity> getReferenceByEmployeeIdAndStatus(Long employeeId, Status status);
 }

@@ -2,7 +2,7 @@ package com.sydorenko.vigvam.manager.service.lessonsServices;
 
 import com.sun.jdi.request.DuplicateRequestException;
 import com.sydorenko.vigvam.manager.configuration.BusinessConfig;
-import com.sydorenko.vigvam.manager.dto.request.lessons.PlanningLessonRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.lessons.CreatePlanningLessonRequestDto;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonCategory;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
@@ -26,12 +26,12 @@ public class PlanningLessonService {
     private final PlanningLessonRepository planningLessonRepository;
     private final BusinessConfig businessConfig;
 
-    public void createPlanningLesson(@NonNull PlanningLessonRequestDto dto) {
+    public void createPlanningLesson(@NonNull CreatePlanningLessonRequestDto dto) {
         String lessonStatus = dto.status();
         if (lessonStatus == null || lessonStatus.isEmpty()) {
             lessonStatus = "wait";
         }
-        EntitiesForLesson entitiesForLesson = checkerLessonService.getEntities(dto.serviceTypeId(), dto.employeeId(), dto.organizationId(), dto.type(), dto.childId());
+        EntitiesForLesson entitiesForLesson = checkerLessonService.getEntitiesForLesson(dto.serviceTypeId(), dto.employeeId(), dto.organizationId(), dto.type(), dto.childId());
 
         PlanningLessonEntity planningLesson = PlanningLessonEntity.builder()
                 .lessonStatus(LessonStatus.fromString(lessonStatus))
@@ -53,14 +53,14 @@ public class PlanningLessonService {
         planningLessonRepository.save(planningLesson);
     }
 
-    public void updatePlanningLesson(@NonNull PlanningLessonRequestDto dto) {
+    public void updatePlanningLesson(@NonNull CreatePlanningLessonRequestDto dto) {
         PlanningLessonEntity planningLesson = planningLessonRepository.findById(dto.id())
                 .orElseThrow(() -> new EntityNotFoundException("Цей урок не знайдено в системі"));
         String lessonStatus = dto.status();
         if (!businessConfig.getStatusesCanBeInPlanSchedule().contains(LessonStatus.fromString(lessonStatus))) {
             throw new IllegalArgumentException("Обраний статус уроку не може існувати в плановому графіку");
         }
-        EntitiesForLesson entitiesForLesson = checkerLessonService.getEntities(dto.serviceTypeId(), dto.employeeId(), dto.organizationId(), dto.type(), dto.childId());
+        EntitiesForLesson entitiesForLesson = checkerLessonService.getEntitiesForLesson(dto.serviceTypeId(), dto.employeeId(), dto.organizationId(), dto.type(), dto.childId());
 
         if(!LessonStatus.fromString(lessonStatus).equals(planningLesson.getLessonStatus())){
             planningLesson.setUpdatedLessonStatus(LocalDateTime.now());

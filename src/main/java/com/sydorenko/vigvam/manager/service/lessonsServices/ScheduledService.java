@@ -38,7 +38,6 @@ public class ScheduledService {
     private final NotebookPlanRepository notebookPlanRepository;
     private final CheckerLessonService checkerLessonService;
 
-
     public ScheduleResponseDto getScheduleByPeriod(GetScheduleRequestDto dto) {
         LocalDateTime startDate = dto.getStartDate().atStartOfDay();
         LocalDateTime endDate;
@@ -58,6 +57,7 @@ public class ScheduledService {
                 .orElseThrow(() -> new EntityNotFoundException("Не знайдено цієї організації"));
 
         Set<EmployeeNameResponseProjection> employees = new HashSet<>(contractEmployeeService.getAllEmployeeNamesByOrg(dto.getOrganizationId()));
+        Set<Long> employeeActiveIds = employees.stream().map(EmployeeNameResponseProjection::getId).collect(Collectors.toSet());
 
         List<LessonResponseProjection> lessons = lessonService
                 .getLessonsByOrgIdForPeriod(dto.getOrganizationId(), startDate, endDate);
@@ -68,14 +68,14 @@ public class ScheduledService {
                 .collect(Collectors.toSet());
 
         List<NotebookPlanScheduleEntity> notebookPlanList = notebookPlanRepository
-                .findByOrganizationIdAndStartDateBeforeAndEndDateAfterAndStatus(organization.getId(), endDate, startDate, Status.ENABLED);
+                .findAllByOrgIdAndPeriodAndStatus(organization.getId(), endDate, startDate, Status.ENABLED);
 
         List<PlanningLessonEntity> planningLessonEntityList = planningLessonService
                 .getLessonsByOrgIdForPeriod(dto.getOrganizationId(), dayOfWeekSet);
 
-        Map<DayOfWeek, List<PlanningLessonDto>> planningLessons = planningLessonEntityList.stream()
-                .map(PlanningLessonDto::new)
-                .collect(Collectors.groupingBy(PlanningLessonDto::getLessonDayOfWeek, Collectors.toList()));
+        Map<DayOfWeek, List<PlanningLessonResponseDto>> planningLessons = planningLessonEntityList.stream()
+                .map(PlanningLessonResponseDto::new)
+                .collect(Collectors.groupingBy(PlanningLessonResponseDto::getLessonDayOfWeek, Collectors.toList()));
 
         Map<LocalDate, List<LessonResponseProjection>> lessonsByDate = lessons.stream()
                 .collect(Collectors.groupingBy(lesson -> lesson.getLessonDateTime().toLocalDate(), Collectors.toList()));
@@ -91,50 +91,56 @@ public class ScheduledService {
                                 lessonsByDate.getOrDefault(date, List.of()),
                                 employees)));
 
-        Set<Long> employeeIdsActive = employees.stream().map(EmployeeNameResponseProjection::getId).collect(Collectors.toSet());
         Set<Long> employeeIdsByAllLessons = lessons.stream().map(LessonResponseProjection::getEmployeeId).collect(Collectors.toSet());
         Set<Long> employeeIdsByPlanLessons = planningLessons.values().stream().flatMap(List::stream)
-                .map(PlanningLessonDto::getEmployeeId).collect(Collectors.toSet());
+                .map(PlanningLessonResponseDto::getEmployeeId).collect(Collectors.toSet());
         employeeIdsByAllLessons.addAll(employeeIdsByPlanLessons);
-        if (!employeeIdsActive.equals(employeeIdsByAllLessons)) {
-            Set<EmployeeNameResponseProjection> employeeNameByAllLessons = employeeService.getAllEmployeesByIds(employeeIdsByAllLessons);
-            employees.addAll(employeeNameByAllLessons);
+        if (!employeeActiveIds.equals(employeeIdsByAllLessons)) {
+            employeeActiveIds.addAll(employeeIdsByAllLessons);
         }
-
+        Set<EmployeeNameResponseProjection> employeeNameByAllLessons = employeeService.getAllEmployeesByIds(employeeActiveIds);
 
         return ScheduleResponseDto.builder()
                 .organization(new OrganizationResponseDto(organization))
-                .employeesData(employees)
+                .employeesData(employeeNameByAllLessons)
                 .schedule(schedule)
                 .build();
     }
 
-    private DayScheduleResponseDto createSomeDaySchedule(LocalDate date, List<PlanningLessonDto> planningLessons,
-                                                        List<LessonResponseProjection> lessons,
-                                                        Set<EmployeeNameResponseProjection> employees) {
+    private DayScheduleResponseDto createSomeDaySchedule(LocalDate date, List<PlanningLessonResponseDto> planningLessons,
+                                                         List<LessonResponseProjection> lessons,
+                                                         Set<EmployeeNameResponseProjection> employees) {
         var employeeIds = employees.stream()
                 .map(EmployeeNameResponseProjection::getId).collect(Collectors.toSet());
         var employeeIdsByLessons = lessons.stream()
                 .map(LessonResponseProjection::getEmployeeId)
                 .collect(Collectors.toSet());
         var employeeIdsByPlan = planningLessons.stream()
-                .map(PlanningLessonDto::getEmployeeId)
+                .map(PlanningLessonResponseDto::getEmployeeId)
                 .collect(Collectors.toSet());
 
         Set<Long> allEmployeeIds = new HashSet<>(employeeIds);
         allEmployeeIds.addAll(employeeIdsByPlan);
         allEmployeeIds.addAll(employeeIdsByLessons);
 
-
+        List<ConflictResponseDto> conflictList = List.of();
         if (date.isBefore(LocalDate.now())) {
-            return new DayScheduleResponseDto(employeeIdsByLessons, lessons, List.of(), List.of());
+            return new DayScheduleResponseDto(employeeIdsByLessons, lessons, List.of(), conflictList);
         } else if (date.equals(LocalDate.now())) {
-            return new DayScheduleResponseDto(allEmployeeIds, lessons, List.of(), List.of());
-        } else
-            return new DayScheduleResponseDto(allEmployeeIds, lessons, planningLessons, getConflictList(planningLessons, lessons));
+            return new DayScheduleResponseDto(allEmployeeIds, lessons, List.of(), conflictList);
+        } else {
+            if (!lessons.isEmpty()) {
+                LessonResponseProjection lesson = lessons.getFirst();
+                boolean canCheck = checkerLessonService.canCheckByDate(lesson.getLessonDateTime(), lesson.getLessonEndTime(), lesson.getOrganizationId());
+                if (canCheck) {
+                    conflictList = getConflictList(planningLessons, lessons);
+                }
+            }
+            return new DayScheduleResponseDto(allEmployeeIds, lessons, planningLessons, conflictList);
+        }
     }
 
-    private List<ConflictResponseDto> getConflictList(List<PlanningLessonDto> planningLessons, List<LessonResponseProjection> lessons) {
+    private List<ConflictResponseDto> getConflictList(List<PlanningLessonResponseDto> planningLessons, List<LessonResponseProjection> lessons) {
         return lessons.stream()
                 .map(fact -> planningLessons.stream()
                         .filter(plan -> businessConfig.getTypesForCheckOfOverlayOfLessons(plan.getLessonType()).contains(fact.getLessonType()))

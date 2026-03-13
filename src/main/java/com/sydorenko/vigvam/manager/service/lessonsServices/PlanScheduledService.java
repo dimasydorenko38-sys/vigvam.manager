@@ -1,13 +1,9 @@
 package com.sydorenko.vigvam.manager.service.lessonsServices;
 
-import com.sydorenko.vigvam.manager.configuration.BusinessConfig;
 import com.sydorenko.vigvam.manager.dto.request.lessons.GetScheduleRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.*;
-import com.sydorenko.vigvam.manager.enums.Status;
-import com.sydorenko.vigvam.manager.persistence.entities.lessons.NotebookPlanScheduleEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.PlanningLessonEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
-import com.sydorenko.vigvam.manager.persistence.repository.NotebookPlanRepository;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
 import com.sydorenko.vigvam.manager.service.usersServices.ContractEmployeeService;
 import com.sydorenko.vigvam.manager.service.usersServices.EmployeeService;
@@ -17,10 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,9 +39,9 @@ public class PlanScheduledService {
         List<PlanningLessonEntity> lessons = planningLessonService
                 .getLessonsByOrgIdForPeriod(dto.getOrganizationId(), dayOfWeekSet);
 
-        Map<DayOfWeek, List<PlanningLessonDto>> lessonsByDate = lessons.stream()
-                .map(PlanningLessonDto::new)
-                .collect(Collectors.groupingBy(PlanningLessonDto::getLessonDayOfWeek, Collectors.toList()));
+        Map<DayOfWeek, List<PlanningLessonResponseDto>> lessonsByDate = lessons.stream()
+                .map(PlanningLessonResponseDto::new)
+                .collect(Collectors.groupingBy(PlanningLessonResponseDto::getLessonDayOfWeek, Collectors.toList()));
 
         Map<DayOfWeek, PlanDayScheduleResponseDto> schedule = dayOfWeekSet.stream()
                 .collect(Collectors.toMap(
@@ -74,12 +66,12 @@ public class PlanScheduledService {
                 .build();
     }
     private PlanDayScheduleResponseDto createSomeDaySchedule(DayOfWeek day,
-                                                         List<PlanningLessonDto> lessons,
+                                                         List<PlanningLessonResponseDto> lessons,
                                                          Set<EmployeeNameResponseProjection> employees) {
         var employeeIds = employees.stream()
                 .map(EmployeeNameResponseProjection::getId).collect(Collectors.toSet());
         var employeeIdsByLessons = lessons.stream()
-                .map(PlanningLessonDto::getEmployeeId)
+                .map(PlanningLessonResponseDto::getEmployeeId)
                 .collect(Collectors.toSet());
 
         Set<Long> allEmployeeIds = new HashSet<>(employeeIds);

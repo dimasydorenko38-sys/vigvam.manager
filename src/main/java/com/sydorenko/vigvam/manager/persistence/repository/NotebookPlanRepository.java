@@ -15,11 +15,11 @@ public interface NotebookPlanRepository extends JpaRepository<NotebookPlanSchedu
     @Query("""
             select n from NotebookPlanScheduleEntity n
             where n.organization.id = :orgId
-            and n.startDate < :endPeriod
-            and n.endDate > :startPeriod
+            and n.startDate <= :endPeriod
+            and n.endDate >= :startPeriod
             and n.status = :status
             """)
-    List<NotebookPlanScheduleEntity> findByOrganizationIdAndStartDateBeforeAndEndDateAfterAndStatus(
+    List<NotebookPlanScheduleEntity> findAllByOrgIdAndPeriodAndStatus(
             @Param("orgId") Long orgId,
             @Param("endPeriod") LocalDateTime endPeriod,
             @Param("startPeriod") LocalDateTime startPeriod,

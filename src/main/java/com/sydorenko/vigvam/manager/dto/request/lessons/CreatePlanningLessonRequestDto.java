@@ -1,12 +1,11 @@
 package com.sydorenko.vigvam.manager.dto.request.lessons;
 
-import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import lombok.NonNull;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 
-public record PlanningLessonRequestDto(
+public record CreatePlanningLessonRequestDto(
 
         Long id,
         String status,

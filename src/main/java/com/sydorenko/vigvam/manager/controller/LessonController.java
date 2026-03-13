@@ -3,6 +3,7 @@ package com.sydorenko.vigvam.manager.controller;
 import com.sydorenko.vigvam.manager.dto.request.lessons.CreateLessonByPlanLessonRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.lessons.UpdateLessonRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.lessons.CreateLessonRequestDto;
+import com.sydorenko.vigvam.manager.dto.response.GenerateLessonListByPlanListResponseDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.GenericService;
 import com.sydorenko.vigvam.manager.service.lessonsServices.LessonService;
@@ -27,6 +28,13 @@ public class LessonController {
     @PostMapping("/create_by_plan")
     public ResponseEntity<MessageResponseDto> createLessonByPlanLesson (@RequestBody CreateLessonByPlanLessonRequestDto dto){
         lessonService.createLessonByPlanLesson(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
+    @PostMapping("/create_all_by_plan")
+    public ResponseEntity<MessageResponseDto> createLessonListByPlanList (@RequestBody GenerateLessonListByPlanListResponseDto dto){
+        lessonService.createLessonListByPlanList(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }
 

@@ -3,11 +3,12 @@ package com.sydorenko.vigvam.manager.service.lessonsServices;
 import com.sun.jdi.request.DuplicateRequestException;
 import com.sydorenko.vigvam.manager.configuration.BusinessConfig;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.LessonResponseProjection;
-import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.PlanningLessonDto;
+import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.PlanningLessonResponseDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonCategory;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
+import com.sydorenko.vigvam.manager.enums.users.RoleUser;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.AbstractLessonEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.LessonEntity;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.NotebookPlanScheduleEntity;
@@ -33,6 +34,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +49,32 @@ public class CheckerLessonService {
     private final OrganizationRepository organizationRepository;
     private final ServiceTypeService serviceTypeService;
     private final PlanningLessonRepository planningLessonRepository;
+    private final ServiceTypeRepository serviceTypeRepository;
 
     public LessonEntity check(@NonNull LessonEntity lesson) {
         lesson = validationChild(lesson);
         lesson = checkLessonTime(lesson);
         if (checkOverlayOfLessons(lesson)) throw new DuplicateRequestException("Урок на цей час уже існує");
         return lesson;
+    }
+
+    public boolean isLessonTypeConflict(LessonType lessonType1, LessonType lessonType2) {
+        List<LessonType> lessonTypeList = businessConfig.getTypesForCheckOfOverlayOfLessons(lessonType1);
+        return lessonTypeList.contains(lessonType2);
+    }
+
+    public boolean canCheckByDate(LocalDateTime startLesson, LocalDateTime endTimeLesson, Long organizationId) {
+        boolean needCheck = startLesson.toLocalDate().isAfter(LocalDate.now().plusDays(1));
+        boolean canCheck = !lessonRepository.existsCategoriesLessonsThisDay(
+                organizationId,
+                startLesson.toLocalDate().atStartOfDay(),
+                endTimeLesson.toLocalDate().atTime(LocalTime.MAX),
+                LessonCategory.REGULAR, businessConfig.getCanIgnoreStatusesInOverlayLessons()
+        );
+        if (needCheck) {
+            canCheck = true;
+        }
+        return canCheck;
     }
 
     public boolean checkOverlayOfFactVsPlan(LessonEntity lesson) {
@@ -61,7 +84,7 @@ public class CheckerLessonService {
                 businessConfig.getIgnoreLessonStatusesInSchedule(), null, lesson.getParentPlanId());
     }
 
-    public boolean existsNotebookPlanForLessonList(PlanningLessonDto planLesson, LocalDate date, List<NotebookPlanScheduleEntity> notebookPlanList) {
+    public boolean existsNotebookPlanForLessonList(PlanningLessonResponseDto planLesson, LocalDate date, List<NotebookPlanScheduleEntity> notebookPlanList) {
         LocalDateTime planStartDate = date.atTime(planLesson.getLessonTime());
         LocalDateTime planEndDate = date.atTime(planLesson.getLessonEndTime());
 
@@ -77,7 +100,7 @@ public class CheckerLessonService {
         return false;
     }
 
-    public boolean checkOverlayByTimeLessons(LessonResponseProjection fact, PlanningLessonDto plan) {
+    public boolean checkOverlayByTimeLessons(LessonResponseProjection fact, PlanningLessonResponseDto plan) {
         if (!fact.getLessonType().equals(plan.getLessonType())) {
             return false;
         }
@@ -175,7 +198,7 @@ public class CheckerLessonService {
         return lesson;
     }
 
-    public EntitiesForLesson getEntities(Long serviceTypeId, Long employeeId, Long organizationId, String lessonType, Long childId) {
+    public EntitiesForLesson getEntitiesForLesson(Long serviceTypeId, Long employeeId, Long organizationId, String lessonType, Long childId) {
         OrganizationEntity organizationLesson = organizationRepository.findActiveByIdWithSettingsAndPrice(organizationId)
                 .orElseThrow(() -> new EntityNotFoundException("Організацію не знайдено"));
 
@@ -215,4 +238,18 @@ public class CheckerLessonService {
                 .build();
     }
 
+    public void checkEntityForLessonLists(Set<EmployeeEntity> employeeList ,Set<ChildEntity> childEntityList, Set<ServiceTypeEntity> serviceTypeEntityList, Long organizationId) {
+    Set<Long> childIds = childEntityList.stream().filter(Objects::nonNull).map(ChildEntity::getId).filter(Objects::nonNull).collect(Collectors.toSet());
+    Set<Long> serviceTypeIds = serviceTypeEntityList.stream().filter(Objects::nonNull).map(ServiceTypeEntity::getId).collect(Collectors.toSet());
+    Set<Long> employeeIds = employeeList.stream().filter(Objects::nonNull).map(EmployeeEntity::getId).collect(Collectors.toSet());
+
+    long countContractsEmployeeInDB = contractEmployeeRepository.countByEmployeeIdInAndOrganizationIdAndRoleAndStatus(employeeIds,organizationId, RoleUser.EMPLOYEE, Status.ENABLED);
+    if (countContractsEmployeeInDB != employeeIds.size()) throw new EntityNotFoundException("В плановому графіку існують уроки з неактивним викладачем, неможливо створити такий фактичний урок") ;
+
+    long childrenCountInDB = childRepository.countByStatusAndIdIn(Status.ENABLED, childIds);
+    if (childrenCountInDB != childIds.size()) throw new EntityNotFoundException("Ймовірно якась із дітей у списку уроків вже не активна, необхідно перевірити Плановий графік");
+
+    long serviceCountInDB = serviceTypeRepository.countByStatusAndIdIn(Status.ENABLED, serviceTypeIds);
+    if(serviceCountInDB!= serviceTypeIds.size()) throw new EntityNotFoundException("Одна з послуг вже не активна в системі, необхідно перевірии Планові заняття");
+    }
 }

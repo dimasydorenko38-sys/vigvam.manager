@@ -6,7 +6,7 @@ import java.util.Set;
 public record DayScheduleResponseDto (
         Set<Long> employeeIds,
         List<LessonResponseProjection> lessons,
-        List<PlanningLessonDto> planningLessons,
+        List<PlanningLessonResponseDto> planningLessons,
         List<ConflictResponseDto> conflictList
 ) {
 

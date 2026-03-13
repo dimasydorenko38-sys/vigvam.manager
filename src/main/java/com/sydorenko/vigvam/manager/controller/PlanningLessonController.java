@@ -1,10 +1,9 @@
 package com.sydorenko.vigvam.manager.controller;
 
 import com.sydorenko.vigvam.manager.dto.request.lessons.GetScheduleRequestDto;
-import com.sydorenko.vigvam.manager.dto.request.lessons.PlanningLessonRequestDto;
+import com.sydorenko.vigvam.manager.dto.request.lessons.CreatePlanningLessonRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.PlanScheduleResponseDto;
-import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.ScheduleResponseDto;
 import com.sydorenko.vigvam.manager.service.GenericService;
 import com.sydorenko.vigvam.manager.service.lessonsServices.PlanScheduledService;
 import com.sydorenko.vigvam.manager.service.lessonsServices.PlanningLessonService;
@@ -25,7 +24,7 @@ public class PlanningLessonController {
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<MessageResponseDto> createPlanningLesson (@RequestBody PlanningLessonRequestDto dto){
+    public ResponseEntity<MessageResponseDto> createPlanningLesson (@RequestBody CreatePlanningLessonRequestDto dto){
         genericService.checkAuditorByOrganization(dto.organizationId());
         planningLessonService.createPlanningLesson(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
@@ -33,7 +32,7 @@ public class PlanningLessonController {
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/update")
-    public ResponseEntity<MessageResponseDto> updatePlanningLesson (@RequestBody PlanningLessonRequestDto dto){
+    public ResponseEntity<MessageResponseDto> updatePlanningLesson (@RequestBody CreatePlanningLessonRequestDto dto){
         genericService.checkAuditorByOrganization(dto.organizationId());
         planningLessonService.updatePlanningLesson(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));

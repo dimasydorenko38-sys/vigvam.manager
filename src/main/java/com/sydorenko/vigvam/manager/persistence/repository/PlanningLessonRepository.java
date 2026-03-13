@@ -6,11 +6,9 @@ import com.sydorenko.vigvam.manager.persistence.entities.lessons.PlanningLessonE
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
@@ -50,5 +48,9 @@ public interface PlanningLessonRepository extends JpaRepository<PlanningLessonEn
             @Param("orgId") Long organizationId,
             @Param("dayOfWeekSet") Set<DayOfWeek> dayOfWeekSet,
             @Param("ignoreStatuses") List<LessonStatus> ignoreLessonStatusesInSchedule);
+
+    List<PlanningLessonEntity> findAllByLessonDayOfWeekAndOrganizationIdAndLessonStatusNotIn(DayOfWeek dayOfWeek, Long organizationId, List<LessonStatus> ignoreLessonStatusesInSchedule);
+
+    List<PlanningLessonEntity> findAllByIdIn(Set<Long> idList);
 }
 

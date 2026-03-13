@@ -5,12 +5,14 @@ import com.sydorenko.vigvam.manager.enums.lessons.LessonCategory;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonStatus;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonType;
 import com.sydorenko.vigvam.manager.persistence.entities.lessons.LessonEntity;
+import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -70,7 +72,7 @@ public interface LessonRepository extends JpaRepository<LessonEntity, Long> {
             WHERE l.organization.id = :org
             AND l.lessonEndTime > :startDateTime
             AND l.lessonDateTime < :endDateTime
-            AND l.lessonCategory = :lessonCategory
+            AND l.category = :lessonCategory
             AND l.lessonStatus NOT IN :inactiveStatuses
             """)
     boolean existsCategoriesLessonsThisDay(
@@ -79,4 +81,20 @@ public interface LessonRepository extends JpaRepository<LessonEntity, Long> {
             @Param("endDateTime") LocalDateTime endDateTime,
             @Param("lessonCategory") LessonCategory lessonCategory,
             @Param("inactiveStatuses") List<LessonStatus> ignoreStatuses);
+
+
+    @Query("""
+            SELECT l
+            FROM LessonEntity l
+            WHERE l.lessonDateTime >= :start
+            AND l.lessonDateTime <= :end
+            AND l.lessonStatus NOT IN :ignoreStatuses
+            AND l.organization.id = :orgId
+            """)
+    List<LessonEntity> findAllEntityByOrgIdForPeriod(
+            @Param("orgId") Long organizationId,
+            @Param("start") LocalDateTime startDate,
+            @Param("end") LocalDateTime endDate,
+            @Param("ignoreStatuses") List<LessonStatus> ignoreStatuses);
+
 }

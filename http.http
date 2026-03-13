@@ -1,6 +1,5 @@
 @host = http://localhost:8082
-@token = eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3NzMwNjE0OTIsImV4cCI6MTc3MzE0Nzg5Mn0.ccbA8E32uAGyNdb_TdMLndrpN0goWx4Jr_jSxuKKTsc
-
+@token = eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3NzM0MDgzMjAsImV4cCI6MTc3MzQ5NDcyMH0.BOIlGsdEkBBkaUy7n9MISDIVDYtdeqlNLmZzCKOQpls
 
 ### логін
 POST {{host}}/api/login
@@ -127,9 +126,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
   {
-        "login": "employee4",
+        "login": "employee3",
         "password": "employee",
-        "name": "Каріна",
+        "name": "Вероніка",
         "lastName": "employee",
         "phone": "380949105847",
         "birthday": "2026-02-22"
@@ -142,7 +141,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-"employeeId": 4,
+"employeeId": 3,
 "organizationId": 2,
 "masterEmployeeId": null,
 "salary": [
@@ -267,7 +266,7 @@ Content-Type: application/json
     "lessonDateTime" : "2026-03-11T12:00",
     "lessonEndTime" : null,
     "organizationId" : 2,
-    "employeeId" : 4,
+    "employeeId" : 2,
     "comments" : "nullsadasd"
 }
 
@@ -295,8 +294,8 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-    "startDate": "2026-03-11",
-    "endDate": "2026-03-11",
+    "startDate": "2026-03-05",
+    "endDate": "2026-03-14",
     "organizationId": 2
 }
 
@@ -318,13 +317,13 @@ Content-Type: application/json
         "status": null,
         "serviceTypeId": 2,
         "type": "INDIVIDUAL",
-        "lessonTime": "09:00",
+        "lessonTime": "11:00",
         "lessonEndTime": null,
-        "lessonDayOfWeek": 1,
+        "lessonDayOfWeek": 5,
         "organizationId": 2,
         "employeeId": 2,
         "comments": "має бути 3 уроки",
-        "childId": 1
+        "childId": null
 }
 
 ### Оновити планове заняття
@@ -354,8 +353,8 @@ Content-Type: application/json
 {
         "childId": 1,
         "organizationId": 2,
-        "startDate": "2026-03-11T11:45",
-        "endDate": "2026-03-11T00:00",
+        "startDate": "2026-03-14T10:00",
+        "endDate": "2026-03-14T12:00",
         "lessonTypeList": null,
         "serviceTypeIds": null,
         "message": "Захворіли"
@@ -368,4 +367,25 @@ Content-Type: application/json
 
 {
     "organizationId": 2
+}
+
+### Створити урок з планового уроку
+POST {{host}}/api/lesson/create_by_plan
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "planLessonId": 2,
+  "date": "2026-03-13"
+}
+
+### Згенерувати уроки з плану на день
+POST {{host}}/api/lesson/create_all_by_plan
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "organizationId": 2,
+  "date": "2026-03-14",
+  "planLessonIds": []
 }
