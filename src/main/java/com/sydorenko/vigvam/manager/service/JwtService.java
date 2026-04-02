@@ -85,7 +85,7 @@ public class JwtService {
         return switch (user) {
             case ClientEntity client -> generateToken(client);
             case EmployeeEntity employee -> generateToken(employee);
-            default -> throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unsupported user type");
+            default -> throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Не визначено тип або роль користувача");
         };
     }
 
@@ -94,12 +94,12 @@ public class JwtService {
                 .map(repo -> repo.findByLoginAndPasswordAndStatus(dto.getLogin(), dto.getPassword(), Status.ENABLED))
                 .flatMap(Optional::stream)
                 .findFirst()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Логін не знайденто, або хибний пароль"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Логін не знайдено, або хибний пароль"));
         UUID refreshToken = user.getRefreshToken();
         String token = switch (user){
             case ClientEntity client -> generateToken(client);
             case EmployeeEntity employee -> generateToken(employee);
-            default -> throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unsupported user type");
+            default -> throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Не визначено тип або роль користувача");
         };
         return new AuthResponseDto(token,refreshToken);
     }

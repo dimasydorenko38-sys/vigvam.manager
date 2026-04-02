@@ -37,7 +37,7 @@ public class EmployeeService extends StatusableService<EmployeeEntity> {
 
     public AuthResponseDto createEmployee(@NonNull CreateEmployeeRequestDto dto) {
         EmployeeEntity employee = new EmployeeEntity();
-        employee.setLogin(dto.getLogin());
+        employee.setLogin(dto.getLogin().toLowerCase());
         employee.setPassword(dto.getPassword());
         employee.setName(dto.getName());
         employee.setLastName(dto.getLastName());

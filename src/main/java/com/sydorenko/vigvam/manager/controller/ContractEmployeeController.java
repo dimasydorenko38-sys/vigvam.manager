@@ -6,6 +6,7 @@ import com.sydorenko.vigvam.manager.dto.request.users.employee.CreateContractEmp
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.usersServices.ContractEmployeeService;
 import com.sydorenko.vigvam.manager.service.usersServices.SalaryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class ContractEmployeeController {
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/add")
-    public ResponseEntity<MessageResponseDto> createContractEmployee(@RequestBody CreateContractEmployeeRequestDto dto){
+    public ResponseEntity<MessageResponseDto> createContractEmployee(@Valid @RequestBody CreateContractEmployeeRequestDto dto){
         contractEmployeeService.createContract(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@CrossOrigin(origins = "*")  // тест візуал для графіку
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/schedule")

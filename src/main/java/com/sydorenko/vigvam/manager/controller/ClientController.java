@@ -10,6 +10,7 @@ import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.GenericService;
 import com.sydorenko.vigvam.manager.service.usersServices.ClientService;
 import com.sydorenko.vigvam.manager.service.usersServices.ClientsOrganizationsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,20 +30,20 @@ public class ClientController {
     private final GenericService genericService;
 
     @PostMapping("/add")
-    public ResponseEntity<AuthResponseDto> createClient(@RequestBody CreateClientRequestDto dto){
-        return ResponseEntity.ok(clientService.createClient(dto));
+    public ResponseEntity<AuthResponseDto> createClient(@Valid @RequestBody CreateClientRequestDto dto){
+        return ResponseEntity.ok(clientService.createClient(dto, true));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/add/admin")
-    public ResponseEntity<MessageResponseDto> createClientUsingAdmin(@RequestBody CreateClientRequestDto dto){
-        clientService.createClient(dto);
+    public ResponseEntity<MessageResponseDto> createClientUsingAdmin(@Valid @RequestBody CreateClientRequestDto dto){
+        clientService.createClient(dto, false);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/update")
-    public ResponseEntity<MessageResponseDto> updateClientUsingAdmin(@RequestBody UpdateClientRequestDto dto){
+    public ResponseEntity<MessageResponseDto> updateClientUsingAdmin(@Valid @RequestBody UpdateClientRequestDto dto){
         clientService.updateClient(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }

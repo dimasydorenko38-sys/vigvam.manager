@@ -5,6 +5,7 @@ import com.sydorenko.vigvam.manager.dto.request.organizations.CreateServiceTypeR
 import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.organizationsServices.ServiceTypeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,14 +24,14 @@ public class ServiceTypeController {
     private final MessageResponseDto messageResponseDto;
 
     @PostMapping("/add")
-    public ResponseEntity<MessageResponseDto> createServiceType(@RequestBody CreateServiceTypeRequestDto dto){
+    public ResponseEntity<MessageResponseDto> createServiceType(@Valid @RequestBody CreateServiceTypeRequestDto dto){
         serviceTypeService.createServiceType(dto);
         messageResponseDto.setMessage("Successful");
         return ResponseEntity.ok(messageResponseDto);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<MessageResponseDto> updateServiceType(@RequestBody UpdateServiceTypeRequestDto dto){
+    public ResponseEntity<MessageResponseDto> updateServiceType(@Valid @RequestBody UpdateServiceTypeRequestDto dto){
         serviceTypeService.updateServiceType(dto);
         messageResponseDto.setMessage("Successful");
         return ResponseEntity.ok(messageResponseDto);

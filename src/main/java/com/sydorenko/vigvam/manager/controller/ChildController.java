@@ -5,6 +5,7 @@ import com.sydorenko.vigvam.manager.dto.request.users.child.CreateChildRequestDt
 import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.usersServices.ChildService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,35 +24,35 @@ public class ChildController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @RequestMapping("/add/client")
-    public ResponseEntity<MessageResponseDto> clientCreatesChild(@RequestBody CreateChildRequestDto dto){
+    public ResponseEntity<MessageResponseDto> clientCreatesChild(@Valid @RequestBody CreateChildRequestDto dto){
         childeService.clientCreatesChild(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @RequestMapping("/add/admin")
-    public ResponseEntity<MessageResponseDto> adminCreatesChild(@RequestBody CreateChildRequestDto dto){
+    public ResponseEntity<MessageResponseDto> adminCreatesChild(@Valid @RequestBody CreateChildRequestDto dto){
         childeService.adminCreatesChild(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @RequestMapping("/update")
-    public ResponseEntity<MessageResponseDto> updateChild(@RequestBody UpdateChildRequestDto dto){
+    public ResponseEntity<MessageResponseDto> updateChild(@Valid @RequestBody UpdateChildRequestDto dto){
         childeService.updateChilde(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/disable")
-    public ResponseEntity<MessageResponseDto> disableChilde(@RequestBody UpdateStatusObjectByIdRequestDto dto){
+    public ResponseEntity<MessageResponseDto> disableChild(@RequestBody UpdateStatusObjectByIdRequestDto dto){
         childeService.setDisableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/enable")
-    public ResponseEntity<MessageResponseDto> enableChilde(@RequestBody UpdateStatusObjectByIdRequestDto dto){
+    public ResponseEntity<MessageResponseDto> enableChild(@RequestBody UpdateStatusObjectByIdRequestDto dto){
         childeService.setEnableStatus(dto.getId());
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }

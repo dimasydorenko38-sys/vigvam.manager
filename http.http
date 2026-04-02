@@ -1,5 +1,5 @@
-@host = http://localhost:8082
-@token = eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3NzM0MDgzMjAsImV4cCI6MTc3MzQ5NDcyMH0.BOIlGsdEkBBkaUy7n9MISDIVDYtdeqlNLmZzCKOQpls
+@host = http://localhost:8080
+@token = eyJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwic2NvcGUiOiJTVVBFUl9BRE1JTiIsInN1YiI6IjEiLCJpYXQiOjE3NzQ1NDgyMjQsImV4cCI6MTc3NDYzNDYyNH0.gltLhrS13wOq4oSviaepgTSvG0WrzAT3YUYzz1J9pR4
 
 ### логін
 POST {{host}}/api/login
@@ -33,7 +33,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-"serviceType": "logo",
+"serviceType": "Sensor",
 "displayName": "logo"
 }
 
@@ -43,7 +43,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
     {
-            "organizationName": "Організація24",
+            "organizationName": "Борщагівка",
             "organizationCity": "Київ",
             "address": "Майдан незалежності",
             "settingLessonsTimesList": [
@@ -126,7 +126,7 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
   {
-        "login": "employee3",
+        "login": "employee6",
         "password": "employee",
         "name": "Вероніка",
         "lastName": "employee",
@@ -190,25 +190,24 @@ POST {{host}}/api/clients/add
 Content-Type: application/json
 
 {
-"login": "loginСlient12",
-"password": "pass",
-"phone": "0959104455",
-"name": "Dima",
-    "organizationId": 2,
-    "photoPermission": true,
-    "sourceClient": "OLX",
-    "children": [
+  "login": "loginСlient1332",
+  "password": "pass",
+  "phone": "0959104455",
+  "name": "Dima",
+  "organizationId": 2,
+  "photoPermission": true,
+  "sourceClient": "OLX",
+  "children": [
     {
-    "name": "Mira",
-    "lastName":"Sydorenko",
-    "secondName": "Dmytrovna",
-    "birthdayDate":"2021-08-11",
-    "interests": "molot huiny",
-    "requestForLessons":"RRRRR",
-    "diagnosis": null
+      "name": " ",
+      "lastName": "Sydorenko",
+      "secondName": "Dmytrovna",
+      "birthdayDate": "2021-08-11",
+      "interests": "molot huiny",
+      "requestForLessons": "RRRRR",
+      "diagnosis": null
     }
-    ]
-
+  ]
 }
 
 ### Додати Організацію Клієнту
@@ -244,7 +243,7 @@ Content-Type: application/json
 
 {
     "clientId": 1,
-    "name": "child2333",
+    "name": "sdFSD",
     "lastName": "sgddgh",
     "secondName": "sdfgh",
     "birthdayDate": "1884-11-11",
@@ -389,3 +388,14 @@ Content-Type: application/json
   "date": "2026-03-14",
   "planLessonIds": []
 }
+
+### Отримати список активних організацій (ДТО)
+GET {{host}}/api/organizations/crud/all_active_names
+Content-Type: application/json
+
+### Отримати список Джерел клієнтів
+GET {{host}}/api/login/all_source_client
+Content-Type: application/json
+
+
+

@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.dto.request.users.employee;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -10,5 +11,6 @@ public class CreateSalaryEmployeeRequestDto {
     @NonNull Long serviceTypeId;
     @NonNull Long value;
     Long premiumValue;
-    @NonNull String lessonType;
+    @NotBlank
+    String lessonType;
 }

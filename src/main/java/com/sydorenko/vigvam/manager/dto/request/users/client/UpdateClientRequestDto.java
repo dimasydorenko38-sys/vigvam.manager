@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.dto.request.users.client;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -10,15 +11,14 @@ public class UpdateClientRequestDto {
 
     @NonNull
     private Long clientId;
-    @NonNull
+    @NotBlank(message = "Логін не можу бути порожнім")
     private String login;
-    @NonNull
+    @NotBlank(message = "Пароль не можу бути порожнім")
     private String password;
-    @NonNull
+    @NotBlank(message = "Телефон не можу бути порожнім")
     private String phone;
-    @NonNull
+    @NotBlank(message = "Імʼя не можу бути порожнім")
     private String name;
-    @NonNull
     private boolean photoPermission;
     private String sourceClient;
 }

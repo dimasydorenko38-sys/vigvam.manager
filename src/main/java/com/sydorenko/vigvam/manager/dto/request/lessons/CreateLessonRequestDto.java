@@ -2,6 +2,7 @@ package com.sydorenko.vigvam.manager.dto.request.lessons;
 
 import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.PlanningLessonResponseDto;
 import com.sydorenko.vigvam.manager.enums.lessons.LessonCategory;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,7 +16,7 @@ public class CreateLessonRequestDto {
     private String lessonStatus;
     private Long childId;
     private Long serviceTypeId;
-    @NonNull
+    @NotBlank( message = "Тип уроку обовʼязковий")
     private String lessonType;
     @NonNull
     private LocalDateTime lessonDateTime;

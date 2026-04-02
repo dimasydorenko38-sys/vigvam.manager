@@ -6,6 +6,7 @@ import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto
 import com.sydorenko.vigvam.manager.dto.response.AuthResponseDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.usersServices.EmployeeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,13 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping("/add")
-    public ResponseEntity<AuthResponseDto> createEmployee(@RequestBody CreateEmployeeRequestDto dto) {
+    public ResponseEntity<AuthResponseDto> createEmployee(@Valid @RequestBody CreateEmployeeRequestDto dto) {
         return ResponseEntity.ok(employeeService.createEmployee(dto));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','SUPER_ADMIN')")
     @PostMapping("/update")
-    public ResponseEntity<MessageResponseDto> updateEmployee (@RequestBody UpdateEmployeeRequestDto dto){
+    public ResponseEntity<MessageResponseDto> updateEmployee (@Valid @RequestBody UpdateEmployeeRequestDto dto){
         employeeService.updateEmployee(dto);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponseDto("Successful"));
     }

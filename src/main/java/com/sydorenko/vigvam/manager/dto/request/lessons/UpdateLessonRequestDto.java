@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.dto.request.lessons;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,12 +14,12 @@ import java.time.LocalDateTime;
 public class UpdateLessonRequestDto {
     @NonNull
     private Long lessonId;
-    @NonNull
+    @NotBlank(message = "Статус уроку обовʼязковий")
     private String lessonStatus;
     private Long childId;
     @NonNull
     private Long serviceTypeId;
-    @NonNull
+    @NotBlank
     private String lessonType;
     @NonNull
     private LocalDateTime lessonDateTime;

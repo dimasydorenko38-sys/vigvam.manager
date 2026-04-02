@@ -3,6 +3,7 @@ package com.sydorenko.vigvam.manager.controller;
 import com.sydorenko.vigvam.manager.dto.request.lessons.CreateNotebookPlanScheduleRequestDto;
 import com.sydorenko.vigvam.manager.dto.response.MessageResponseDto;
 import com.sydorenko.vigvam.manager.service.lessonsServices.NotebookPlanService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class NotebookPlanScheduleController {
     private final NotebookPlanService notebookPlanService;
 
     @PostMapping ("/create")
-    public ResponseEntity<MessageResponseDto> createNotebookPlan (@RequestBody CreateNotebookPlanScheduleRequestDto dto){
+    public ResponseEntity<MessageResponseDto> createNotebookPlan (@Valid @RequestBody CreateNotebookPlanScheduleRequestDto dto){
         notebookPlanService.createNotebookPlanSchedule(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(new MessageResponseDto("successful"));
     }

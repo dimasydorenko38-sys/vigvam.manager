@@ -1,6 +1,9 @@
 package com.sydorenko.vigvam.manager.dto.request.users.client;
 
 import com.sydorenko.vigvam.manager.dto.request.users.child.CreateChildRequestDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 import java.util.Set;
@@ -14,17 +17,18 @@ import java.util.Set;
 @NoArgsConstructor
 public class CreateClientRequestDto {
 
-    @NonNull
+    @NotBlank(message = "Логін не можу бути порожнім")
     private String login;
-    @NonNull
+    @NotBlank(message = "Пароль не можу бути порожнім")
     private String password;
-    @NonNull
+    @NotBlank(message = "Телефон не можу бути порожнім")
     private String phone;
-    @NonNull
+    @NotBlank(message = "Імʼя не можу бути порожнім")
     private String name;
     @NonNull
     private Long organizationId;
     private boolean photoPermission;
     private String sourceClient;
+    @Valid
     private Set<CreateChildRequestDto> children;
 }

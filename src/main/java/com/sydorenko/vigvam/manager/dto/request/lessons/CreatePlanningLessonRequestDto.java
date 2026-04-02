@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.dto.request.lessons;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.NonNull;
 
 import java.time.DayOfWeek;
@@ -10,7 +11,7 @@ public record CreatePlanningLessonRequestDto(
         Long id,
         String status,
         @NonNull Long serviceTypeId,
-        @NonNull String type,
+        @NotBlank(message = "Тип уроку обовʼязковий") String type,
         @NonNull LocalTime lessonTime,
         LocalTime lessonEndTime,
         @NonNull DayOfWeek lessonDayOfWeek,

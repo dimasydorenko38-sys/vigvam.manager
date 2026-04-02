@@ -1,7 +1,9 @@
 package com.sydorenko.vigvam.manager.dto.request.users.client;
 
+import lombok.NonNull;
+
 public record NewStatusLinkClientOrgRequestDto(
-        Long clientId,
-        Long organizationId
+        @NonNull Long clientId,
+        @NonNull Long organizationId
 ) {
 }

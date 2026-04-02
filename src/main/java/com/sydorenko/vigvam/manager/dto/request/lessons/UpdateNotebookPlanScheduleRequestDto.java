@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.dto.request.lessons;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.NonNull;
 
 import java.time.LocalDateTime;
@@ -12,6 +13,6 @@ public record UpdateNotebookPlanScheduleRequestDto(
         LocalDateTime endDate,
         List<String> lessonTypeList,
         Set<Long> serviceTypeIds,
-        @NonNull String message
+        @NotBlank(message = "Коментар не можу бути порожнім") String message
 ) {
 }

@@ -1,5 +1,7 @@
 package com.sydorenko.vigvam.manager.dto.request.users.employee;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,15 +17,15 @@ import java.util.List;
 public class CreateContractEmployeeRequestDto {
 
     LocalDate activatedDate;
-    @NonNull
+    @NotBlank
     private Long employeeId;
-    @NonNull
+    @NotBlank
     private Long organizationId;
 
     private Long masterEmployeeId;
-    @NonNull
+    @NotEmpty
     private List<CreateSalaryEmployeeRequestDto> salary;
-    @NonNull
+    @NotBlank
     private String role;
 
 }

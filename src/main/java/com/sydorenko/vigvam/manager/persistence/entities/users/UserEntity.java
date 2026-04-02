@@ -3,16 +3,15 @@ package com.sydorenko.vigvam.manager.persistence.entities.users;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.interfaces.Statusable;
 import jakarta.persistence.*;
+import jdk.jfr.Timestamp;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
@@ -42,7 +41,7 @@ public abstract class UserEntity implements UserDetails, Statusable {
     @Column(name = "phone", length = 20, nullable = false)
     private String phone;
 
-    @CreatedDate
+    @Timestamp
     @Column(name = "created_date", updatable = false)
     private LocalDateTime createdDate;
 

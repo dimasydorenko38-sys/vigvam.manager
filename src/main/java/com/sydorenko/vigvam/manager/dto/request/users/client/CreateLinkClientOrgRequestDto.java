@@ -1,4 +1,6 @@
 package com.sydorenko.vigvam.manager.dto.request.users.client;
 
-public record CreateLinkClientOrgRequestDto(Long clientId, Long organizationId) {
+import lombok.NonNull;
+
+public record CreateLinkClientOrgRequestDto(@NonNull Long clientId, @NonNull Long organizationId) {
 }

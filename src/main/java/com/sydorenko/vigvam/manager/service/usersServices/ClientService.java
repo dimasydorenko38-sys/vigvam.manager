@@ -43,19 +43,20 @@ public class ClientService extends StatusableService<ClientEntity> {
     private final ChildService childService;
 
 
-    public AuthResponseDto createClient(CreateClientRequestDto dto) {
+    public AuthResponseDto createClient(CreateClientRequestDto dto, boolean isCreatedByClient) {
         if (clientRepository.existsByLogin(dto.getLogin())) {
             throw new DuplicateRequestException("Цей логін або номер телефону вже використовується в системі, вигадайте новий логін для реєстрації");
         }
         ClientEntity client = new ClientEntity();
         client.setStatus(Status.ENABLED);
         client.setRole(RoleUser.CLIENT);
-        client.setLogin(dto.getLogin());
+        client.setLogin(dto.getLogin().toLowerCase());
         client.setPassword(dto.getPassword());
         client.setName(dto.getName());
         client.setPhone(genericService.formatPhone(dto.getPhone()));
         client.setPhotoPermission(dto.isPhotoPermission());
         client.setSource(SourceClient.valueOf(dto.getSourceClient().toUpperCase()));
+        client.setCreatedByClient(isCreatedByClient);
         if (!organizationRepository.existsActiveById(dto.getOrganizationId())) {
             throw new EntityNotFoundException("Такої організації не існує");
         }

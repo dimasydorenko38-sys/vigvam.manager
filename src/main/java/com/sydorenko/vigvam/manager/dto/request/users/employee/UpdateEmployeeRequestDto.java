@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.dto.request.users.employee;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,14 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateEmployeeRequestDto {
-    @NonNull private Long employeeId;
-    @NonNull private String name;
-    @NonNull private String lastName;
-    @NonNull private String phone;
-    @NonNull private LocalDate birthday;
+    @NonNull
+    private Long employeeId;
+    @NotBlank
+    private String name;
+    @NotBlank
+    private String lastName;
+    @NotBlank
+    private String phone;
+    @NonNull
+    private LocalDate birthday;
 }

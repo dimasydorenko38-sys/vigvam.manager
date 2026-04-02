@@ -3,6 +3,8 @@ package com.sydorenko.vigvam.manager.service.organizationsServices;
 import com.sydorenko.vigvam.manager.dto.request.UpdateStatusObjectByIdRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.organizations.CreateOrganizationRequestDto;
 import com.sydorenko.vigvam.manager.dto.request.organizations.UpdateOrganizationRequestDto;
+import com.sydorenko.vigvam.manager.dto.response.OrganizationNamesResponseDto;
+import com.sydorenko.vigvam.manager.dto.response.scheduleResponse.OrganizationResponseDto;
 import com.sydorenko.vigvam.manager.enums.Status;
 import com.sydorenko.vigvam.manager.persistence.entities.organizations.OrganizationEntity;
 import com.sydorenko.vigvam.manager.persistence.repository.OrganizationRepository;
@@ -11,6 +13,9 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -48,6 +53,17 @@ public class OrganizationService extends StatusableService<OrganizationEntity> {
         }
         supportService.checkSettingTimeAndPrice(currentOrg);
         organizationRepository.save(currentOrg);
+    }
+
+    public List<OrganizationNamesResponseDto> getAllOrganizationNames(){
+        List<OrganizationEntity> organizationEntities = organizationRepository.findAllActive();
+        return organizationRepository.findAllActive().stream()
+                .map(entity -> new OrganizationNamesResponseDto(
+                        entity.getId(),
+                        entity.getOrganizationName(),
+                        entity.getOrganizationCity(),
+                        entity.getAddress()))
+                .toList();
     }
 
     public void setDisableStatus(Long organizationId) {

@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.dto.request.users.child;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +13,10 @@ import java.time.LocalDate;
 public class UpdateChildRequestDto {
     @NonNull
     private Long childId;
-    @NonNull
+    @NotBlank(message = "Ім'я не може бути порожнім")
     private String name;
-    @NonNull
+    @NotBlank(message = "Прізвище не може бути порожнім")
     private String lastName;
-    @NonNull
     private String secondName;
     @NonNull
     private LocalDate birthdayDate;

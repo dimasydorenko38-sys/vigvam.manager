@@ -4,6 +4,7 @@ import com.sydorenko.vigvam.manager.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
 
+import java.util.List;
 import java.util.Optional;
 
 @NoRepositoryBean
@@ -13,6 +14,11 @@ public interface GenericActiveRepository<E> extends JpaRepository<E, Long> {
         return findByIdAndStatus(id, Status.ENABLED);
     }
     Optional<E> findByIdAndStatus(Long id, Status status);
+
+    default List<E> findAllActive(){
+        return findAllByStatus(Status.ENABLED);
+    }
+    List<E> findAllByStatus(Status status);
 
     default boolean existsActiveById(Long id){
         return existsByIdAndStatus(id, Status.ENABLED);

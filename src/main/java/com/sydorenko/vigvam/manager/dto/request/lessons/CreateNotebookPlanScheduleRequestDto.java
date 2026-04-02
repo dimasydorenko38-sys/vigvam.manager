@@ -1,5 +1,6 @@
 package com.sydorenko.vigvam.manager.dto.request.lessons;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.NonNull;
 
 import java.time.LocalDateTime;
@@ -14,12 +15,14 @@ public record CreateNotebookPlanScheduleRequestDto(
         LocalDateTime endDate,
         List<String> lessonTypeList,
         Set<Long> serviceTypeIds,
-        @NonNull String message
+        @NotBlank(message = "Повідомлення не може бути порожнім")
+        String message
 ) {
     public List<String> lessonTypeList() {
         return lessonTypeList != null ? lessonTypeList : List.of();
     }
-    public Set<Long> serviceTypeIds(){
+
+    public Set<Long> serviceTypeIds() {
         return serviceTypeIds != null ? serviceTypeIds : Set.of();
     }
 }

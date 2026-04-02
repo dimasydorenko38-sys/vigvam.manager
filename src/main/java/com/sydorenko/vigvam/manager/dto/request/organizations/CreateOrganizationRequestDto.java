@@ -1,5 +1,7 @@
 package com.sydorenko.vigvam.manager.dto.request.organizations;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,15 +15,15 @@ import java.util.List;
 @NoArgsConstructor
 public class CreateOrganizationRequestDto {
 
-    @NonNull
+    @NotBlank(message = "Імʼя обовʼязкове поле")
     private String organizationName;
-    @NonNull
+    @NotBlank(message = "Вкажіть місто організації")
     private String organizationCity;
-    @NonNull
+    @NotBlank(message = "Вкажіть Вулицю та номер будинку")
     private String address;
-    @NonNull
+    @NotEmpty
     private List<CreateSettingLessonsTimeRequestDto> settingLessonsTimesList;
-    @NonNull
+    @NotEmpty
     private List<CreatePriceRequestDto> priceList;
 }
 
